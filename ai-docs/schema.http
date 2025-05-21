@@ -1,0 +1,199 @@
+# -------HTTP REST CLIENT -------
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+#
+# Purpose: Sample requests for Schema Service
+#          WARNING: Schemas can not be deleted
+
+# -----------------------
+# OAUTH (Variables)
+# -----------------------
+###
+@login_base = login.microsoftonline.com/{{TENANT_ID}}
+@oauth_token_host = {{login_base}}/oauth2/v2.0/token
+@scopes = {{CLIENT_ID}}/.default openid profile offline_access
+
+
+# -----------------------
+# OAUTH  refresh_token
+# -----------------------
+###
+# @name refresh
+POST https://{{oauth_token_host}} HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token
+&client_id={{CLIENT_ID}}
+&client_secret={{CLIENT_SECRET}}
+&refresh_token={{REFRESH_TOKEN}}
+&scope={{scopes}}
+
+
+# -----------------------
+# API (Variables)
+# -----------------------
+###
+@access_token = {{refresh.response.body.access_token}}
+@SCHEMA_HOST = {{HOST}}/api/schema-service/v1
+
+
+# -----------------------
+# API: Version
+# -----------------------
+
+###
+# @name info
+GET {{SCHEMA_HOST}}/info
+Authorization: Bearer {{access_token}}
+Accept: application/json
+
+
+# -----------------------
+# API: schema
+# -----------------------
+
+###
+# @name getSchemaInfoList
+GET {{SCHEMA_HOST}}/schema
+Authorization: Bearer {{access_token}}
+Accept: application/json
+data-partition-id: {{DATA_PARTITION}}
+
+
+###
+# @name createSchema
+POST {{SCHEMA_HOST}}/schema
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+data-partition-id: {{DATA_PARTITION}}
+
+{
+  "schemaInfo": {
+    "schemaIdentity": {
+      "authority": "lab",
+      "source": "test",
+      "entityType": "testSchema",
+      "schemaVersionMajor": 0,
+      "schemaVersionMinor": 0,
+      "schemaVersionPatch": 1,
+      "id": "lab:test:testSchema:0.0.1"
+    },
+    "status": "DEVELOPMENT",
+    "scope": "INTERNAL",
+    "createdBy": "John Smith",
+    "dateCreated": "2022-03-31T11:16:03Z"
+  },
+  "schema": {
+    "ValidationString": "Initial Creation",
+    "newfield": "something",
+    "definitions": {}
+  }
+}
+
+
+###
+# @name getSchema
+GET {{SCHEMA_HOST}}/schema/lab:test:testSchema:0.0.1
+Authorization: Bearer {{access_token}}
+Accept: application/json
+data-partition-id: {{DATA_PARTITION}}
+
+
+###
+# @name updateSchema
+PUT {{SCHEMA_HOST}}/schema
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+data-partition-id: {{DATA_PARTITION}}
+
+{
+  "schemaInfo": {
+    "schemaIdentity": {
+      "authority": "lab",
+      "source": "test",
+      "entityType": "testSchema",
+      "schemaVersionMajor": 0,
+      "schemaVersionMinor": 1,
+      "schemaVersionPatch": 0,
+      "id": "lab:test:testSchema:0.1.0"
+    },
+    "status": "DEVELOPMENT",
+    "scope": "INTERNAL",
+    "createdBy": "John Smith",
+    "dateCreated": "2022-03-31T11:16:03Z"
+  },
+  "schema": {
+    "ValidationString": "Updated Schema",
+    "newfield": "something",
+    "anotherfield": "else",
+    "definitions": {}
+  }
+}
+
+
+###
+# @name getUpdatedSchema
+GET {{SCHEMA_HOST}}/schema/lab:test:testSchema:0.1.0
+Authorization: Bearer {{access_token}}
+Accept: application/json
+data-partition-id: {{DATA_PARTITION}}
+
+
+### This call can't be done by a default user.
+###
+# @name createSystemSchema
+PUT {{SCHEMA_HOST}}/schemas/system
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+AppKey: None
+
+{
+  "schemaInfo": {
+    "schemaIdentity": {
+      "authority": "osdu",
+      "source": "wks",
+      "entityType": "AbstractAccessControlList",
+      "schemaVersionMajor": 1,
+      "schemaVersionMinor": 0,
+      "schemaVersionPatch": 0,
+      "id": "osdu:wks:AbstractAccessControlList:1.0.0"
+    },
+    "createdBy": "OSDU Data Definition Group",
+    "scope": "SHARED",
+    "status": "PUBLISHED"
+  },
+  "schema": {
+    "x-osdu-license": "Copyright 2022, The Open Group \\nLicensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.",
+    "$id": "https://schema.osdu.opengroup.org/json/abstract/AbstractAccessControlList.1.0.0.json",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "x-osdu-schema-source": "osdu:wks:AbstractAccessControlList:1.0.0",
+    "title": "Access Control List",
+    "description": "The access control tags associated with this entity. This structure is included by the SystemProperties \"acl\", which is part of all OSDU records. Not extensible.",
+    "type": "object",
+    "properties": {
+      "owners": {
+        "title": "List of Owners",
+        "description": "The list of owners of this data record formatted as an email (core.common.model.storage.validation.ValidationDoc.EMAIL_REGEX).",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
+        }
+      },
+      "viewers": {
+        "title": "List of Viewers",
+        "description": "The list of viewers to which this data record is accessible/visible/discoverable formatted as an email (core.common.model.storage.validation.ValidationDoc.EMAIL_REGEX).",
+        "type": "array",
+        "items": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
+        }
+      }
+    },
+    "required": [
+      "owners",
+      "viewers"
+    ],
+    "additionalProperties": false,
+    "x-osdu-inheriting-from-kind": []
+  }
+}

@@ -1,0 +1,1 @@
+"""Schema service tool tests."""

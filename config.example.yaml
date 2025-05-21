@@ -1,0 +1,23 @@
+# OSDU MCP Server Configuration Example
+# Copy this file to config.yaml and update with your values
+#
+# Required environment variables:
+# - AZURE_CLIENT_ID: Your Azure service principal or application ID
+# - AZURE_TENANT_ID: Your Azure tenant ID
+# 
+# Optional environment variables:
+# - AZURE_CLIENT_SECRET: Service principal secret (enables SP auth)
+
+server:
+  url: "https://your-osdu.com"
+  data_partition: "your-partition"
+  timeout: 30
+
+# Authentication is auto-configured:
+# - Service Principal: When AZURE_CLIENT_SECRET is present
+# - Azure CLI/PowerShell: When AZURE_CLIENT_SECRET is absent
+# - Interactive: Always disabled for security
+
+logging:
+  enabled: false  # Set to true to enable logging
+  level: "INFO"   # Available levels: DEBUG, INFO, WARNING, ERROR, CRITICAL
