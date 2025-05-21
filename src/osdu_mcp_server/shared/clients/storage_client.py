@@ -176,7 +176,7 @@ class StorageClient(OsduClient):
         return await self.get(f"/records/{id}", params=params)
     
     async def get_record_version(self, id: str, version: int,
-                               attributes: Optional[List[str]] = None) -> Dict[str, Any]:
+                                     attributes: Optional[List[str]] = None) -> Dict[str, Any]:
         """Get a specific version of a record by ID.
         
         Args:
@@ -223,7 +223,7 @@ class StorageClient(OsduClient):
         return await self.get(f"/records/versions/{id}")
     
     async def query_records_by_kind(self, kind: str, limit: int = 10,
-                                  cursor: Optional[str] = None) -> Dict[str, Any]:
+                                       cursor: Optional[str] = None) -> Dict[str, Any]:
         """Get record IDs of a specific kind.
         
         Args:
@@ -251,7 +251,7 @@ class StorageClient(OsduClient):
         return await self.get("/query/records", params=params)
     
     async def fetch_records(self, record_ids: List[str],
-                          attributes: Optional[List[str]] = None) -> Dict[str, Any]:
+                                attributes: Optional[List[str]] = None) -> Dict[str, Any]:
         """Retrieve multiple records at once.
         
         Args:
