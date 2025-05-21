@@ -1,7 +1,6 @@
 """Tests for the exceptions module."""
 
 import pytest
-from unittest.mock import AsyncMock, patch
 
 from mcp import McpError
 

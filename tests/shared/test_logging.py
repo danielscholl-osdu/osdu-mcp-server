@@ -1,9 +1,7 @@
 """Tests for logging manager."""
 
-import io
 import json
 import logging
-import sys
 import unittest
 from unittest.mock import patch, MagicMock
 

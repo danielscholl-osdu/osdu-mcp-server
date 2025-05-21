@@ -1,8 +1,5 @@
 """Tests for the MCP server integration."""
 
-import pytest
-from unittest.mock import patch
-
 from osdu_mcp_server.server import mcp
 from osdu_mcp_server.tools.health_check import health_check
 from osdu_mcp_server.tools.schema import (

@@ -4,12 +4,9 @@ import pytest
 from aioresponses import aioresponses
 from unittest.mock import patch, MagicMock
 import os
-import re
 from datetime import datetime, timedelta
-from urllib.parse import quote
 
 from azure.core.credentials import AccessToken
-from osdu_mcp_server.shared.exceptions import OSMCPAPIError
 
 from osdu_mcp_server.tools.schema.create import schema_create
 from osdu_mcp_server.tools.schema.update import schema_update

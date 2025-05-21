@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 
 from azure.core.credentials import AccessToken
 
-from osdu_mcp_server.tools.schema import get as schema_get_module
 from osdu_mcp_server.tools.schema.get import schema_get
 
 
