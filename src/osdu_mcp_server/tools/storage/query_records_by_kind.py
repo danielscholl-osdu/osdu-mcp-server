@@ -18,12 +18,12 @@ async def storage_query_records_by_kind(
     cursor: Optional[str] = None
 ) -> Dict:
     """Get record IDs of a specific kind.
-    
+
     Args:
         kind: Required string - Kind to query for
         limit: Optional integer - Maximum number of results (default: 10)
         cursor: Optional string - Cursor for pagination
-    
+
     Returns:
         Dictionary containing query results with the structure:
         {
@@ -41,11 +41,11 @@ async def storage_query_records_by_kind(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Query records by kind
         response = await client.query_records_by_kind(kind, limit, cursor)
-        
+
         # Build response
         result = {
             "success": True,
@@ -54,7 +54,7 @@ async def storage_query_records_by_kind(
             "count": len(response.get("results", [])),
             "partition": config.get("server", "data_partition")
         }
-        
+
         logger.info(
             f"Found {result['count']} records of kind {kind}",
             extra={
@@ -65,8 +65,8 @@ async def storage_query_records_by_kind(
                 "has_cursor": bool(cursor)
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

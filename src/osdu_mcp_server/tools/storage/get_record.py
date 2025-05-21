@@ -17,11 +17,11 @@ async def storage_get_record(
     attributes: Optional[List[str]] = None
 ) -> Dict:
     """Get the latest version of a record by ID.
-    
+
     Args:
         id: Required string - Record ID
         attributes: Optional array of strings - Specific data fields to return
-    
+
     Returns:
         Dictionary containing record information with the structure:
         {
@@ -43,18 +43,18 @@ async def storage_get_record(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Get the record
         record = await client.get_record(id, attributes)
-        
+
         # Build response
         result = {
             "success": True,
             "record": record,
             "partition": config.get("server", "data_partition")
         }
-        
+
         logger.info(
             f"Retrieved record {id}",
             extra={
@@ -63,8 +63,8 @@ async def storage_get_record(
                 "has_attributes": bool(attributes)
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

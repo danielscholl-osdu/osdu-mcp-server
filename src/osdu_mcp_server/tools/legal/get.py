@@ -18,10 +18,10 @@ async def legaltag_get(
     name: str
 ) -> Dict:
     """Retrieve a specific legal tag by name.
-    
+
     Args:
         name: Name of the legal tag (can include partition prefix or not)
-    
+
     Returns:
         Dictionary containing legal tag details with the following structure:
         {
@@ -39,18 +39,18 @@ async def legaltag_get(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = LegalClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Get legal tag
         response = await client.get_legal_tag(name)
-        
+
         # Extract tag data
         tag = response
         full_name = tag.get("name", name)
-        
+
         # Build response
         result = {
             "success": True,
@@ -59,7 +59,7 @@ async def legaltag_get(
             "simplifiedName": client.simplify_tag_name(full_name),
             "partition": partition
         }
-        
+
         logger.info(
             "Retrieved legal tag successfully",
             extra={
@@ -68,8 +68,8 @@ async def legaltag_get(
                 "partition": partition
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

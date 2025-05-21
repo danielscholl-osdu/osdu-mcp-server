@@ -54,17 +54,17 @@ class TestLoggingManager(unittest.TestCase):
                 mock_config_instance = MagicMock()
                 mock_config_instance.get.side_effect = lambda section, key, default=None: True if section == "logging" and key == "enabled" else "INFO" if section == "logging" and key == "level" else default
                 mock_config.return_value = mock_config_instance
-        
+
                 # Create logging manager and configure
                 manager = LoggingManager(mock_config_instance)
-                
+
                 # Get the osdu_mcp logger and remove any existing handlers
                 test_logger = logging.getLogger("osdu_mcp")
                 for handler in test_logger.handlers[:]:
                     test_logger.removeHandler(handler)
-                    
+
                 manager.configure()
-        
+
                 # Verify log level
                 self.assertEqual(test_logger.level, logging.INFO)
 
@@ -72,7 +72,7 @@ class TestLoggingManager(unittest.TestCase):
         """Test JSON formatter formats logs correctly."""
         # Create formatter directly
         formatter = JSONFormatter()
-        
+
         # Create a log record
         record = logging.LogRecord(
             name="test_logger",
@@ -83,16 +83,16 @@ class TestLoggingManager(unittest.TestCase):
             args={},
             exc_info=None
         )
-        
+
         # Add extra fields
         record.extra = {"test_field": "test_value"}
-        
+
         # Format the record
         formatted = formatter.format(record)
-        
+
         # Parse the JSON
         log_json = json.loads(formatted)
-        
+
         # Verify JSON structure
         self.assertEqual(log_json["level"], "INFO")
         self.assertEqual(log_json["message"], "Test message")
@@ -121,10 +121,10 @@ class TestLoggingManager(unittest.TestCase):
             mock_config_instance = MagicMock()
             mock_config_instance.get.side_effect = lambda section, key, default=None: True if section == "logging" and key == "enabled" else "DEBUG" if section == "logging" and key == "level" else default
             mock_config.return_value = mock_config_instance
-            
+
             # Configure logging using global function
             configure_logging()
-            
+
             # Verify we didn't modify the root logger
             root_logger = logging.getLogger()
             self.assertEqual(root_logger.level, logging.WARNING)  # Default root logger level

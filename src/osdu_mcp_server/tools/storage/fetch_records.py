@@ -17,11 +17,11 @@ async def storage_fetch_records(
     attributes: Optional[List[str]] = None
 ) -> Dict:
     """Retrieve multiple records at once.
-    
+
     Args:
         records: Required array of strings - Record IDs (max 100)
         attributes: Optional array of strings - Specific data fields to return
-    
+
     Returns:
         Dictionary containing multiple records with the structure:
         {
@@ -44,11 +44,11 @@ async def storage_fetch_records(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Fetch multiple records
         response = await client.fetch_records(records, attributes)
-        
+
         # Build response
         result = {
             "success": True,
@@ -57,11 +57,11 @@ async def storage_fetch_records(
             "invalidRecords": response.get("invalidRecords", []),
             "partition": config.get("server", "data_partition")
         }
-        
+
         # Include retry records if present
         if "retryRecords" in response:
             result["retryRecords"] = response["retryRecords"]
-        
+
         logger.info(
             f"Fetched {result['count']} records out of {len(records)} requested",
             extra={
@@ -72,8 +72,8 @@ async def storage_fetch_records(
                 "has_attributes": bool(attributes)
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

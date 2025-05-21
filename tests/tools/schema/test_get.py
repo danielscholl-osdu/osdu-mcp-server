@@ -46,12 +46,12 @@ async def test_schema_get_success():
             "required": ["name"]
         }
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -59,27 +59,27 @@ async def test_schema_get_success():
         'AZURE_TENANT_ID': 'test-tenant-id',
         'AZURE_CLIENT_SECRET': 'test-secret'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/schema-service/v1/schema/osdu:wks:wellbore:1.0.0",
                     payload=mock_response
                 )
-                
+
                 result = await schema_get(id="osdu:wks:wellbore:1.0.0")
-        
+
         assert result["success"] is True
         assert result["id"] == "osdu:wks:wellbore:1.0.0"
         assert result["partition"] == "opendes"
         assert "schemaInfo" in result
         assert "schema" in result
-        
+
         # Check schema details
         assert result["schemaInfo"]["schemaIdentity"]["authority"] == "osdu"
         assert result["schemaInfo"]["schemaIdentity"]["source"] == "wks"

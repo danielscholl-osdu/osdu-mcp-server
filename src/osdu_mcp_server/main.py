@@ -8,7 +8,7 @@ def main() -> None:
     """Run the MCP server."""
     # Configure logging based on environment variables
     configure_logging()
-    
+
     # Run the MCP server
     mcp.run()
 

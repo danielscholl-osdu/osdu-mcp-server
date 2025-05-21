@@ -42,10 +42,10 @@ async def test_handle_osdu_exceptions_auth_error():
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPAuthError("Auth failed")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Authentication error: Auth failed" in str(exc_info.value)
 
 
@@ -55,10 +55,10 @@ async def test_handle_osdu_exceptions_api_error():
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPAPIError("API failed", status_code=500)
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "OSDU API error (HTTP 500): API failed" in str(exc_info.value)
 
 
@@ -68,10 +68,10 @@ async def test_handle_osdu_exceptions_config_error():
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPConfigError("Config missing")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Configuration error: Config missing" in str(exc_info.value)
 
 
@@ -81,10 +81,10 @@ async def test_handle_osdu_exceptions_connection_error():
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPConnectionError("Connection lost")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Connection error: Connection lost" in str(exc_info.value)
 
 
@@ -94,10 +94,10 @@ async def test_handle_osdu_exceptions_base_error():
     @handle_osdu_exceptions(default_message="Custom error")
     async def failing_func():
         raise OSMCPError("Base error")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Custom error: Base error" in str(exc_info.value)
 
 
@@ -107,10 +107,10 @@ async def test_handle_osdu_exceptions_unexpected_error():
     @handle_osdu_exceptions
     async def failing_func():
         raise ValueError("Unexpected")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Unexpected error in OSDU operation: Unexpected" in str(exc_info.value)
 
 
@@ -120,7 +120,7 @@ async def test_handle_osdu_exceptions_success():
     @handle_osdu_exceptions
     async def successful_func():
         return "success"
-    
+
     result = await successful_func()
     assert result == "success"
 
@@ -131,10 +131,10 @@ async def test_handle_osdu_exceptions_with_parameters():
     @handle_osdu_exceptions(default_message="Test operation failed")
     async def failing_func():
         raise OSMCPError("Error")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "Test operation failed: Error" in str(exc_info.value)
 
 
@@ -144,8 +144,8 @@ async def test_handle_osdu_exceptions_without_parameters():
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPError("Error")
-    
+
     with pytest.raises(McpError) as exc_info:
         await failing_func()
-    
+
     assert "OSDU operation failed: Error" in str(exc_info.value)

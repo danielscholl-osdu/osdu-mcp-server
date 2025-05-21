@@ -24,17 +24,17 @@ async def legaltag_update(
     extension_properties: Optional[Dict[str, Any]] = None
 ) -> Dict:
     """Update an existing legal tag.
-    
+
     Args:
         name: Legal tag name (with or without partition prefix)
         description: New description
         contract_id: New contract ID
         expiration_date: New expiration date (YYYY-MM-DD format)
         extension_properties: New custom properties
-    
+
     Returns:
         Dictionary containing updated legal tag
-    
+
     Note: Requires OSDU_MCP_ENABLE_WRITE_MODE=true
     """
     # Check write protection
@@ -43,15 +43,15 @@ async def legaltag_update(
             "Legal tag write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
             status_code=403
         )
-    
+
     config = ConfigManager()
     auth = AuthHandler(config)
     client = LegalClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Update legal tag
         response = await client.update_legal_tag(
             name=name,
@@ -60,10 +60,10 @@ async def legaltag_update(
             expiration_date=expiration_date,
             extension_properties=extension_properties
         )
-        
+
         # Extract tag data
         tag = response
-        
+
         # Build response
         result = {
             "success": True,
@@ -72,7 +72,7 @@ async def legaltag_update(
             "write_enabled": True,
             "partition": partition
         }
-        
+
         logger.info(
             "Updated legal tag successfully",
             extra={
@@ -80,7 +80,7 @@ async def legaltag_update(
                 "partition": partition
             }
         )
-        
+
         # Audit log for write operation
         logger.audit(
             "Legal tag updated",
@@ -91,8 +91,8 @@ async def legaltag_update(
                 "user": "authenticated_user"  # Should be extracted from auth context
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

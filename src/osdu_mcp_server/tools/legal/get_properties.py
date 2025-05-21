@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 @handle_osdu_exceptions
 async def legaltag_get_properties() -> Dict:
     """Get allowed values for legal tag properties.
-    
+
     Returns:
         Dictionary containing allowed property values with the following structure:
         {
@@ -53,20 +53,20 @@ async def legaltag_get_properties() -> Dict:
     config = ConfigManager()
     auth = AuthHandler(config)
     client = LegalClient(config, auth)
-    
+
     try:
         # Get properties
         response = await client.get_legal_tag_properties()
-        
+
         # Build response
         result = {
             "success": True,
             "properties": response
         }
-        
+
         logger.info("Retrieved legal tag properties successfully")
-        
+
         return result
-        
+
     finally:
         await client.close()

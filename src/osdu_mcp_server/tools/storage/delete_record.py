@@ -14,10 +14,10 @@ logger = get_logger(__name__)
 @handle_osdu_exceptions
 async def storage_delete_record(id: str) -> Dict:
     """Logically delete a record (can be restored).
-    
+
     Args:
         id: Required string - Record ID to delete
-    
+
     Returns:
         Dictionary containing deletion confirmation with the structure:
         {
@@ -27,17 +27,17 @@ async def storage_delete_record(id: str) -> Dict:
             "delete_enabled": bool,
             "partition": str
         }
-    
+
     Note: Requires OSDU_MCP_ENABLE_DELETE_MODE=true
     """
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Delete the record
         await client.delete_record(id)
-        
+
         # Build response - delete endpoint may return 204 No Content
         result = {
             "success": True,
@@ -46,7 +46,7 @@ async def storage_delete_record(id: str) -> Dict:
             "delete_enabled": True,
             "partition": config.get("server", "data_partition")
         }
-        
+
         logger.warning(
             f"Successfully deleted record {id}",
             extra={
@@ -55,8 +55,8 @@ async def storage_delete_record(id: str) -> Dict:
                 "destructive": True
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

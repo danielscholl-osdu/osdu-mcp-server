@@ -42,7 +42,7 @@ async def partition_list(
         OSMCPError: For any errors during the operation
     """
     trace_id = get_trace_id()
-    
+
     # Log the operation
     logger.info(json.dumps({
         "timestamp": datetime.utcnow().isoformat(),
@@ -53,32 +53,32 @@ async def partition_list(
         "include_count": include_count,
         "detailed": detailed,
     }))
-    
+
     try:
         # Initialize dependencies
         config = ConfigManager()
         auth_handler = AuthHandler(config)
         client = PartitionClient(config, auth_handler)
-        
+
         # Get partitions
         partitions = await client.list_partitions()
-        
+
         # Build response
         response = {
             "success": True,
             "partitions": partitions,
         }
-        
+
         if include_count:
             response["count"] = len(partitions)
-            
+
         if detailed:
             response["metadata"] = {
                 "timestamp": datetime.utcnow().isoformat(),
                 "trace_id": trace_id,
                 "server_url": config.get("server", "url"),
             }
-        
+
         # Log successful response
         logger.info(json.dumps({
             "timestamp": datetime.utcnow().isoformat(),
@@ -88,9 +88,9 @@ async def partition_list(
             "action": "partition_list_success",
             "partition_count": len(partitions),
         }))
-        
+
         return response
-        
+
     except OSMCPError as e:
         # Log error
         logger.error(json.dumps({
@@ -102,13 +102,13 @@ async def partition_list(
             "error_type": type(e).__name__,
             "error_message": str(e),
         }))
-        
+
         return {
             "success": False,
             "partitions": [],
             "error": str(e),
         }
-        
+
     finally:
         # Clean up resources
         if 'client' in locals():

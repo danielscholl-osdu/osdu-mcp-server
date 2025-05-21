@@ -20,18 +20,18 @@ async def schema_search(
     # Text search parameters
     text: Optional[str] = None,
     search_in: List[str] = None,
-    
+
     # Version filtering
     version_pattern: Optional[str] = None,
-    
+
     # Rich filtering
     filter: Optional[Dict[str, Union[str, List[str]]]] = None,
-    
+
     # Common parameters
     latest_version: bool = False,
     limit: int = 100,
     offset: int = 0,
-    
+
     # Advanced options
     include_content: bool = False,
     sort_by: str = "dateCreated",
@@ -70,13 +70,13 @@ async def schema_search(
     Example Usage:
         # Find schemas with version 1.1.0
         schema_search(version_pattern="1.1.0")
-        
+
         # Find schemas about pressure in SHARED scope
         schema_search(
             text="pressure",
             filter={"scope": "SHARED"}
         )
-        
+
         # Find schemas from multiple authorities
         schema_search(
             filter={
@@ -84,7 +84,7 @@ async def schema_search(
                 "status": "PUBLISHED"
             }
         )
-        
+
         # Find schemas with 1.1.* versions across all scopes
         schema_search(
             version_pattern="1.1.*",
@@ -95,22 +95,22 @@ async def schema_search(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = SchemaClient(config, auth)
-    
+
     # Default search fields if not provided
     if search_in is None:
         search_in = ["title", "description", "properties"]
-    
+
     # Initialize filter if not provided
     filter = filter or {}
-    
+
     # Analyze what can be server-side filtered
     server_filters = {}
     client_filters = {}
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Process server-side filtering
         # These are filters that can be directly passed to the API
         if isinstance(filter.get("authority"), str):
@@ -123,7 +123,7 @@ async def schema_search(
             server_filters["status"] = filter["status"]
         if isinstance(filter.get("scope"), str):
             server_filters["scope"] = filter["scope"]
-            
+
         # Collect filters that need client-side processing
         # These include array filters and other advanced criteria
         for key, value in filter.items():
@@ -131,11 +131,11 @@ async def schema_search(
                 client_filters[key] = value
             elif key not in ["authority", "source", "entity", "status", "scope"]:
                 client_filters[key] = value
-        
+
         # Apply server-side filtering through the API
         logger.info(f"Executing schema list with server filters: {server_filters}")
         api_limit = min(1000, limit * 2)  # Request more to account for client filtering
-        
+
         try:
             # Make API request with server-side filters using search_schemas which internally redirects
             # to list_schemas with the appropriate parameters - this ensures forward compatibility
@@ -146,15 +146,15 @@ async def schema_search(
                 limit=api_limit,
                 offset=offset
             )
-            
+
             # Extract schemas from response - API returns "schemaInfos" but we map to "schemas" for consistency
             schemas = response.get("schemaInfos", [])
             if not schemas:
                 # Fallback - though schemaInfos is the expected field name from the API
                 schemas = response.get("schemas", [])
-                
+
             logger.info(f"Retrieved {len(schemas)} schemas from API response")
-            
+
         except Exception as e:
             logger.error(f"Error during schema search: {str(e)}")
             return {
@@ -162,11 +162,11 @@ async def schema_search(
                 "error": f"Failed to retrieve schemas: {str(e)}",
                 "partition": partition
             }
-        
+
         total_count = response.get("totalCount", len(schemas))
-        
+
         logger.info(f"Retrieved {len(schemas)} schemas from server, applying client-side filtering")
-        
+
         # Apply client-side filtering
         filtered_schemas = []
         for schema in schemas:
@@ -176,10 +176,10 @@ async def schema_search(
                     matches = await _matches_text_search(schema, text, search_in, include_content, client)
                     if not matches:
                         continue
-                
+
                 # Add schema to filtered results
                 filtered_schemas.append(schema)
-                
+
                 # Fetch full schema content if requested
                 if include_content and "id" in schema.get("schemaIdentity", {}):
                     schema_id = schema["schemaIdentity"]["id"]
@@ -188,16 +188,16 @@ async def schema_search(
                         schema["schemaContent"] = schema_content.get("schema", {})
                     except Exception as e:
                         logger.warning(f"Failed to fetch schema content for {schema_id}: {e}")
-        
+
         # Apply sorting if needed
         if sort_by:
             filtered_schemas = _sort_schemas(filtered_schemas, sort_by, sort_order)
-        
+
         # Apply pagination
         start_idx = 0
         end_idx = min(limit, len(filtered_schemas))
         paginated_schemas = filtered_schemas[start_idx:end_idx]
-        
+
         # Build response
         result = {
             "success": True,
@@ -209,7 +209,7 @@ async def schema_search(
             "filteredCount": len(filtered_schemas),  # Additional info for transparency
             "query": text if text else None  # Include search query for reference
         }
-        
+
         logger.info(
             "Schema search completed successfully",
             extra={
@@ -219,9 +219,9 @@ async def schema_search(
                 "returned": len(paginated_schemas)
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()
 
@@ -230,12 +230,12 @@ def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Option
     """Apply client-side filters to a schema."""
     # Extract schema identity for easier access
     schema_identity = schema.get("schemaIdentity", {})
-    
+
     # Check array-based filters
     for key, values in filters.items():
         if not isinstance(values, list):
             continue
-            
+
         if key == "authority" and schema_identity.get("authority") not in values:
             return False
         elif key == "source" and schema_identity.get("source") not in values:
@@ -246,17 +246,17 @@ def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Option
             return False
         elif key == "scope" and schema.get("scope") not in values:
             return False
-    
+
     # Check version pattern if provided
     if version_pattern:
         major = schema_identity.get("schemaVersionMajor", 0)
         minor = schema_identity.get("schemaVersionMinor", 0)
         patch = schema_identity.get("schemaVersionPatch", 0)
         version_str = f"{major}.{minor}.{patch}"
-        
+
         if not fnmatch.fnmatch(version_str, version_pattern):
             return False
-    
+
     return True
 
 
@@ -270,10 +270,10 @@ async def _matches_text_search(
     """Check if schema matches text search criteria."""
     # Convert to lowercase for case-insensitive search
     text_lower = text.lower()
-    
+
     # Search in schema metadata
     schema_identity = schema.get("schemaIdentity", {})
-    
+
     # Check in identity fields
     if "id" in search_fields and schema_identity.get("id", "").lower().find(text_lower) != -1:
         return True
@@ -283,7 +283,7 @@ async def _matches_text_search(
         return True
     if "entityType" in search_fields and schema_identity.get("entityType", "").lower().find(text_lower) != -1:
         return True
-    
+
     # Need to fetch full schema if searching in content
     if any(field in search_fields for field in ["title", "description", "properties", "content"]):
         if include_content and "schemaContent" in schema:
@@ -293,24 +293,24 @@ async def _matches_text_search(
                 schema_id = schema_identity.get("id")
                 if not schema_id:
                     return False
-                    
+
                 schema_data = await client.get_schema(schema_id)
                 schema_content = schema_data.get("schema", {})
             except Exception:
                 return False
-        
+
         # Search in schema content fields
         if "title" in search_fields and schema_content.get("title", "").lower().find(text_lower) != -1:
             return True
         if "description" in search_fields and schema_content.get("description", "").lower().find(text_lower) != -1:
             return True
-        
+
         # Search in properties (recursively)
         if "properties" in search_fields:
             properties = schema_content.get("properties", {})
             if _search_in_object(properties, text_lower):
                 return True
-    
+
     return False
 
 
@@ -318,22 +318,22 @@ def _search_in_object(obj: Dict, text: str) -> bool:
     """Recursively search for text in a nested object."""
     if not isinstance(obj, dict):
         return False
-        
+
     # Search in current object
     for key, value in obj.items():
         # Check if text is in key
         if text in key.lower():
             return True
-            
+
         # Check if text is in string value
         if isinstance(value, str) and text in value.lower():
             return True
-            
+
         # Recursively check nested objects
         elif isinstance(value, dict):
             if _search_in_object(value, text):
                 return True
-                
+
         # Check in list elements
         elif isinstance(value, list):
             for item in value:
@@ -341,7 +341,7 @@ def _search_in_object(obj: Dict, text: str) -> bool:
                     return True
                 elif isinstance(item, str) and text in item.lower():
                     return True
-    
+
     return False
 
 
@@ -358,10 +358,10 @@ def _sort_schemas(schemas: List[Dict], sort_by: str, sort_order: str) -> List[Di
         "id": ["schemaIdentity", "id"],
         "version": ["schemaIdentity", "schemaVersionMajor", "schemaVersionMinor", "schemaVersionPatch"]
     }
-    
+
     # Get actual field(s) to sort by
     sort_fields = sort_field_mapping.get(sort_by, sort_by)
-    
+
     # Sort schemas
     def _get_sort_key(schema):
         if isinstance(sort_fields, list):
@@ -378,12 +378,12 @@ def _sort_schemas(schemas: List[Dict], sort_by: str, sort_order: str) -> List[Di
         else:
             # For direct fields
             return schema.get(sort_fields)
-    
+
     # Sort with None values last
     sorted_schemas = sorted(
         schemas,
         key=lambda s: (_get_sort_key(s) is None, _get_sort_key(s)),
         reverse=(sort_order.upper() == "DESC")
     )
-    
+
     return sorted_schemas

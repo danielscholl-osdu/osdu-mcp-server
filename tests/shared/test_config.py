@@ -57,7 +57,7 @@ def test_config_manager_parse_boolean():
         ("no", False),
         ("0", False),
     ]
-    
+
     for env_value, expected in test_cases:
         with patch.dict(os.environ, {"OSDU_MCP_AUTH_ALLOW_CLI": env_value}):
             config = ConfigManager()
@@ -72,7 +72,7 @@ def test_config_manager_parse_numbers():
         ("0", 0),
         ("-1", -1),
     ]
-    
+
     for env_value, expected in test_cases:
         with patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": env_value}):
             config = ConfigManager()
@@ -99,10 +99,10 @@ auth:
     with patch("builtins.open", mock_open(read_data=yaml_content)), \
          patch("pathlib.Path.exists", return_value=True), \
          patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": "30"}):
-        
+
         config = ConfigManager()
         all_config = config.get_all_config()
-        
+
         assert all_config["server"]["url"] == "https://yaml-osdu.com"
         assert all_config["server"]["timeout"] == 30
         assert all_config["auth"]["scope"] == "yaml-scope"
@@ -117,6 +117,6 @@ server:
 """
     with patch("builtins.open", mock_open(read_data=yaml_content)), \
          patch("pathlib.Path.exists", return_value=True):
-        
+
         config = ConfigManager(config_file=custom_path)
         assert config.get("server", "url") == "https://custom-osdu.com"

@@ -47,11 +47,11 @@ async def partition_update(
         OSMCPError: For any errors during the operation
     """
     trace_id = get_trace_id()
-    
+
     # Check write permissions first
     import os
     write_enabled = os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true"
-    
+
     # Log the operation
     logger.info(json.dumps({
         "timestamp": datetime.utcnow().isoformat(),
@@ -64,7 +64,7 @@ async def partition_update(
         "dry_run": dry_run,
         "property_count": len(properties),
     }))
-    
+
     # Check write permissions before proceeding
     if not write_enabled:
         error_msg = "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable partition updates."
@@ -76,7 +76,7 @@ async def partition_update(
             "action": "write_operation_blocked",
             "partition_id": partition_id,
         }))
-        
+
         return {
             "success": False,
             "updated": False,
@@ -85,7 +85,7 @@ async def partition_update(
             "dry_run": dry_run,
             "error": error_msg,
         }
-    
+
     if dry_run:
         # Simulate the operation
         logger.info(json.dumps({
@@ -96,7 +96,7 @@ async def partition_update(
             "action": "partition_update_dry_run",
             "partition_id": partition_id,
         }))
-        
+
         return {
             "success": True,
             "updated": False,
@@ -105,16 +105,16 @@ async def partition_update(
             "dry_run": True,
             "message": "Dry run completed. Partition would be updated with the provided properties.",
         }
-    
+
     try:
         # Initialize dependencies
         config = ConfigManager()
         auth_handler = AuthHandler(config)
         client = PartitionClient(config, auth_handler)
-        
+
         # Update the partition
         result = await client.update_partition(partition_id, properties)
-        
+
         # Log successful update
         logger.info(json.dumps({
             "timestamp": datetime.utcnow().isoformat(),
@@ -124,7 +124,7 @@ async def partition_update(
             "action": "partition_update_success",
             "partition_id": partition_id,
         }))
-        
+
         return {
             "success": True,
             "updated": True,
@@ -132,7 +132,7 @@ async def partition_update(
             "write_enabled": True,
             "dry_run": False,
         }
-        
+
     except OSMCPError as e:
         # Log error
         logger.error(json.dumps({
@@ -145,7 +145,7 @@ async def partition_update(
             "error_type": type(e).__name__,
             "error_message": str(e),
         }))
-        
+
         return {
             "success": False,
             "updated": False,
@@ -154,7 +154,7 @@ async def partition_update(
             "dry_run": False,
             "error": str(e),
         }
-        
+
     finally:
         # Clean up resources
         if 'client' in locals():

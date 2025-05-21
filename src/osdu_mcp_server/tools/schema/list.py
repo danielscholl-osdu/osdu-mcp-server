@@ -25,7 +25,7 @@ async def schema_list(
     offset: int = 0
 ) -> Dict:
     """List schemas with optional filtering.
-    
+
     Args:
         authority (str, optional): Filter by authority. Examples: "osdu", "SchemaSanityTest"
         source (str, optional): Filter by source. Example: "wks"
@@ -35,7 +35,7 @@ async def schema_list(
         latest_version (bool, optional): Only return latest versions. Default: False
         limit (int, optional): Maximum results to return. Range: 1-100. Default: 10
         offset (int, optional): Pagination offset. Default: 0
-    
+
     Returns:
         Dict: List results containing:
             - success (bool): Operation success status
@@ -44,25 +44,25 @@ async def schema_list(
             - totalCount (int): Total schemas matching criteria
             - offset (int): Current pagination offset
             - partition (str): Current data partition
-    
+
     Example Usage:
         # List standard OSDU schemas
         schema_list(scope="SHARED")
-        
+
         # List wellbore-related schemas
         schema_list(entity="wellbore")
-        
+
         # List OSDU schemas with pagination
         schema_list(authority="osdu", limit=20, offset=40)
     """
     config = ConfigManager()
     auth = AuthHandler(config)
     client = SchemaClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Get schemas
         response = await client.list_schemas(
             authority=authority,
@@ -74,14 +74,14 @@ async def schema_list(
             limit=limit,
             offset=offset
         )
-        
+
         # Process response - check for both "schemaInfos" and "schemas" field
         schemas = response.get("schemaInfos", [])
         if not schemas:
             schemas = response.get("schemas", [])
-        
+
         total_count = response.get("totalCount", len(schemas))
-        
+
         # Build response
         result = {
             "success": True,
@@ -91,7 +91,7 @@ async def schema_list(
             "offset": offset,
             "partition": partition
         }
-        
+
         logger.info(
             "Retrieved schemas successfully",
             extra={
@@ -108,8 +108,8 @@ async def schema_list(
                 }
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

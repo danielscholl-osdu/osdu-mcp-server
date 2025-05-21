@@ -103,3 +103,6 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+[tool.flake8]
+ignore = ["E127"]

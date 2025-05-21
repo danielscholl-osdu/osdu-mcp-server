@@ -29,7 +29,7 @@ async def legaltag_create(
     extension_properties: Optional[Dict[str, Any]] = None
 ) -> Dict:
     """Create a new legal tag.
-    
+
     Args:
         name: Legal tag name (without partition prefix)
         description: Tag description
@@ -41,10 +41,10 @@ async def legaltag_create(
         data_type: Type of data
         expiration_date: Optional expiration date (YYYY-MM-DD format)
         extension_properties: Optional custom properties
-    
+
     Returns:
         Dictionary containing created legal tag
-    
+
     Note: Requires OSDU_MCP_ENABLE_WRITE_MODE=true
     """
     # Check write protection
@@ -53,15 +53,15 @@ async def legaltag_create(
             "Legal tag write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
             status_code=403
         )
-    
+
     config = ConfigManager()
     auth = AuthHandler(config)
     client = LegalClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Build properties
         properties = {
             "countryOfOrigin": country_of_origin,
@@ -71,23 +71,23 @@ async def legaltag_create(
             "exportClassification": export_classification,
             "dataType": data_type
         }
-        
+
         if expiration_date:
             properties["expirationDate"] = expiration_date
-            
+
         if extension_properties:
             properties["extensionProperties"] = extension_properties
-        
+
         # Create legal tag
         response = await client.create_legal_tag(
             name=name,
             description=description,
             properties=properties
         )
-        
+
         # Extract tag data
         tag = response
-        
+
         # Build response
         result = {
             "success": True,
@@ -96,7 +96,7 @@ async def legaltag_create(
             "write_enabled": True,
             "partition": partition
         }
-        
+
         logger.info(
             "Created legal tag successfully",
             extra={
@@ -104,7 +104,7 @@ async def legaltag_create(
                 "partition": partition
             }
         )
-        
+
         # Audit log for write operation
         logger.audit(
             "Legal tag created",
@@ -115,8 +115,8 @@ async def legaltag_create(
                 "user": "authenticated_user"  # Should be extracted from auth context
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

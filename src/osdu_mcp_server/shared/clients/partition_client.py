@@ -36,10 +36,10 @@ class PartitionClient(OsduClient):
             OSMCPConnectionError: For connection errors
         """
         path = f"{self._base_path}/partitions"
-        
+
         try:
             response = await self.get(path)
-            
+
             # The partition service returns a list of strings
             if isinstance(response, list):
                 logger.info(f"Retrieved {len(response)} partitions")
@@ -47,7 +47,7 @@ class PartitionClient(OsduClient):
             else:
                 logger.warning(f"Unexpected response format: {type(response)}")
                 return []
-                
+
         except OSMCPAPIError as e:
             if e.status_code == 404:
                 logger.info("No partitions found")
@@ -75,20 +75,20 @@ class PartitionClient(OsduClient):
         """
         if not partition_id or not partition_id.strip():
             raise OSMCPValidationError("Partition ID cannot be empty")
-            
+
         path = f"{self._base_path}/partitions/{partition_id}"
-        
+
         try:
             # Set custom headers for this specific request
             headers = {
                 "data-partition-id": partition_id,  # Use specific partition ID
             }
-            
+
             response = await self.get(path, headers=headers)
-            
+
             logger.info(f"Retrieved properties for partition: {partition_id}")
             return response
-            
+
         except OSMCPAPIError as e:
             if e.status_code == 404:
                 # Handle plain text 404 response
@@ -128,14 +128,14 @@ class PartitionClient(OsduClient):
             raise OSMCPValidationError("Partition ID cannot be empty")
 
         path = f"{self._base_path}/partitions/{partition_id}"
-        
+
         # Ensure sensitive properties are marked correctly
         data = {"properties": self._validate_properties(properties)}
-        
+
         headers = {
             "data-partition-id": partition_id,
         }
-        
+
         try:
             response = await self.post(path, data, headers=headers)
             logger.info(f"Created partition: {partition_id}")
@@ -168,14 +168,14 @@ class PartitionClient(OsduClient):
             raise OSMCPValidationError("Partition ID cannot be empty")
 
         path = f"{self._base_path}/partitions/{partition_id}"
-        
+
         # Ensure sensitive properties are marked correctly
         data = {"properties": self._validate_properties(properties)}
-        
+
         headers = {
             "data-partition-id": partition_id,
         }
-        
+
         try:
             response = await self.put(path, data, headers=headers)
             logger.info(f"Updated partition: {partition_id}")
@@ -204,11 +204,11 @@ class PartitionClient(OsduClient):
             raise OSMCPValidationError("Partition ID cannot be empty")
 
         path = f"{self._base_path}/partitions/{partition_id}"
-        
+
         headers = {
             "data-partition-id": partition_id,
         }
-        
+
         try:
             await self.delete(path, headers=headers)
             logger.info(f"Deleted partition: {partition_id}")
@@ -235,7 +235,7 @@ class PartitionClient(OsduClient):
             OSMCPValidationError: For invalid property format
         """
         validated = {}
-        
+
         for key, value in properties.items():
             if isinstance(value, dict):
                 # Already in correct format
@@ -248,5 +248,5 @@ class PartitionClient(OsduClient):
                     "value": value,
                     "sensitive": False
                 }
-        
+
         return validated

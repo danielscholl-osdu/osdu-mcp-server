@@ -18,12 +18,12 @@ async def schema_get(
     id: str
 ) -> Dict[str, Any]:
     """Retrieve complete schema by ID.
-    
+
     Args:
         id: Schema ID (format: authority:source:entityType:majorVersion.minorVersion.patchVersion)
             Example standard schema: "osdu:wks:AbstractAccessControlList:1.0.0"
             Example custom schema: "SchemaSanityTest:testSource:testEntity:1.1.0"
-    
+
     Returns:
         Dictionary containing schema details with the following structure:
         {
@@ -75,7 +75,7 @@ async def schema_get(
                 "scope": "SHARED"
             }
         }
-    
+
     Notes:
         - Both SHARED and INTERNAL scope schemas can be retrieved
         - Standard OSDU schemas use "osdu:" as the authority prefix
@@ -88,27 +88,27 @@ async def schema_get(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = SchemaClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Get schema
         response = await client.get_schema(id)
-        
+
         # Add success flag and partition info
         response["success"] = True
         response["partition"] = partition
-        
+
         # Enhance response to provide more context about the schema
         if "schemaInfo" in response:
             schema_info = response["schemaInfo"]
             identity = schema_info.get("schemaIdentity", {})
-            
+
             # Log status and scope for informational purposes
             status = schema_info.get("status", "UNKNOWN")
             scope = schema_info.get("scope", "UNKNOWN")
-            
+
             logger.info(
                 "Retrieved schema successfully",
                 extra={
@@ -127,8 +127,8 @@ async def schema_get(
                     "partition": partition
                 }
             )
-        
+
         return response
-        
+
     finally:
         await client.close()

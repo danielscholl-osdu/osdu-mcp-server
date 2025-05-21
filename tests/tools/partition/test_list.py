@@ -16,19 +16,19 @@ async def test_partition_list_success():
             "https://test.osdu.com/api/partition/v1/partitions",
             payload=["osdu", "tenant-a", "tenant-b"],
         )
-        
+
         with patch("osdu_mcp_server.tools.partition.list.ConfigManager") as mock_config:
             mock_config.return_value.get.return_value = "https://test.osdu.com"
             mock_config.return_value.get_required.side_effect = lambda section, key: {
                 ("server", "url"): "https://test.osdu.com",
                 ("server", "data_partition"): "osdu",
             }[(section, key)]
-            
+
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
                 mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                
+
                 result = await partition_list()
-                
+
                 assert result["success"] is True
                 assert result["partitions"] == ["osdu", "tenant-a", "tenant-b"]
                 assert result["count"] == 3
@@ -43,19 +43,19 @@ async def test_partition_list_empty():
             "https://test.osdu.com/api/partition/v1/partitions",
             payload=[],
         )
-        
+
         with patch("osdu_mcp_server.tools.partition.list.ConfigManager") as mock_config:
             mock_config.return_value.get.return_value = "https://test.osdu.com"
             mock_config.return_value.get_required.side_effect = lambda section, key: {
                 ("server", "url"): "https://test.osdu.com",
                 ("server", "data_partition"): "osdu",
             }[(section, key)]
-            
+
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
                 mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                
+
                 result = await partition_list()
-                
+
                 assert result["success"] is True
                 assert result["partitions"] == []
                 assert result["count"] == 0
@@ -71,19 +71,19 @@ async def test_partition_list_forbidden():
             status=403,
             body="Access denied",
         )
-        
+
         with patch("osdu_mcp_server.tools.partition.list.ConfigManager") as mock_config:
             mock_config.return_value.get.return_value = "https://test.osdu.com"
             mock_config.return_value.get_required.side_effect = lambda section, key: {
                 ("server", "url"): "https://test.osdu.com",
                 ("server", "data_partition"): "osdu",
             }[(section, key)]
-            
+
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
                 mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                
+
                 result = await partition_list()
-                
+
                 assert result["success"] is False
                 assert result["partitions"] == []
                 assert "Insufficient permissions" in result["error"]
@@ -98,19 +98,19 @@ async def test_partition_list_with_detailed_metadata():
             "https://test.osdu.com/api/partition/v1/partitions",
             payload=["osdu", "tenant-a"],
         )
-        
+
         with patch("osdu_mcp_server.tools.partition.list.ConfigManager") as mock_config:
             mock_config.return_value.get.return_value = "https://test.osdu.com"
             mock_config.return_value.get_required.side_effect = lambda section, key: {
                 ("server", "url"): "https://test.osdu.com",
                 ("server", "data_partition"): "osdu",
             }[(section, key)]
-            
+
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
                 mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                
+
                 result = await partition_list(detailed=True)
-                
+
                 assert result["success"] is True
                 assert result["partitions"] == ["osdu", "tenant-a"]
                 assert result["count"] == 2

@@ -15,7 +15,7 @@ async def test_storage_create_blocked_by_default():
     with patch.dict(os.environ, {}, clear=False):
         # Remove the env var if it exists
         os.environ.pop("OSDU_MCP_ENABLE_WRITE_MODE", None)
-        
+
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
                 test_record = {
@@ -24,7 +24,7 @@ async def test_storage_create_blocked_by_default():
                     "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
                     "data": {"test": "data"}
                 }
-                
+
                 try:
                     await storage_create_update_records([test_record])
                     assert False, "Expected exception was not raised"
@@ -39,7 +39,7 @@ async def test_storage_delete_blocked_by_default():
     with patch.dict(os.environ, {}, clear=False):
         # Remove the env var if it exists
         os.environ.pop("OSDU_MCP_ENABLE_DELETE_MODE", None)
-        
+
         with patch("osdu_mcp_server.tools.storage.delete_record.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.delete_record.AuthHandler"):
                 try:
@@ -56,7 +56,7 @@ async def test_storage_purge_blocked_by_default():
     with patch.dict(os.environ, {}, clear=False):
         # Remove the env var if it exists
         os.environ.pop("OSDU_MCP_ENABLE_DELETE_MODE", None)
-        
+
         with patch("osdu_mcp_server.tools.storage.purge_record.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.purge_record.AuthHandler"):
                 try:
@@ -91,11 +91,11 @@ async def test_dual_protection_independence():
         "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
         "data": {"test": "data"}
     }
-    
+
     # Test write enabled but delete disabled
     with patch.dict(os.environ, {"OSDU_MCP_ENABLE_WRITE_MODE": "true"}, clear=False):
         os.environ.pop("OSDU_MCP_ENABLE_DELETE_MODE", None)
-        
+
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
                 with patch("osdu_mcp_server.tools.storage.create_update_records.StorageClient") as mock_client:
@@ -107,12 +107,12 @@ async def test_dual_protection_independence():
                         "recordIdVersions": ["1234567890"]
                     })
                     mock_instance.close = AsyncMock()
-                    
+
                     # Create should work
                     result = await storage_create_update_records([test_record])
                     assert result["success"] is True
                     assert result["write_enabled"] is True
-        
+
         # But delete should still fail
         with patch("osdu_mcp_server.tools.storage.delete_record.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.delete_record.AuthHandler"):
@@ -129,20 +129,20 @@ async def test_record_validation():
     with patch.dict(os.environ, {"OSDU_MCP_ENABLE_WRITE_MODE": "true"}):
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
             with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
-                
+
                 # Test missing required field
                 invalid_record = {
                     "kind": "test:test:test:1.0.0",
                     "acl": {"viewers": ["test"], "owners": ["test"]},
                     # Missing legal and data fields
                 }
-                
+
                 try:
                     await storage_create_update_records([invalid_record])
                     assert False, "Expected validation exception was not raised"
                 except Exception as e:
                     assert "Missing required field" in str(e)
-                
+
                 # Test invalid ACL
                 invalid_acl_record = {
                     "kind": "test:test:test:1.0.0",
@@ -150,7 +150,7 @@ async def test_record_validation():
                     "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
                     "data": {"test": "data"}
                 }
-                
+
                 try:
                     await storage_create_update_records([invalid_acl_record])
                     assert False, "Expected validation exception was not raised"

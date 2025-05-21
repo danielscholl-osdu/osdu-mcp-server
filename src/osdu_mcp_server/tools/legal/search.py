@@ -22,14 +22,14 @@ async def legaltag_search(
     limit: Optional[int] = None
 ) -> Dict:
     """Search legal tags with filter conditions.
-    
+
     Args:
         query: Filter condition (e.g., "properties.countryOfOrigin:US")
         valid_only: If true returns only valid tags, if false returns only invalid tags
         sort_by: Field to sort by
         sort_order: "ASC" or "DESC"
         limit: Maximum results
-    
+
     Returns:
         Dictionary containing filtered legal tags with the following structure:
         {
@@ -42,16 +42,16 @@ async def legaltag_search(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = LegalClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Build query list
         query_list = []
         if query:
             query_list = [query]
-        
+
         # Search legal tags
         if query_list or sort_by or sort_order or limit:
             # Use search endpoint
@@ -64,15 +64,15 @@ async def legaltag_search(
         else:
             # Use list endpoint with valid filter
             response = await client.list_legal_tags(valid=valid_only)
-        
+
         # Process response
         legal_tags = response.get("legalTags", [])
-        
+
         # Simplify tag names for AI-friendly display
         for tag in legal_tags:
             if "name" in tag:
                 tag["simplifiedName"] = client.simplify_tag_name(tag["name"])
-        
+
         # Build response
         result = {
             "success": True,
@@ -80,7 +80,7 @@ async def legaltag_search(
             "count": len(legal_tags),
             "partition": partition
         }
-        
+
         logger.info(
             "Searched legal tags successfully",
             extra={
@@ -89,8 +89,8 @@ async def legaltag_search(
                 "partition": partition
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

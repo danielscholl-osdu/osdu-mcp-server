@@ -17,11 +17,11 @@ async def storage_purge_record(
     confirm: bool
 ) -> Dict:
     """Physically delete a record permanently (cannot be restored).
-    
+
     Args:
         id: Required string - Record ID to purge
         confirm: Required boolean - Explicit confirmation (must be true)
-    
+
     Returns:
         Dictionary containing purge confirmation with the structure:
         {
@@ -32,17 +32,17 @@ async def storage_purge_record(
             "warning": str,
             "partition": str
         }
-    
+
     Note: Requires OSDU_MCP_ENABLE_DELETE_MODE=true
     """
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Purge the record
         await client.purge_record(id, confirm)
-        
+
         # Build response - purge endpoint may return 204 No Content
         result = {
             "success": True,
@@ -52,7 +52,7 @@ async def storage_purge_record(
             "warning": "Record has been permanently deleted and cannot be recovered",
             "partition": config.get("server", "data_partition")
         }
-        
+
         logger.error(
             f"Successfully purged record {id} permanently",
             extra={
@@ -62,8 +62,8 @@ async def storage_purge_record(
                 "permanent": True
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

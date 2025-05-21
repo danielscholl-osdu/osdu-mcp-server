@@ -38,17 +38,17 @@ class AuthHandler:
         self._cached_token: Optional[AccessToken] = None
         self.mode = self._detect_authentication_mode()
         self._initialize_credential()
-    
+
     def _detect_authentication_mode(self) -> AuthenticationMode:
         """Auto-detect authentication mode based on environment variables.
-        
+
         Detection priority:
         1. Provider-specific environment variables (auto-detection)
         2. Explicit OSDU_MCP_AUTH_MODE (optional override)
-        
+
         Returns:
             AuthenticationMode: Detected authentication mode
-            
+
         Raises:
             OSMCPAuthError: If no valid authentication mode can be determined
         """
@@ -61,7 +61,7 @@ class AuthHandler:
             detected_mode = AuthenticationMode.GCP
         else:
             detected_mode = None
-            
+
         # Check for explicit override (optional)
         explicit_mode = os.environ.get("OSDU_MCP_AUTH_MODE", "").lower()
         if explicit_mode and explicit_mode in [m.value for m in AuthenticationMode]:
@@ -70,11 +70,11 @@ class AuthHandler:
                 # In production, you might want to log a warning here
                 pass
             return AuthenticationMode(explicit_mode)
-            
+
         # Use detected mode or raise error
         if detected_mode:
             return detected_mode
-        
+
         raise OSMCPAuthError(
             "Cannot detect authentication mode from environment variables. "
             "Set Azure (AZURE_CLIENT_ID), AWS (AWS_ACCESS_KEY_ID), or "
@@ -89,12 +89,12 @@ class AuthHandler:
             self._initialize_aws_credential()
         elif self.mode == AuthenticationMode.GCP:
             self._initialize_gcp_credential()
-    
+
     def _initialize_azure_credential(self) -> None:
         """Initialize Azure credential with appropriate exclusions."""
         # Auto-detect authentication method based on available credentials
         has_client_secret = bool(os.environ.get("AZURE_CLIENT_SECRET"))
-        
+
         if has_client_secret:
             # Service Principal authentication - exclude other methods
             exclude_cli = True
@@ -114,14 +114,14 @@ class AuthHandler:
             # Always exclude Visual Studio Code credential in production
             exclude_visual_studio_code_credential=True,
         )
-    
+
     def _initialize_aws_credential(self) -> None:
         """Initialize AWS credential (future implementation)."""
         raise NotImplementedError(
             "AWS authentication not yet implemented. "
             "Please use Azure authentication by setting AZURE_CLIENT_ID and AZURE_TENANT_ID."
         )
-    
+
     def _initialize_gcp_credential(self) -> None:
         """Initialize GCP credential (future implementation)."""
         raise NotImplementedError(
@@ -144,13 +144,13 @@ class AuthHandler:
             return await self._get_aws_token()
         elif self.mode == AuthenticationMode.GCP:
             return await self._get_gcp_token()
-    
+
     async def _get_azure_token(self) -> str:
         """Get Azure access token.
-        
+
         Returns:
             Valid Azure access token
-            
+
         Raises:
             OSMCPAuthError: If authentication fails
         """
@@ -165,7 +165,7 @@ class AuthHandler:
                 raise OSMCPAuthError(
                     "AZURE_CLIENT_ID environment variable is required for Azure authentication"
                 )
-            
+
             # Derive OAuth scope from client ID
             scope = f"{client_id}/.default"
 
@@ -176,7 +176,7 @@ class AuthHandler:
         except ClientAuthenticationError as e:
             # Handle specific authentication errors with user-friendly messages
             error_message = str(e).lower()
-            
+
             if "az login" in error_message or "azurecli" in error_message:
                 raise OSMCPAuthError(
                     "Authentication failed. Please run 'az login' before using OSDU MCP Server"
@@ -216,13 +216,13 @@ class AuthHandler:
                 raise OSMCPAuthError(
                     "Authentication configuration error. Please check your environment setup"
                 )
-    
+
     async def _get_aws_token(self) -> str:
         """Get AWS access token (future implementation).
-        
+
         Returns:
             Valid AWS access token
-            
+
         Raises:
             NotImplementedError: AWS authentication not yet implemented
         """
@@ -230,13 +230,13 @@ class AuthHandler:
             "AWS token retrieval not yet implemented. "
             "Please use Azure authentication by setting AZURE_CLIENT_ID and AZURE_TENANT_ID."
         )
-    
+
     async def _get_gcp_token(self) -> str:
         """Get GCP access token (future implementation).
-        
+
         Returns:
             Valid GCP access token
-            
+
         Raises:
             NotImplementedError: GCP authentication not yet implemented
         """

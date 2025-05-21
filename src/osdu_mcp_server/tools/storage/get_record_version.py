@@ -18,12 +18,12 @@ async def storage_get_record_version(
     attributes: Optional[List[str]] = None
 ) -> Dict:
     """Get a specific version of a record by ID.
-    
+
     Args:
         id: Required string - Record ID
         version: Required integer - Record version
         attributes: Optional array of strings - Specific data fields to return
-    
+
     Returns:
         Dictionary containing record information with the structure:
         {
@@ -45,18 +45,18 @@ async def storage_get_record_version(
     config = ConfigManager()
     auth = AuthHandler(config)
     client = StorageClient(config, auth)
-    
+
     try:
         # Get the specific record version
         record = await client.get_record_version(id, version, attributes)
-        
+
         # Build response
         result = {
             "success": True,
             "record": record,
             "partition": config.get("server", "data_partition")
         }
-        
+
         logger.info(
             f"Retrieved record {id} version {version}",
             extra={
@@ -66,8 +66,8 @@ async def storage_get_record_version(
                 "has_attributes": bool(attributes)
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

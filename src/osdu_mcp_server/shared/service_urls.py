@@ -6,7 +6,7 @@ from typing import Dict
 
 class OSMCPService(Enum):
     """OSDU service identifiers."""
-    
+
     STORAGE = "storage"
     SEARCH = "search"
     LEGAL = "legal"
@@ -34,10 +34,10 @@ SERVICE_BASE_URLS: Dict[OSMCPService, str] = {
 
 def get_service_base_url(service: OSMCPService) -> str:
     """Get the base URL for a given OSDU service.
-    
+
     Args:
         service: The OSDU service enum
-        
+
     Returns:
         The base URL path for the service
     """
@@ -46,10 +46,10 @@ def get_service_base_url(service: OSMCPService) -> str:
 
 def get_service_info_endpoint(service: OSMCPService) -> str:
     """Get the info/health endpoint for a given OSDU service.
-    
+
     Args:
         service: The OSDU service enum
-        
+
     Returns:
         The full path to the service info endpoint
     """

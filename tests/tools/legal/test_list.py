@@ -41,12 +41,12 @@ async def test_legaltag_list_success():
             }
         ]
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -54,26 +54,26 @@ async def test_legaltag_list_success():
         'AZURE_TENANT_ID': 'test-tenant-id',
         'AZURE_CLIENT_SECRET': 'test-secret'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=true",
                     payload=mock_response
                 )
-                
+
                 result = await legaltag_list(valid_only=True)
-        
+
         assert result["success"] is True
         assert result["count"] == 2
         assert len(result["legalTags"]) == 2
         assert result["partition"] == "opendes"
-        
+
         # Check simplified names were added
         assert result["legalTags"][0]["simplifiedName"] == "Private-USA-EHC"
         assert result["legalTags"][1]["simplifiedName"] == "Public-Global-Data"
@@ -96,12 +96,12 @@ async def test_legaltag_list_invalid_only():
             }
         ]
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -109,21 +109,21 @@ async def test_legaltag_list_invalid_only():
         'AZURE_TENANT_ID': 'test-tenant-id',
         'AZURE_CLIENT_SECRET': 'test-secret'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=false",
                     payload=mock_response
                 )
-                
+
                 result = await legaltag_list(valid_only=False)
-        
+
         assert result["success"] is True
         assert result["count"] == 1
         assert len(result["legalTags"]) == 1
@@ -136,12 +136,12 @@ async def test_legaltag_list_empty():
     mock_response = {
         "legalTags": []
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -149,21 +149,21 @@ async def test_legaltag_list_empty():
         'AZURE_TENANT_ID': 'test-tenant-id',
         'AZURE_CLIENT_SECRET': 'test-secret'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=true",
                     payload=mock_response
                 )
-                
+
                 result = await legaltag_list()
-        
+
         assert result["success"] is True
         assert result["count"] == 0
         assert len(result["legalTags"]) == 0

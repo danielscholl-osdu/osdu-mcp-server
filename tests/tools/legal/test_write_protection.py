@@ -19,7 +19,7 @@ async def test_legaltag_create_write_disabled():
     test_env = {
         'OSDU_MCP_ENABLE_WRITE_MODE': 'false'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with pytest.raises(McpError) as exc_info:
             await legaltag_create(
@@ -32,7 +32,7 @@ async def test_legaltag_create_write_disabled():
                 export_classification="EAR99",
                 data_type="First Party Data"
             )
-        
+
         assert exc_info.value.error.code == 403
         assert "Legal tag write operations are disabled" in exc_info.value.error.message
         assert "OSDU_MCP_ENABLE_WRITE_MODE=true" in exc_info.value.error.message
@@ -44,14 +44,14 @@ async def test_legaltag_update_write_disabled():
     test_env = {
         'OSDU_MCP_ENABLE_WRITE_MODE': 'false'
     }
-    
+
     with patch.dict(os.environ, test_env):
         with pytest.raises(McpError) as exc_info:
             await legaltag_update(
                 name="Test-Tag",
                 description="Updated description"
             )
-        
+
         assert exc_info.value.error.code == 403
         assert "Legal tag write operations are disabled" in exc_info.value.error.message
 
@@ -62,7 +62,7 @@ async def test_legaltag_delete_disabled():
     with patch.dict(os.environ, {}, clear=False):
         # Remove the env var if it exists
         os.environ.pop("OSDU_MCP_ENABLE_DELETE_MODE", None)
-        
+
         with patch("osdu_mcp_server.tools.legal.delete.ConfigManager"):
             with patch("osdu_mcp_server.tools.legal.delete.AuthHandler"):
                 with pytest.raises(McpError) as exc_info:
@@ -70,7 +70,7 @@ async def test_legaltag_delete_disabled():
                         name="Test-Tag",
                         confirm=True
                     )
-                
+
                 assert exc_info.value.error.code == 403
                 assert "Delete operations are disabled" in exc_info.value.error.message
                 assert "OSDU_MCP_ENABLE_DELETE_MODE=true" in exc_info.value.error.message
@@ -87,7 +87,7 @@ async def test_legaltag_delete_no_confirmation():
                         name="Test-Tag",
                         confirm=False
                     )
-                
+
                 assert exc_info.value.error.code == 400
                 assert "Deletion not confirmed" in exc_info.value.error.message
                 assert "WARNING: This will invalidate all associated data" in exc_info.value.error.message

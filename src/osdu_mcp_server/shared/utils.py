@@ -35,7 +35,7 @@ def merge_dicts(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any
 
 def get_trace_id() -> str:
     """Generate a unique trace ID for request correlation.
-    
+
     Returns:
         A UUID string for request tracing
     """

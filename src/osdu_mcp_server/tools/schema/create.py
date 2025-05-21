@@ -28,11 +28,11 @@ async def schema_create(
     description: Optional[str] = None
 ) -> Dict[str, Any]:
     """Create a new schema.
-    
+
     WARNING: This operation creates a new schema and requires write permissions.
     It requires write permissions to be enabled via OSDU_MCP_ENABLE_WRITE_MODE=true.
     Use with caution and only in controlled environments.
-    
+
     Args:
         authority: Schema authority (e.g., "mycompany")
         source: Schema source (e.g., "app")
@@ -43,7 +43,7 @@ async def schema_create(
         schema: JSON Schema definition
         status: Schema status (default: DEVELOPMENT)
         description: Schema description
-    
+
     Returns:
         Dictionary containing operation result with the following structure:
         {
@@ -54,7 +54,7 @@ async def schema_create(
             "write_enabled": true,
             "partition": "opendes"
         }
-    
+
     Notes:
         - New schemas are created in INTERNAL scope
         - SHARED scope is reserved for standard OSDU schemas
@@ -64,7 +64,7 @@ async def schema_create(
         - These transitions are irreversible
         - Basic JSON Schema validation is performed by the API
         - Minimum schema requirements: $schema (draft-07), type, properties
-        
+
     Example schema structure:
         {
             "$schema": "http://json-schema.org/draft-07/schema#",
@@ -83,7 +83,7 @@ async def schema_create(
             },
             "required": ["name"]
         }
-    
+
     Raises:
         OSMCPAPIError: If write mode is disabled or schema creation fails
     """
@@ -93,38 +93,38 @@ async def schema_create(
             "Schema write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
             status_code=403
         )
-    
+
     config = ConfigManager()
     auth = AuthHandler(config)
     client = SchemaClient(config, auth)
-    
+
     try:
         # Get current partition
         partition = config.get("server", "data_partition")
-        
+
         # Format schema ID for logging and response
         schema_id = client.format_schema_id(
             authority, source, entity,
             major_version, minor_version, patch_version
         )
-        
+
         # Ensure schema has the minimum required elements
         if "$schema" not in schema:
             schema["$schema"] = "http://json-schema.org/draft-07/schema#"
-        
+
         if "type" not in schema:
             schema["type"] = "object"
-        
+
         if "properties" not in schema and schema["type"] == "object":
             schema["properties"] = {}
-        
+
         # Set title and description if provided and not already in schema
         if description and "description" not in schema:
             schema["description"] = description
-            
+
         if description and "title" not in schema:
             schema["title"] = description.split('.')[0] if '.' in description else description
-        
+
         # Create schema
         response = await client.create_schema(
             authority=authority,
@@ -137,7 +137,7 @@ async def schema_create(
             status=status,
             description=description
         )
-        
+
         # Build response
         result = {
             "success": True,
@@ -147,7 +147,7 @@ async def schema_create(
             "write_enabled": True,
             "partition": partition
         }
-        
+
         # Include API response details if available
         if isinstance(response, dict) and response:
             # Include relevant fields from the API response
@@ -155,7 +155,7 @@ async def schema_create(
                 result["schema_id"] = response["id"]
             if "status" in response:
                 result["api_status"] = response["status"]
-        
+
         logger.info(
             "Created schema successfully",
             extra={
@@ -168,8 +168,8 @@ async def schema_create(
                 "status": status
             }
         )
-        
+
         return result
-        
+
     finally:
         await client.close()

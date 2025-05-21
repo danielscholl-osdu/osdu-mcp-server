@@ -19,7 +19,7 @@ async def test_schema_create_write_protection():
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -28,13 +28,13 @@ async def test_schema_create_write_protection():
         'AZURE_CLIENT_SECRET': 'test-secret',
         'OSDU_MCP_ENABLE_WRITE_MODE': 'false'  # Write protection enabled
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with pytest.raises(Exception) as excinfo:
                 await schema_create(
                     authority="test",
@@ -45,7 +45,7 @@ async def test_schema_create_write_protection():
                     patch_version=0,
                     schema={"type": "object"}
                 )
-            
+
             assert "Schema write operations are disabled" in str(excinfo.value)
             assert "OSDU_MCP_ENABLE_WRITE_MODE=true" in str(excinfo.value)
 
@@ -57,7 +57,7 @@ async def test_schema_update_write_protection():
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -66,19 +66,19 @@ async def test_schema_update_write_protection():
         'AZURE_CLIENT_SECRET': 'test-secret',
         'OSDU_MCP_ENABLE_WRITE_MODE': 'false'  # Write protection enabled
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with pytest.raises(Exception) as excinfo:
                 await schema_update(
                     id="test:test:test:1.0.0",
                     schema={"type": "object"}
                 )
-            
+
             assert "Schema write operations are disabled" in str(excinfo.value)
             assert "OSDU_MCP_ENABLE_WRITE_MODE=true" in str(excinfo.value)
 
@@ -90,12 +90,12 @@ async def test_schema_create_write_enabled():
         "id": "test:test:test:1.0.0",
         "status": "DEVELOPMENT"
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -104,19 +104,19 @@ async def test_schema_create_write_enabled():
         'AZURE_CLIENT_SECRET': 'test-secret',
         'OSDU_MCP_ENABLE_WRITE_MODE': 'true'  # Write protection disabled
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 mocked.post(
                     "https://test.osdu.com/api/schema-service/v1/schema",
                     payload=mock_response
                 )
-                
+
                 result = await schema_create(
                     authority="test",
                     source="test",
@@ -126,7 +126,7 @@ async def test_schema_create_write_enabled():
                     patch_version=0,
                     schema={"type": "object"}
                 )
-            
+
             assert result["success"] is True
             assert result["created"] is True
             assert result["id"] == "test:test:test:1.0.0"
@@ -151,17 +151,17 @@ async def test_schema_update_write_enabled():
             "status": "DEVELOPMENT"
         }
     }
-    
+
     mock_update_response = {
         "id": "test:test:test:1.0.0",
         "status": "DEVELOPMENT"
     }
-    
+
     mock_token = AccessToken(
         token="fake-token",
         expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
     )
-    
+
     test_env = {
         'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
         'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
@@ -170,13 +170,13 @@ async def test_schema_update_write_enabled():
         'AZURE_CLIENT_SECRET': 'test-secret',
         'OSDU_MCP_ENABLE_WRITE_MODE': 'true'  # Write protection disabled
     }
-    
+
     with patch.dict(os.environ, test_env):
         with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
-            
+
             with aioresponses() as mocked:
                 # Mock both raw URL and quoted URL to handle aioresponses URL normalization
                 test_schema_url = "https://test.osdu.com/api/schema-service/v1/schema/test:test:test:1.0.0"
@@ -189,12 +189,12 @@ async def test_schema_update_write_enabled():
                     "https://test.osdu.com/api/schema-service/v1/schema",
                     payload=mock_update_response
                 )
-                
+
                 result = await schema_update(
                     id="test:test:test:1.0.0",
                     schema={"type": "object", "properties": {"name": {"type": "string"}}}
                 )
-            
+
             assert result["success"] is True
             assert result["updated"] is True
             assert result["id"] == "test:test:test:1.0.0"
