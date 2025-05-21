@@ -85,7 +85,7 @@ class LoggingManager:
             
         # Use module name with osdu_mcp prefix to ensure isolation
         # We're not modifying the root logger so this shouldn't affect existing tests
-        logger_name = f"osdu_mcp.{name}" if not "pytest" in sys.modules else f"osdu_mcp_test.{name}"
+        logger_name = f"osdu_mcp.{name}" if "pytest" not in sys.modules else f"osdu_mcp_test.{name}"
         return logging.getLogger(logger_name)
 
 
