@@ -1,7 +1,6 @@
 """Tool for creating or updating records."""
 
 from typing import Dict, List
-import logging
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler

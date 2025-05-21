@@ -1,7 +1,7 @@
 """Tool for advanced schema discovery with rich filtering and text search."""
 
 import fnmatch
-from typing import Dict, Optional, List, Any, Union
+from typing import Dict, Optional, List, Union
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
