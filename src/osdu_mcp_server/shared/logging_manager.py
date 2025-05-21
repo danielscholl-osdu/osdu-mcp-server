@@ -135,9 +135,11 @@ class JSONFormatter(logging.Formatter):
 # Global instance for easy access
 _manager = LoggingManager()
 
+
 def configure_logging() -> None:
     """Configure logging system (convenience function)."""
     _manager.configure()
+
 
 def get_logger(name: str) -> logging.Logger:
     """Get a configured logger (convenience function).
