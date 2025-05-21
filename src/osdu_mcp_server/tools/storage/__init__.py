@@ -12,7 +12,7 @@ from .purge_record import storage_purge_record
 
 __all__ = [
     "storage_create_update_records",
-    "storage_get_record", 
+    "storage_get_record",
     "storage_get_record_version",
     "storage_list_record_versions",
     "storage_query_records_by_kind",

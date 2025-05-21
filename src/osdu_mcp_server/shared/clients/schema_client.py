@@ -33,7 +33,7 @@ class SchemaClient(OsduClient):
         data = kwargs.pop("json", None)
         return await super().put(full_path, data, **kwargs)
     
-    def format_schema_id(self, authority: str, source: str, entity: str, 
+    def format_schema_id(self, authority: str, source: str, entity: str,
                          major: int, minor: int, patch: int) -> str:
         """Format schema ID from components.
         
@@ -50,9 +50,9 @@ class SchemaClient(OsduClient):
         """
         return f"{authority}:{source}:{entity}:{major}.{minor}.{patch}"
     
-    async def list_schemas(self, 
-                         authority: Optional[str] = None, 
-                         source: Optional[str] = None, 
+    async def list_schemas(self,
+                         authority: Optional[str] = None,
+                         source: Optional[str] = None,
                          entity: Optional[str] = None,
                          status: Optional[str] = "PUBLISHED",
                          scope: Optional[str] = None,
@@ -120,7 +120,7 @@ class SchemaClient(OsduClient):
         """
         return await self.get(f"/schema/{schema_id}")
     
-    async def search_schemas(self, 
+    async def search_schemas(self,
                            query: Optional[str] = None,
                            filter_criteria: Optional[Dict[str, List[str]]] = None,
                            latest_version: bool = False,
@@ -212,7 +212,7 @@ class SchemaClient(OsduClient):
         
         # Format schema ID
         schema_id = self.format_schema_id(
-            authority, source, entity, 
+            authority, source, entity,
             major_version, minor_version, patch_version
         )
         
