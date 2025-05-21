@@ -113,9 +113,9 @@ class LegalClient(OsduClient):
         return await self.get("/legaltags:properties")
     
     async def search_legal_tags(self, query: Optional[List[str]] = None,
-                              sort_by: Optional[str] = None,
-                              sort_order: Optional[str] = None,
-                              limit: Optional[int] = None) -> Dict[str, Any]:
+                                   sort_by: Optional[str] = None,
+                                   sort_order: Optional[str] = None,
+                                   limit: Optional[int] = None) -> Dict[str, Any]:
         """Search legal tags with filter conditions.
         
         Args:
@@ -160,7 +160,7 @@ class LegalClient(OsduClient):
         return await self.post("/legaltags:batchRetrieve", json={"names": full_names})
     
     async def create_legal_tag(self, name: str, description: str,
-                             properties: Dict[str, Any]) -> Dict[str, Any]:
+                                  properties: Dict[str, Any]) -> Dict[str, Any]:
         """Create a new legal tag.
         
         Args:
@@ -180,9 +180,9 @@ class LegalClient(OsduClient):
         return await self.post("/legaltags", json=body)
     
     async def update_legal_tag(self, name: str, description: Optional[str] = None,
-                             contract_id: Optional[str] = None,
-                             expiration_date: Optional[str] = None,
-                             extension_properties: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+                                  contract_id: Optional[str] = None,
+                                  expiration_date: Optional[str] = None,
+                                  extension_properties: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Update an existing legal tag.
         
         Args:

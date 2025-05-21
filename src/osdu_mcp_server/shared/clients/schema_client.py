@@ -51,14 +51,14 @@ class SchemaClient(OsduClient):
         return f"{authority}:{source}:{entity}:{major}.{minor}.{patch}"
     
     async def list_schemas(self,
-                         authority: Optional[str] = None,
-                         source: Optional[str] = None,
-                         entity: Optional[str] = None,
-                         status: Optional[str] = "PUBLISHED",
-                         scope: Optional[str] = None,
-                         latest_version: bool = False,
-                         limit: int = 100,
-                         offset: int = 0) -> Dict[str, Any]:
+                               authority: Optional[str] = None,
+                               source: Optional[str] = None,
+                               entity: Optional[str] = None,
+                               status: Optional[str] = "PUBLISHED",
+                               scope: Optional[str] = None,
+                               latest_version: bool = False,
+                               limit: int = 100,
+                               offset: int = 0) -> Dict[str, Any]:
         """List schemas with optional filtering.
         
         Args:
@@ -121,11 +121,11 @@ class SchemaClient(OsduClient):
         return await self.get(f"/schema/{schema_id}")
     
     async def search_schemas(self,
-                           query: Optional[str] = None,
-                           filter_criteria: Optional[Dict[str, List[str]]] = None,
-                           latest_version: bool = False,
-                           limit: int = 10,
-                           offset: int = 0) -> Dict[str, Any]:
+                                 query: Optional[str] = None,
+                                 filter_criteria: Optional[Dict[str, List[str]]] = None,
+                                 latest_version: bool = False,
+                                 limit: int = 10,
+                                 offset: int = 0) -> Dict[str, Any]:
         """Search schemas with complex filtering.
         
         Note: This implementation uses the list_schemas endpoint with additional
@@ -175,15 +175,15 @@ class SchemaClient(OsduClient):
         )
     
     async def create_schema(self,
-                          authority: str,
-                          source: str,
-                          entity: str,
-                          major_version: int,
-                          minor_version: int,
-                          patch_version: int,
-                          schema: Dict[str, Any],
-                          status: str = "DEVELOPMENT",
-                          description: Optional[str] = None) -> Dict[str, Any]:
+                                authority: str,
+                                source: str,
+                                entity: str,
+                                major_version: int,
+                                minor_version: int,
+                                patch_version: int,
+                                schema: Dict[str, Any],
+                                status: str = "DEVELOPMENT",
+                                description: Optional[str] = None) -> Dict[str, Any]:
         """Create a new schema.
         
         Args:
@@ -243,9 +243,9 @@ class SchemaClient(OsduClient):
         return await self.post("/schema", json=body)
     
     async def update_schema(self,
-                          id: str,
-                          schema: Dict[str, Any],
-                          status: Optional[str] = None) -> Dict[str, Any]:
+                                id: str,
+                                schema: Dict[str, Any],
+                                status: Optional[str] = None) -> Dict[str, Any]:
         """Update an existing schema in DEVELOPMENT status.
         
         Args:
