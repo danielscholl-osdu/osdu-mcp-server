@@ -1,7 +1,7 @@
 """Client for OSDU Partition Service operations."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from ..auth_handler import AuthHandler
 from ..config_manager import ConfigManager

@@ -1,15 +1,13 @@
 """Tool for advanced schema discovery with rich filtering and text search."""
 
-import re
 import fnmatch
-from typing import Dict, Optional, List, Any, Union
+from typing import Dict, Optional, List, Union
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
 from ...shared.logging_manager import get_logger
 from ...shared.exceptions import (
-    OSMCPError,
     handle_osdu_exceptions
 )
 

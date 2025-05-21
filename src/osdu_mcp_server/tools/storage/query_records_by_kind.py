@@ -1,7 +1,6 @@
 """Tool for querying records by kind."""
 
 from typing import Dict, Optional
-import logging
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler

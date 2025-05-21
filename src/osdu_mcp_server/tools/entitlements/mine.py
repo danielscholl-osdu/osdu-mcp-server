@@ -7,7 +7,6 @@ from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.entitlements_client import EntitlementsClient
 from ...shared.exceptions import (
-    OSMCPError,
     handle_osdu_exceptions
 )
 

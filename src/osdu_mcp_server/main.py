@@ -1,7 +1,5 @@
 """Main entry point for OSDU MCP Server."""
 
-import sys
-
 from .server import mcp
 from .shared.logging_manager import configure_logging
 
