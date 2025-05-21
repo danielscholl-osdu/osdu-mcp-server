@@ -15,7 +15,7 @@ cd osdu-mcp-server
 
 # Install using uv (recommended)
 uv sync
-uv pip install -e .
+uv pip install -e '.[dev]'
 ```
 
 ## Configuration
