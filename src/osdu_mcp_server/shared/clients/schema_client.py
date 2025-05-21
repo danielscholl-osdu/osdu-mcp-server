@@ -101,7 +101,7 @@ class SchemaClient(OsduClient):
         if scope:
             params.append(f"scope={scope}")
         if latest_version:
-            params.append(f"latestVersion=true")
+            params.append("latestVersion=true")
             
         # Build query string
         query_string = "&".join(params)
