@@ -107,6 +107,9 @@ class OsduClient:
                 if "OSMCPAPIError" in str(type(e)):
                     raise
                 raise OSMCPAPIError(f"Unexpected error: {e}")
+                
+        # If all retries failed but we didn't explicitly raise an exception
+        raise OSMCPConnectionError("Maximum retry attempts reached without success")
 
     async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
         """GET request with retry logic.
