@@ -93,7 +93,7 @@ class StorageClient(OsduClient):
         Raises:
             OSMCPAPIError: If write operations are disabled
         """
-        if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
+        if os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() != "true":
             raise OSMCPAPIError(
                 "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable record creation and updates",
                 status_code=403
@@ -105,7 +105,7 @@ class StorageClient(OsduClient):
         Raises:
             OSMCPAPIError: If delete operations are disabled
         """
-        if not os.environ.get("OSDU_MCP_ENABLE_DELETE_MODE", "false").lower() == "true":
+        if os.environ.get("OSDU_MCP_ENABLE_DELETE_MODE", "false").lower() != "true":
             raise OSMCPAPIError(
                 "Delete operations are disabled. Set OSDU_MCP_ENABLE_DELETE_MODE=true to enable record deletion",
                 status_code=403

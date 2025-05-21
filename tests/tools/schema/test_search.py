@@ -48,7 +48,7 @@ async def test_schema_search_basic():
         result = await schema_search()
         
         # Verify the result contains the expected data
-        assert result["success"] == True
+        assert result["success"] is True
         assert len(result["schemas"]) == 1
         assert result["count"] == 1
         assert "schemas" in result
@@ -113,7 +113,7 @@ async def test_schema_search_with_text():
         result = await schema_search(text="pressure")
         
         # Verify the result contains the expected data
-        assert result["success"] == True
+        assert result["success"] is True
         assert len(result["schemas"]) == 1  # Should find the schema with "pressure" in description
         assert result["count"] == 1
         assert result["query"] == "pressure"
