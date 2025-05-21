@@ -3,7 +3,7 @@
 import json
 import logging
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.partition_client import PartitionClient

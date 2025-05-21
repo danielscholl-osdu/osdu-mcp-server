@@ -3,7 +3,7 @@
 This module implements the health check tool as defined in ADR-007.
 """
 
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from ..shared.auth_handler import AuthHandler
 from ..shared.config_manager import ConfigManager

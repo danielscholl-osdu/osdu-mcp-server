@@ -8,7 +8,6 @@ from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
 from ...shared.exceptions import (
-    OSMCPError,
     OSMCPAPIError,
     handle_osdu_exceptions
 )
