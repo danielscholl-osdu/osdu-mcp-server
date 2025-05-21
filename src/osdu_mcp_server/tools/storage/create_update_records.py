@@ -20,7 +20,7 @@ async def storage_create_update_records(
     
     Args:
         records: Array of records to create or update. Each record must contain:
-            - kind: Required string - Kind of data 
+            - kind: Required string - Kind of data
             - acl: Required object - Access control lists
               - viewers: Required array - Groups with read access
               - owners: Required array - Groups with write access

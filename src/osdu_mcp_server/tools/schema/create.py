@@ -104,7 +104,7 @@ async def schema_create(
         
         # Format schema ID for logging and response
         schema_id = client.format_schema_id(
-            authority, source, entity, 
+            authority, source, entity,
             major_version, minor_version, patch_version
         )
         

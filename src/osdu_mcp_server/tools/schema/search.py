@@ -261,8 +261,8 @@ def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Option
 
 
 async def _matches_text_search(
-    schema: Dict, 
-    text: str, 
+    schema: Dict,
+    text: str,
     search_fields: List[str],
     include_content: bool,
     client: SchemaClient
