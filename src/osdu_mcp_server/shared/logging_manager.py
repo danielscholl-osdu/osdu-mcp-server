@@ -6,10 +6,9 @@ Logging can be enabled/disabled via environment variable.
 
 import json
 import logging
-import os
 import sys
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Optional
 
 from .config_manager import ConfigManager
 from .utils import get_trace_id

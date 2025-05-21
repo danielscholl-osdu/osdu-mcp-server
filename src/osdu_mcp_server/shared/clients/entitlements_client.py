@@ -4,7 +4,6 @@ from typing import Dict, Any
 
 from ..osdu_client import OsduClient
 from ..service_urls import OSMCPService, get_service_base_url
-from ..exceptions import OSMCPAPIError
 
 
 class EntitlementsClient(OsduClient):

@@ -1,7 +1,7 @@
 """OSDU Schema service client."""
 
 import os
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional
 
 from ..osdu_client import OsduClient
 from ..service_urls import OSMCPService, get_service_base_url
