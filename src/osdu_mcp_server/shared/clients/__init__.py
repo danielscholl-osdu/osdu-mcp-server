@@ -8,7 +8,7 @@ from .storage_client import StorageClient
 
 __all__ = [
     "PartitionClient",
-    "EntitlementsClient", 
+    "EntitlementsClient",
     "LegalClient",
     "SchemaClient",
     "StorageClient",

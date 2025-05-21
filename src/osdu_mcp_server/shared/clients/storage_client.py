@@ -111,7 +111,7 @@ class StorageClient(OsduClient):
                 status_code=403
             )
     
-    async def create_update_records(self, records: List[Dict[str, Any]], 
+    async def create_update_records(self, records: List[Dict[str, Any]],
                                     skip_dupes: bool = False) -> Dict[str, Any]:
         """Create or update records.
         
@@ -178,7 +178,7 @@ class StorageClient(OsduClient):
         
         return await self.get(f"/records/{id}", params=params)
     
-    async def get_record_version(self, id: str, version: int, 
+    async def get_record_version(self, id: str, version: int,
                                attributes: Optional[List[str]] = None) -> Dict[str, Any]:
         """Get a specific version of a record by ID.
         
@@ -225,7 +225,7 @@ class StorageClient(OsduClient):
         
         return await self.get(f"/records/versions/{id}")
     
-    async def query_records_by_kind(self, kind: str, limit: int = 10, 
+    async def query_records_by_kind(self, kind: str, limit: int = 10,
                                   cursor: Optional[str] = None) -> Dict[str, Any]:
         """Get record IDs of a specific kind.
         
@@ -253,7 +253,7 @@ class StorageClient(OsduClient):
         
         return await self.get("/query/records", params=params)
     
-    async def fetch_records(self, record_ids: List[str], 
+    async def fetch_records(self, record_ids: List[str],
                           attributes: Optional[List[str]] = None) -> Dict[str, Any]:
         """Retrieve multiple records at once.
         
