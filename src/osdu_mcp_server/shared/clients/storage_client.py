@@ -138,9 +138,6 @@ class StorageClient(OsduClient):
         if skip_dupes:
             params["skipdupes"] = "true"
         
-        # Extract record IDs for logging (if present)
-        record_ids = [record.get("id", "auto-generated") for record in records]
-        
         logger.info(
             f"Creating/updating {len(records)} records",
             extra={

@@ -115,7 +115,8 @@ async def test_auth_handler_azure_auto_detection():
     # Test 1: With client secret (Service Principal)
     with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
         with patch.dict(os.environ, {"AZURE_CLIENT_SECRET": "test-secret", "AZURE_CLIENT_ID": "test"}):
-            auth = AuthHandler(mock_config)
+            # Create the handler but we're only interested in how the credential was instantiated
+            AuthHandler(mock_config)
             
             # Should exclude CLI when secret is present
             call_kwargs = mock_cred.call_args.kwargs
@@ -126,7 +127,8 @@ async def test_auth_handler_azure_auto_detection():
     # Test 2: Without client secret (Azure CLI/PowerShell)
     with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
         with patch.dict(os.environ, {"AZURE_CLIENT_ID": "test"}, clear=True):
-            auth = AuthHandler(mock_config)
+            # Create the handler but we're only interested in how the credential was instantiated
+            AuthHandler(mock_config)
             
             # Should allow CLI and PowerShell when no secret
             call_kwargs = mock_cred.call_args.kwargs
@@ -413,7 +415,6 @@ def test_auth_handler_mode_detection_error():
 @pytest.mark.asyncio
 async def test_auth_handler_aws_token_not_implemented():
     """Test that AWS token retrieval raises NotImplementedError."""
-    mock_config = MagicMock(spec=ConfigManager)
     
     with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "aws"}, clear=True):
         # Skip initialization which would fail
@@ -427,7 +428,6 @@ async def test_auth_handler_aws_token_not_implemented():
 @pytest.mark.asyncio
 async def test_auth_handler_gcp_token_not_implemented():
     """Test that GCP token retrieval raises NotImplementedError."""
-    mock_config = MagicMock(spec=ConfigManager)
     
     with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "gcp"}, clear=True):
         # Skip initialization which would fail
