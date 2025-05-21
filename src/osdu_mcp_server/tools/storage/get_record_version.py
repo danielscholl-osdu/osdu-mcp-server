@@ -1,7 +1,6 @@
 """Tool for getting a specific version of a record."""
 
 from typing import Dict, List, Optional
-import logging
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler

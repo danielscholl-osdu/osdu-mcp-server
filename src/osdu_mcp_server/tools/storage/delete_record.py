@@ -1,7 +1,6 @@
 """Tool for logically deleting a record."""
 
 from typing import Dict
-import logging
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler

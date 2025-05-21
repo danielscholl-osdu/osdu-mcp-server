@@ -1,7 +1,6 @@
 """Tool for fetching multiple records at once."""
 
 from typing import Dict, List, Optional
-import logging
 
 from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
