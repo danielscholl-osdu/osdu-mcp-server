@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any, Dict
 
 from ...shared.auth_handler import AuthHandler
@@ -54,7 +54,7 @@ async def partition_update(
 
     # Log the operation
     logger.info(json.dumps({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "trace_id": trace_id,
         "level": "INFO",
         "tool": "partition_update",
@@ -69,7 +69,7 @@ async def partition_update(
     if not write_enabled:
         error_msg = "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable partition updates."
         logger.warning(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "WARN",
             "tool": "partition_update",
@@ -89,7 +89,7 @@ async def partition_update(
     if dry_run:
         # Simulate the operation
         logger.info(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "INFO",
             "tool": "partition_update",
@@ -117,7 +117,7 @@ async def partition_update(
 
         # Log successful update
         logger.info(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "INFO",
             "tool": "partition_update",
@@ -136,7 +136,7 @@ async def partition_update(
     except OSMCPError as e:
         # Log error
         logger.error(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "ERROR",
             "tool": "partition_update",

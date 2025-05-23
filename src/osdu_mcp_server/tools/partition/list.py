@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any, Dict
 
 from ...shared.auth_handler import AuthHandler
@@ -45,7 +45,7 @@ async def partition_list(
 
     # Log the operation
     logger.info(json.dumps({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "trace_id": trace_id,
         "level": "INFO",
         "tool": "partition_list",
@@ -74,14 +74,14 @@ async def partition_list(
 
         if detailed:
             response["metadata"] = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "trace_id": trace_id,
                 "server_url": config.get("server", "url"),
             }
 
         # Log successful response
         logger.info(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "INFO",
             "tool": "partition_list",
@@ -94,7 +94,7 @@ async def partition_list(
     except OSMCPError as e:
         # Log error
         logger.error(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "ERROR",
             "tool": "partition_list",

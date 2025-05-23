@@ -7,7 +7,7 @@ Logging can be enabled/disabled via environment variable.
 import json
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Optional
 
 from .config_manager import ConfigManager
@@ -107,7 +107,7 @@ class JSONFormatter(logging.Formatter):
 
         # Build the JSON structure
         log_entry = {
-            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "timestamp": datetime.now(UTC).isoformat() + "Z",
             "trace_id": getattr(record, "trace_id", get_trace_id()),
             "level": record.levelname,
             "tool": tool,

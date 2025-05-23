@@ -90,6 +90,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+filterwarnings = [
+    "ignore:Field name.*shadows an attribute in parent.*:UserWarning:pydantic._internal._fields"
+]
 
 [tool.coverage.run]
 branch = true

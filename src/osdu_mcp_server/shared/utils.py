@@ -1,7 +1,7 @@
 """Utility functions for OSDU MCP Server."""
 
 import uuid
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any, Dict
 
 
@@ -11,7 +11,7 @@ def get_timestamp() -> str:
     Returns:
         Current timestamp as ISO 8601 string
     """
-    return datetime.utcnow().isoformat() + "Z"
+    return datetime.now(UTC).isoformat().replace("+00:00", "") + "Z"
 
 
 def merge_dicts(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:

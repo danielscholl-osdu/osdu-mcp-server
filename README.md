@@ -20,6 +20,12 @@ uv pip install -e '.[dev]'
 
 ## Configuration
 
+To utilize this MCP server directly in other projects either use the buttons to install in VSCode, edit the `.mcp.json` file directory.
+
+> Clients tend to have slightly different configurations
+
+[![Install with UV in VS Code](https://img.shields.io/badge/VS_Code-UV-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect?url=vscode:mcp/install?%7B%22name%22%3A%22osdu-mcp-server%22%2C%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22git%2Bhttps%3A%2F%2Fgithub.com%2Fdanielscholl-osdu%2Fosdu-mcp-server%40main%22%2C%22osdu-mcp-server%22%5D%2C%22env%22%3A%7B%22OSDU_MCP_SERVER_URL%22%3A%22%24%7Binput%3Aosdu_url%7D%22%2C%22OSDU_MCP_SERVER_DATA_PARTITION%22%3A%22%24%7Binput%3Adata_partition%7D%22%2C%22AZURE_CLIENT_ID%22%3A%22%24%7Binput%3Aazure_client_id%7D%22%2C%22AZURE_TENANT_ID%22%3A%22%24%7Binput%3Aazure_tenant_id%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22osdu_url%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22OSDU%20Server%20URL%20(e.g.%2C%20https%3A%2F%2Fyour-osdu.com)%22%7D%2C%7B%22id%22%3A%22data_partition%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22OSDU%20Data%20Partition%20(e.g.%2C%20your-partition)%22%7D%2C%7B%22id%22%3A%22azure_client_id%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Client%20ID%22%7D%2C%7B%22id%22%3A%22azure_tenant_id%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Tenant%20ID%22%7D%2C%7B%22id%22%3A%22azure_client_secret%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Client%20Secret%20(optional%20for%20Service%20Principal%20auth)%22%2C%22password%22%3Atrue%7D%5D%7D)
+
 To use the OSDU MCP Server, configure it through your MCP client's configuration file:
 
 ```json

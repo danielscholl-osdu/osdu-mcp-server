@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any, Dict
 
 from ...shared.auth_handler import AuthHandler
@@ -49,7 +49,7 @@ async def partition_get(
 
     # Log the operation
     logger.info(json.dumps({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "trace_id": trace_id,
         "level": "INFO",
         "tool": "partition_get",
@@ -100,7 +100,7 @@ async def partition_get(
         # Log sensitive data access if any
         if sensitive_accessed:
             logger.warning(json.dumps({
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "trace_id": trace_id,
                 "level": "WARN",
                 "tool": "partition_get",
@@ -121,7 +121,7 @@ async def partition_get(
 
         # Log successful response
         logger.info(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "INFO",
             "tool": "partition_get",
@@ -136,7 +136,7 @@ async def partition_get(
     except OSMCPError as e:
         # Log error
         logger.error(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "trace_id": trace_id,
             "level": "ERROR",
             "tool": "partition_get",
