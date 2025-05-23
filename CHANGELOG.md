@@ -11,6 +11,14 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.1.1](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.0...v0.1.1) (2025-05-23)
+
+
+### Bug Fixes
+
+* **github_actions:** add virtual environment setup to release workflow ([8b018b4](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/8b018b4ed27d5cb30727656b7189f5c9b57edbcc))
+* **github_actions:** add virtual environment setup to release workflow ([330a901](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/330a90160fae5ecf40abd283dc62d218ddf0c512))
+
 ## 0.1.0 (2025-05-23)
 
 
