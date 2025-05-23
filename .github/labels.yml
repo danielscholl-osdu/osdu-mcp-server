@@ -1,0 +1,107 @@
+# GitHub Labels Configuration
+# This file defines all labels used in the project
+# Can be synced using github-label-sync or similar tools
+
+# Type Labels (What kind of work)
+- name: bug
+  color: d73a4a
+  description: Something isn't working
+  
+- name: enhancement
+  color: a2eeef
+  description: New feature or request
+  
+- name: documentation
+  color: 0075ca
+  description: Improvements or additions to documentation
+  
+- name: refactor
+  color: 0e8a16
+  description: Requires code refactoring
+  
+- name: cleanup
+  color: ffd93d
+  description: Cleanup tasks requiring minimal effort
+  
+- name: question
+  color: d876e3
+  description: Further information is requested
+
+- name: testing
+  color: bfe5bf
+  description: Test coverage, test fixes, or new tests
+
+- name: security
+  color: ee0701
+  description: Security vulnerabilities or improvements
+
+- name: performance
+  color: f9d0c4
+  description: Performance optimizations
+
+# Priority Labels (How urgent)
+- name: high-priority
+  color: b60205
+  description: High priority issues
+  
+- name: medium-priority
+  color: fbca04
+  description: Medium priority issues
+  
+- name: low-priority
+  color: 0e8a16
+  description: Low priority issues
+
+# Component Labels (What area)
+- name: configuration
+  color: 84b6eb
+  description: Related to project configuration
+  
+- name: dependencies
+  color: 0366d6
+  description: Pull requests that update a dependency file
+  
+- name: github_actions
+  color: 000000
+  description: Pull requests that update GitHub Actions code
+  
+- name: code-quality
+  color: 5319e7
+  description: Code quality improvements (linting, typing, etc.)
+
+- name: ADR
+  color: c5def5
+  description: Architecture Decision Record needed or updated
+
+# Service Labels (Which OSDU service)
+  
+
+# Status Labels (Current state)
+- name: help wanted
+  color: 008672
+  description: Extra attention is needed
+  
+- name: good first issue
+  color: 7057ff
+  description: Good for newcomers
+
+- name: wontfix
+  color: ffffff
+  description: This will not be worked on
+
+- name: needs-triage
+  color: e99695
+  description: New issues requiring review and categorization
+
+- name: blocked
+  color: d93f0b
+  description: Issues blocked by dependencies or other work
+
+- name: breaking-change
+  color: ff0000
+  description: Changes that break backward compatibility
+
+# AI Agent Labels
+- name: copilot
+  color: 9333ea
+  description: Suitable for GitHub Copilot to implement

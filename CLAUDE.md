@@ -58,6 +58,25 @@ gh pr create                           # Create pull request
 4. **Type Safety**: Fix all mypy errors before committing
 5. **Documentation**: Update ADRs when architecture changes
 
+## Issue Creation and Labels
+
+When creating GitHub issues, follow the label strategy defined in @docs/label-strategy.md:
+
+1. **Always include one Type label**: bug, enhancement, documentation, etc.
+2. **Add Priority when clear**: high-priority, medium-priority, low-priority
+3. **Include Service labels**: service:storage, service:legal, etc. (when applicable)
+4. **Add Component labels**: configuration, dependencies, etc. (when relevant)
+5. **Status labels are optional**: needs-triage, blocked, breaking-change
+
+Example issue creation:
+```bash
+gh issue create -t "Add retry logic to storage client" \
+  -l "enhancement,service:storage,medium-priority" \
+  -b "The storage client should retry failed requests..."
+```
+
+See @docs/label-strategy.md for complete label definitions and examples.
+
 ## Current Phase
 
 The project is in active development. Check recent issues and ADRs to understand the current focus areas.
