@@ -4,7 +4,7 @@ This module implements the exception hierarchy as defined in ADR-004.
 """
 
 from functools import wraps
-from typing import Any, Callable, Coroutine, Optional, TypeVar, Union
+from typing import Any, Awaitable, Callable, Coroutine, Optional, TypeVar, Union
 
 from mcp import McpError
 from mcp.types import ErrorData
