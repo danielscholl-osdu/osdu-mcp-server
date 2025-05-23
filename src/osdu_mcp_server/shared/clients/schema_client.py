@@ -1,11 +1,11 @@
 """OSDU Schema service client."""
 
 import os
-from typing import Dict, Any, List, Optional
+from typing import Any
 
+from ..exceptions import OSMCPAPIError
 from ..osdu_client import OsduClient
 from ..service_urls import OSMCPService, get_service_base_url
-from ..exceptions import OSMCPAPIError
 
 
 class SchemaClient(OsduClient):
@@ -16,23 +16,30 @@ class SchemaClient(OsduClient):
         super().__init__(*args, **kwargs)
         self._base_path = get_service_base_url(OSMCPService.SCHEMA)
 
-    async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Override get to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().get(full_path, **kwargs)
 
-    async def post(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override post to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().post(full_path, data, **kwargs)
 
-    async def put(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override put to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().put(full_path, data, **kwargs)
 
-    def format_schema_id(self, authority: str, source: str, entity: str,
-                         major: int, minor: int, patch: int) -> str:
+    def format_schema_id(
+        self,
+        authority: str,
+        source: str,
+        entity: str,
+        major: int,
+        minor: int,
+        patch: int,
+    ) -> str:
         """Format schema ID from components.
 
         Args:
@@ -48,15 +55,17 @@ class SchemaClient(OsduClient):
         """
         return f"{authority}:{source}:{entity}:{major}.{minor}.{patch}"
 
-    async def list_schemas(self,
-                               authority: Optional[str] = None,
-                               source: Optional[str] = None,
-                               entity: Optional[str] = None,
-                               status: Optional[str] = "PUBLISHED",
-                               scope: Optional[str] = None,
-                               latest_version: bool = False,
-                               limit: int = 100,
-                               offset: int = 0) -> Dict[str, Any]:
+    async def list_schemas(
+        self,
+        authority: str | None = None,
+        source: str | None = None,
+        entity: str | None = None,
+        status: str | None = "PUBLISHED",
+        scope: str | None = None,
+        latest_version: bool = False,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> dict[str, Any]:
         """List schemas with optional filtering.
 
         Args:
@@ -82,7 +91,9 @@ class SchemaClient(OsduClient):
         params = []
 
         # Add pagination parameters
-        params.append(f"limit={min(limit, 1000)}")  # API limit is 100, but we'll enforce 1000
+        params.append(
+            f"limit={min(limit, 1000)}"
+        )  # API limit is 100, but we'll enforce 1000
 
         if offset > 0:
             params.append(f"offset={offset}")
@@ -107,7 +118,7 @@ class SchemaClient(OsduClient):
         # Make API request
         return await self.get(f"/schema?{query_string}")
 
-    async def get_schema(self, schema_id: str) -> Dict[str, Any]:
+    async def get_schema(self, schema_id: str) -> dict[str, Any]:
         """Get schema by ID.
 
         Args:
@@ -118,12 +129,14 @@ class SchemaClient(OsduClient):
         """
         return await self.get(f"/schema/{schema_id}")
 
-    async def search_schemas(self,
-                                 query: Optional[str] = None,
-                                 filter_criteria: Optional[Dict[str, List[str]]] = None,
-                                 latest_version: bool = False,
-                                 limit: int = 10,
-                                 offset: int = 0) -> Dict[str, Any]:
+    async def search_schemas(
+        self,
+        query: str | None = None,
+        filter_criteria: dict[str, list[str]] | None = None,
+        latest_version: bool = False,
+        limit: int = 10,
+        offset: int = 0,
+    ) -> dict[str, Any]:
         """Search schemas with complex filtering.
 
         Note: This implementation uses the list_schemas endpoint with additional
@@ -149,13 +162,21 @@ class SchemaClient(OsduClient):
 
         if filter_criteria:
             # Extract simple filters for server-side filtering
-            if "authority" in filter_criteria and isinstance(filter_criteria["authority"], str):
+            if "authority" in filter_criteria and isinstance(
+                filter_criteria["authority"], str
+            ):
                 authority = filter_criteria["authority"]
-            if "source" in filter_criteria and isinstance(filter_criteria["source"], str):
+            if "source" in filter_criteria and isinstance(
+                filter_criteria["source"], str
+            ):
                 source = filter_criteria["source"]
-            if "entity" in filter_criteria and isinstance(filter_criteria["entity"], str):
+            if "entity" in filter_criteria and isinstance(
+                filter_criteria["entity"], str
+            ):
                 entity = filter_criteria["entity"]
-            if "status" in filter_criteria and isinstance(filter_criteria["status"], str):
+            if "status" in filter_criteria and isinstance(
+                filter_criteria["status"], str
+            ):
                 status = filter_criteria["status"]
             if "scope" in filter_criteria and isinstance(filter_criteria["scope"], str):
                 scope = filter_criteria["scope"]
@@ -169,19 +190,21 @@ class SchemaClient(OsduClient):
             scope=scope,
             latest_version=latest_version,
             limit=limit,
-            offset=offset
+            offset=offset,
         )
 
-    async def create_schema(self,
-                                authority: str,
-                                source: str,
-                                entity: str,
-                                major_version: int,
-                                minor_version: int,
-                                patch_version: int,
-                                schema: Dict[str, Any],
-                                status: str = "DEVELOPMENT",
-                                description: Optional[str] = None) -> Dict[str, Any]:
+    async def create_schema(
+        self,
+        authority: str,
+        source: str,
+        entity: str,
+        major_version: int,
+        minor_version: int,
+        patch_version: int,
+        schema: dict[str, Any],
+        status: str = "DEVELOPMENT",
+        description: str | None = None,
+    ) -> dict[str, Any]:
         """Create a new schema.
 
         Args:
@@ -205,13 +228,12 @@ class SchemaClient(OsduClient):
         if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
             raise OSMCPAPIError(
                 "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.",
-                status_code=403
+                status_code=403,
             )
 
         # Format schema ID
         schema_id = self.format_schema_id(
-            authority, source, entity,
-            major_version, minor_version, patch_version
+            authority, source, entity, major_version, minor_version, patch_version
         )
 
         # Build request body
@@ -224,11 +246,11 @@ class SchemaClient(OsduClient):
                     "schemaVersionMajor": major_version,
                     "schemaVersionMinor": minor_version,
                     "schemaVersionPatch": patch_version,
-                    "id": schema_id
+                    "id": schema_id,
                 },
-                "status": status
+                "status": status,
             },
-            "schema": schema
+            "schema": schema,
         }
 
         # Add description to schema if provided
@@ -240,10 +262,9 @@ class SchemaClient(OsduClient):
 
         return await self.post("/schema", json=body)
 
-    async def update_schema(self,
-                                id: str,
-                                schema: Dict[str, Any],
-                                status: Optional[str] = None) -> Dict[str, Any]:
+    async def update_schema(
+        self, id: str, schema: dict[str, Any], status: str | None = None
+    ) -> dict[str, Any]:
         """Update an existing schema in DEVELOPMENT status.
 
         Args:
@@ -261,7 +282,7 @@ class SchemaClient(OsduClient):
         if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
             raise OSMCPAPIError(
                 "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.",
-                status_code=403
+                status_code=403,
             )
 
         # Get existing schema to extract identity details
@@ -272,12 +293,7 @@ class SchemaClient(OsduClient):
         schema_identity = schema_info.get("schemaIdentity", {})
 
         # Build request body
-        body = {
-            "schemaInfo": {
-                "schemaIdentity": schema_identity
-            },
-            "schema": schema
-        }
+        body = {"schemaInfo": {"schemaIdentity": schema_identity}, "schema": schema}
 
         # Update status if provided
         if status:

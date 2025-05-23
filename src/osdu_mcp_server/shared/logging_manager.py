@@ -7,8 +7,7 @@ Logging can be enabled/disabled via environment variable.
 import json
 import logging
 import sys
-from datetime import datetime, UTC
-from typing import Optional
+from datetime import UTC, datetime
 
 from .config_manager import ConfigManager
 from .utils import get_trace_id
@@ -17,7 +16,7 @@ from .utils import get_trace_id
 class LoggingManager:
     """Manages logging configuration with feature flag support."""
 
-    def __init__(self, config: Optional[ConfigManager] = None):
+    def __init__(self, config: ConfigManager | None = None):
         """Initialize logging manager.
 
         Args:
@@ -85,7 +84,11 @@ class LoggingManager:
 
         # Use module name with osdu_mcp prefix to ensure isolation
         # We're not modifying the root logger so this shouldn't affect existing tests
-        logger_name = f"osdu_mcp.{name}" if "pytest" not in sys.modules else f"osdu_mcp_test.{name}"
+        logger_name = (
+            f"osdu_mcp.{name}"
+            if "pytest" not in sys.modules
+            else f"osdu_mcp_test.{name}"
+        )
         return logging.getLogger(logger_name)
 
 
@@ -102,7 +105,7 @@ class JSONFormatter(logging.Formatter):
             JSON-formatted log entry
         """
         # Extract the module and function name
-        module_parts = record.name.split('.')
+        module_parts = record.name.split(".")
         tool = module_parts[-1] if len(module_parts) > 0 else ""
 
         # Build the JSON structure
@@ -111,7 +114,7 @@ class JSONFormatter(logging.Formatter):
             "trace_id": getattr(record, "trace_id", get_trace_id()),
             "level": record.levelname,
             "tool": tool,
-            "message": record.getMessage()
+            "message": record.getMessage(),
         }
 
         # Add exception info if present

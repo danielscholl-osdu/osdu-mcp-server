@@ -3,10 +3,10 @@
 from osdu_mcp_server.server import mcp
 from osdu_mcp_server.tools.health_check import health_check
 from osdu_mcp_server.tools.schema import (
-    schema_list,
-    schema_get,
-    schema_search,
     schema_create,
+    schema_get,
+    schema_list,
+    schema_search,
     schema_update,
 )
 

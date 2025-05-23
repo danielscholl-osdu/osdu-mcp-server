@@ -1,10 +1,9 @@
 """Tool for permanently purging a record."""
 
-from typing import Dict
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -12,10 +11,7 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_purge_record(
-    id: str,
-    confirm: bool
-) -> Dict:
+async def storage_purge_record(id: str, confirm: bool) -> dict:
     """Physically delete a record permanently (cannot be restored).
 
     Args:
@@ -50,7 +46,7 @@ async def storage_purge_record(
             "id": id,
             "delete_enabled": True,
             "warning": "Record has been permanently deleted and cannot be recovered",
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.error(
@@ -59,8 +55,8 @@ async def storage_purge_record(
                 "record_id": id,
                 "operation": "purge_record",
                 "destructive": True,
-                "permanent": True
-            }
+                "permanent": True,
+            },
         )
 
         return result

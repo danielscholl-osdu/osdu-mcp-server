@@ -1,26 +1,23 @@
 """Tool for searching legal tags with filter conditions."""
 
-from typing import Dict, Optional
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
 async def legaltag_search(
-    query: Optional[str] = None,
-    valid_only: Optional[bool] = True,
-    sort_by: Optional[str] = None,
-    sort_order: Optional[str] = None,
-    limit: Optional[int] = None
-) -> Dict:
+    query: str | None = None,
+    valid_only: bool | None = True,
+    sort_by: str | None = None,
+    sort_order: str | None = None,
+    limit: int | None = None,
+) -> dict:
     """Search legal tags with filter conditions.
 
     Args:
@@ -56,10 +53,7 @@ async def legaltag_search(
         if query_list or sort_by or sort_order or limit:
             # Use search endpoint
             response = await client.search_legal_tags(
-                query=query_list,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit
+                query=query_list, sort_by=sort_by, sort_order=sort_order, limit=limit
             )
         else:
             # Use list endpoint with valid filter
@@ -78,16 +72,12 @@ async def legaltag_search(
             "success": True,
             "legalTags": legal_tags,
             "count": len(legal_tags),
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
             "Searched legal tags successfully",
-            extra={
-                "query": query,
-                "count": len(legal_tags),
-                "partition": partition
-            }
+            extra={"query": query, "count": len(legal_tags), "partition": partition},
         )
 
         return result

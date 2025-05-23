@@ -1,22 +1,17 @@
 """Tool for getting a specific legal tag."""
 
-from typing import Dict
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_get(
-    name: str
-) -> Dict:
+async def legaltag_get(name: str) -> dict:
     """Retrieve a specific legal tag by name.
 
     Args:
@@ -57,16 +52,12 @@ async def legaltag_get(
             "legalTag": tag,
             "fullName": full_name,
             "simplifiedName": client.simplify_tag_name(full_name),
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
             "Retrieved legal tag successfully",
-            extra={
-                "name": name,
-                "full_name": full_name,
-                "partition": partition
-            }
+            extra={"name": name, "full_name": full_name, "partition": partition},
         )
 
         return result

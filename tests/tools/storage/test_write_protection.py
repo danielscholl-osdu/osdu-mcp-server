@@ -1,10 +1,13 @@
 """Tests for storage write and delete operation protection."""
 
-import pytest
-from unittest.mock import patch, AsyncMock
 import os
+from unittest.mock import AsyncMock, patch
 
-from osdu_mcp_server.tools.storage.create_update_records import storage_create_update_records
+import pytest
+
+from osdu_mcp_server.tools.storage.create_update_records import (
+    storage_create_update_records,
+)
 from osdu_mcp_server.tools.storage.delete_record import storage_delete_record
 from osdu_mcp_server.tools.storage.purge_record import storage_purge_record
 
@@ -17,12 +20,17 @@ async def test_storage_create_blocked_by_default():
         os.environ.pop("OSDU_MCP_ENABLE_WRITE_MODE", None)
 
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
-            with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
+            with patch(
+                "osdu_mcp_server.tools.storage.create_update_records.AuthHandler"
+            ):
                 test_record = {
                     "kind": "test:test:test:1.0.0",
                     "acl": {"viewers": ["test"], "owners": ["test"]},
-                    "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
-                    "data": {"test": "data"}
+                    "legal": {
+                        "legaltags": ["test"],
+                        "otherRelevantDataCountries": ["US"],
+                    },
+                    "data": {"test": "data"},
                 }
 
                 try:
@@ -89,7 +97,7 @@ async def test_dual_protection_independence():
         "kind": "test:test:test:1.0.0",
         "acl": {"viewers": ["test"], "owners": ["test"]},
         "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
-        "data": {"test": "data"}
+        "data": {"test": "data"},
     }
 
     # Test write enabled but delete disabled
@@ -97,15 +105,21 @@ async def test_dual_protection_independence():
         os.environ.pop("OSDU_MCP_ENABLE_DELETE_MODE", None)
 
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
-            with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
-                with patch("osdu_mcp_server.tools.storage.create_update_records.StorageClient") as mock_client:
+            with patch(
+                "osdu_mcp_server.tools.storage.create_update_records.AuthHandler"
+            ):
+                with patch(
+                    "osdu_mcp_server.tools.storage.create_update_records.StorageClient"
+                ) as mock_client:
                     # Mock successful creation
                     mock_instance = mock_client.return_value
-                    mock_instance.create_update_records = AsyncMock(return_value={
-                        "recordCount": 1,
-                        "recordIds": ["test:record:123"],
-                        "recordIdVersions": ["1234567890"]
-                    })
+                    mock_instance.create_update_records = AsyncMock(
+                        return_value={
+                            "recordCount": 1,
+                            "recordIds": ["test:record:123"],
+                            "recordIdVersions": ["1234567890"],
+                        }
+                    )
                     mock_instance.close = AsyncMock()
 
                     # Create should work
@@ -128,7 +142,9 @@ async def test_record_validation():
     """Test record validation for required fields."""
     with patch.dict(os.environ, {"OSDU_MCP_ENABLE_WRITE_MODE": "true"}):
         with patch("osdu_mcp_server.tools.storage.create_update_records.ConfigManager"):
-            with patch("osdu_mcp_server.tools.storage.create_update_records.AuthHandler"):
+            with patch(
+                "osdu_mcp_server.tools.storage.create_update_records.AuthHandler"
+            ):
 
                 # Test missing required field
                 invalid_record = {
@@ -147,8 +163,11 @@ async def test_record_validation():
                 invalid_acl_record = {
                     "kind": "test:test:test:1.0.0",
                     "acl": {"viewers": ["test"]},  # Missing owners
-                    "legal": {"legaltags": ["test"], "otherRelevantDataCountries": ["US"]},
-                    "data": {"test": "data"}
+                    "legal": {
+                        "legaltags": ["test"],
+                        "otherRelevantDataCountries": ["US"],
+                    },
+                    "data": {"test": "data"},
                 }
 
                 try:

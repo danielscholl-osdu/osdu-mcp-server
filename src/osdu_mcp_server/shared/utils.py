@@ -1,8 +1,8 @@
 """Utility functions for OSDU MCP Server."""
 
 import uuid
-from datetime import datetime, UTC
-from typing import Any, Dict
+from datetime import UTC, datetime
+from typing import Any
 
 
 def get_timestamp() -> str:
@@ -14,7 +14,7 @@ def get_timestamp() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "") + "Z"
 
 
-def merge_dicts(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+def merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
     """Merge two dictionaries, with override taking precedence.
 
     Args:

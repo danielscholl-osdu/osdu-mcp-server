@@ -1,20 +1,17 @@
 """Tool for getting current user's groups."""
 
-from typing import Dict
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.entitlements_client import EntitlementsClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def entitlements_mine() -> Dict:
+async def entitlements_mine() -> dict:
     """Get groups for the current authenticated user.
 
     Returns:
@@ -51,15 +48,12 @@ async def entitlements_mine() -> Dict:
             "success": True,
             "groups": groups,
             "count": len(groups),
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
             "Retrieved user groups successfully",
-            extra={
-                "count": len(groups),
-                "partition": partition
-            }
+            extra={"count": len(groups), "partition": partition},
         )
 
         return result

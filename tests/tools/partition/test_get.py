@@ -1,8 +1,9 @@
 """Tests for partition_get tool."""
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from aioresponses import aioresponses
-from unittest.mock import patch, AsyncMock
 
 from osdu_mcp_server.tools.partition.get import partition_get
 
@@ -15,14 +16,8 @@ async def test_partition_get_success():
         mocked.get(
             "https://test.osdu.com/api/partition/v1/partitions/osdu",
             payload={
-                "compliance-ruleset": {
-                    "sensitive": False,
-                    "value": "shared"
-                },
-                "storage-account-key": {
-                    "sensitive": True,
-                    "value": "secret-key"
-                }
+                "compliance-ruleset": {"sensitive": False, "value": "shared"},
+                "storage-account-key": {"sensitive": True, "value": "secret-key"},
             },
         )
 
@@ -34,8 +29,12 @@ async def test_partition_get_success():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.get.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                mock_auth.return_value.get_user_info = AsyncMock(return_value="test-user")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
+                mock_auth.return_value.get_user_info = AsyncMock(
+                    return_value="test-user"
+                )
 
                 result = await partition_get("osdu")
 
@@ -56,14 +55,8 @@ async def test_partition_get_with_redacted_sensitive():
         mocked.get(
             "https://test.osdu.com/api/partition/v1/partitions/osdu",
             payload={
-                "compliance-ruleset": {
-                    "sensitive": False,
-                    "value": "shared"
-                },
-                "storage-account-key": {
-                    "sensitive": True,
-                    "value": "secret-key"
-                }
+                "compliance-ruleset": {"sensitive": False, "value": "shared"},
+                "storage-account-key": {"sensitive": True, "value": "secret-key"},
             },
         )
 
@@ -75,8 +68,12 @@ async def test_partition_get_with_redacted_sensitive():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.get.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                mock_auth.return_value.get_user_info = AsyncMock(return_value="test-user")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
+                mock_auth.return_value.get_user_info = AsyncMock(
+                    return_value="test-user"
+                )
 
                 # Request with sensitive included but redacted (default)
                 result = await partition_get("osdu", include_sensitive=True)
@@ -86,7 +83,9 @@ async def test_partition_get_with_redacted_sensitive():
                 assert result["partition_id"] == "osdu"
                 assert result["sensitive_properties_count"] == 1
                 # Sensitive values should be redacted
-                assert result["properties"]["storage-account-key"]["value"] == "<REDACTED>"
+                assert (
+                    result["properties"]["storage-account-key"]["value"] == "<REDACTED>"
+                )
                 assert result["properties"]["compliance-ruleset"]["value"] == "shared"
 
 
@@ -109,8 +108,12 @@ async def test_partition_get_not_found():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.get.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                mock_auth.return_value.get_user_info = AsyncMock(return_value="test-user")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
+                mock_auth.return_value.get_user_info = AsyncMock(
+                    return_value="test-user"
+                )
 
                 result = await partition_get("nonexistent")
 
@@ -126,12 +129,7 @@ async def test_partition_get_with_sensitive_values():
         # Mock the partition get endpoint
         mocked.get(
             "https://test.osdu.com/api/partition/v1/partitions/osdu",
-            payload={
-                "storage-account-key": {
-                    "sensitive": True,
-                    "value": "secret-key"
-                }
-            },
+            payload={"storage-account-key": {"sensitive": True, "value": "secret-key"}},
         )
 
         with patch("osdu_mcp_server.tools.partition.get.ConfigManager") as mock_config:
@@ -142,14 +140,22 @@ async def test_partition_get_with_sensitive_values():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.get.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                mock_auth.return_value.get_user_info = AsyncMock(return_value="test-user")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
+                mock_auth.return_value.get_user_info = AsyncMock(
+                    return_value="test-user"
+                )
 
                 # Request with sensitive values exposed
-                result = await partition_get("osdu", include_sensitive=True, redact_sensitive_values=False)
+                result = await partition_get(
+                    "osdu", include_sensitive=True, redact_sensitive_values=False
+                )
 
                 assert result["success"] is True
-                assert result["properties"]["storage-account-key"]["value"] == "secret-key"
+                assert (
+                    result["properties"]["storage-account-key"]["value"] == "secret-key"
+                )
 
 
 @pytest.mark.asyncio
@@ -160,14 +166,8 @@ async def test_partition_get_exclude_sensitive():
         mocked.get(
             "https://test.osdu.com/api/partition/v1/partitions/osdu",
             payload={
-                "compliance-ruleset": {
-                    "sensitive": False,
-                    "value": "shared"
-                },
-                "storage-account-key": {
-                    "sensitive": True,
-                    "value": "secret-key"
-                }
+                "compliance-ruleset": {"sensitive": False, "value": "shared"},
+                "storage-account-key": {"sensitive": True, "value": "secret-key"},
             },
         )
 
@@ -179,8 +179,12 @@ async def test_partition_get_exclude_sensitive():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.get.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
-                mock_auth.return_value.get_user_info = AsyncMock(return_value="test-user")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
+                mock_auth.return_value.get_user_info = AsyncMock(
+                    return_value="test-user"
+                )
 
                 # Request without sensitive properties
                 result = await partition_get("osdu", include_sensitive=False)

@@ -1,10 +1,9 @@
 """Tool for getting a specific version of a record."""
 
-from typing import Dict, List, Optional
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -13,10 +12,8 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_get_record_version(
-    id: str,
-    version: int,
-    attributes: Optional[List[str]] = None
-) -> Dict:
+    id: str, version: int, attributes: list[str] | None = None
+) -> dict:
     """Get a specific version of a record by ID.
 
     Args:
@@ -54,7 +51,7 @@ async def storage_get_record_version(
         result = {
             "success": True,
             "record": record,
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.info(
@@ -63,8 +60,8 @@ async def storage_get_record_version(
                 "record_id": id,
                 "version": version,
                 "operation": "get_record_version",
-                "has_attributes": bool(attributes)
-            }
+                "has_attributes": bool(attributes),
+            },
         )
 
         return result

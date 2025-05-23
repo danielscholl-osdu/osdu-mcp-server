@@ -1,29 +1,26 @@
 """Tool for listing schemas."""
 
-from typing import Dict, Optional
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
 async def schema_list(
-    authority: Optional[str] = None,
-    source: Optional[str] = None,
-    entity: Optional[str] = None,
-    status: Optional[str] = None,
-    scope: Optional[str] = None,
+    authority: str | None = None,
+    source: str | None = None,
+    entity: str | None = None,
+    status: str | None = None,
+    scope: str | None = None,
     latest_version: bool = False,
     limit: int = 10,
-    offset: int = 0
-) -> Dict:
+    offset: int = 0,
+) -> dict:
     """List schemas with optional filtering.
 
     Args:
@@ -72,7 +69,7 @@ async def schema_list(
             scope=scope,
             latest_version=latest_version,
             limit=limit,
-            offset=offset
+            offset=offset,
         )
 
         # Process response - check for both "schemaInfos" and "schemas" field
@@ -89,7 +86,7 @@ async def schema_list(
             "count": len(schemas),
             "totalCount": total_count,
             "offset": offset,
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
@@ -104,9 +101,9 @@ async def schema_list(
                     "entity": entity,
                     "status": status,
                     "scope": scope,
-                    "latest_version": latest_version
-                }
-            }
+                    "latest_version": latest_version,
+                },
+            },
         )
 
         return result

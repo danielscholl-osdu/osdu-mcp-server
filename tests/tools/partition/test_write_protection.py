@@ -1,12 +1,13 @@
 """Tests for write operation protection."""
 
-import pytest
-from unittest.mock import patch
 import os
+from unittest.mock import patch
+
+import pytest
 
 from osdu_mcp_server.tools.partition.create import partition_create
-from osdu_mcp_server.tools.partition.update import partition_update
 from osdu_mcp_server.tools.partition.delete import partition_delete
+from osdu_mcp_server.tools.partition.update import partition_update
 
 
 @pytest.mark.asyncio
@@ -77,7 +78,9 @@ async def test_dry_run_operations():
         with patch("osdu_mcp_server.tools.partition.create.ConfigManager"):
             with patch("osdu_mcp_server.tools.partition.create.AuthHandler"):
                 # Test create dry run
-                result = await partition_create("test-partition", {"key": "value"}, dry_run=True)
+                result = await partition_create(
+                    "test-partition", {"key": "value"}, dry_run=True
+                )
 
                 assert result["success"] is True
                 assert result["created"] is False
@@ -87,7 +90,9 @@ async def test_dry_run_operations():
         with patch("osdu_mcp_server.tools.partition.delete.ConfigManager"):
             with patch("osdu_mcp_server.tools.partition.delete.AuthHandler"):
                 # Test delete dry run
-                result = await partition_delete("test-partition", confirm=True, dry_run=True)
+                result = await partition_delete(
+                    "test-partition", confirm=True, dry_run=True
+                )
 
                 assert result["success"] is True
                 assert result["deleted"] is False

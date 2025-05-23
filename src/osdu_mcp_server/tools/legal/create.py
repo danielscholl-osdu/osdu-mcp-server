@@ -1,16 +1,13 @@
 """Tool for creating legal tags (write-protected)."""
 
-import os
-from typing import Dict, List, Optional, Any
 import logging
+import os
+from typing import Any
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    OSMCPAPIError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPAPIError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -19,15 +16,15 @@ logger = logging.getLogger(__name__)
 async def legaltag_create(
     name: str,
     description: str,
-    country_of_origin: List[str],
+    country_of_origin: list[str],
     contract_id: str,
     security_classification: str,
     personal_data: str,
     export_classification: str,
     data_type: str,
-    expiration_date: Optional[str] = None,
-    extension_properties: Optional[Dict[str, Any]] = None
-) -> Dict:
+    expiration_date: str | None = None,
+    extension_properties: dict[str, Any] | None = None,
+) -> dict:
     """Create a new legal tag.
 
     Args:
@@ -51,7 +48,7 @@ async def legaltag_create(
     if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
         raise OSMCPAPIError(
             "Legal tag write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
-            status_code=403
+            status_code=403,
         )
 
     config = ConfigManager()
@@ -69,7 +66,7 @@ async def legaltag_create(
             "securityClassification": security_classification,
             "personalData": personal_data,
             "exportClassification": export_classification,
-            "dataType": data_type
+            "dataType": data_type,
         }
 
         if expiration_date:
@@ -80,9 +77,7 @@ async def legaltag_create(
 
         # Create legal tag
         response = await client.create_legal_tag(
-            name=name,
-            description=description,
-            properties=properties
+            name=name, description=description, properties=properties
         )
 
         # Extract tag data
@@ -94,15 +89,12 @@ async def legaltag_create(
             "legalTag": tag,
             "created": True,
             "write_enabled": True,
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
             "Created legal tag successfully",
-            extra={
-                "name": name,
-                "partition": partition
-            }
+            extra={"name": name, "partition": partition},
         )
 
         # Audit log for write operation
@@ -112,8 +104,8 @@ async def legaltag_create(
                 "operation": "create_legal_tag",
                 "tag_name": name,
                 "partition": partition,
-                "user": "authenticated_user"  # Should be extracted from auth context
-            }
+                "user": "authenticated_user",  # Should be extracted from auth context
+            },
         )
 
         return result

@@ -1,14 +1,14 @@
 """Tests for the AuthHandler class."""
 
 import os
-import pytest
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
+import pytest
 from azure.core.credentials import AccessToken
 from azure.core.exceptions import ClientAuthenticationError
 
-from osdu_mcp_server.shared.auth_handler import AuthHandler, AuthenticationMode
+from osdu_mcp_server.shared.auth_handler import AuthenticationMode, AuthHandler
 from osdu_mcp_server.shared.config_manager import ConfigManager
 from osdu_mcp_server.shared.exceptions import OSMCPAuthError
 
@@ -21,10 +21,12 @@ async def test_auth_handler_get_token_success():
 
     mock_token = AccessToken(
         token="test-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.return_value = mock_token
         mock_cred.return_value = mock_cred_instance
@@ -36,7 +38,9 @@ async def test_auth_handler_get_token_success():
 
             assert token == "test-token"
             # Scope should always be derived from CLIENT_ID
-            mock_cred_instance.get_token.assert_called_once_with("test-client-id/.default")
+            mock_cred_instance.get_token.assert_called_once_with(
+                "test-client-id/.default"
+            )
 
 
 @pytest.mark.asyncio
@@ -47,10 +51,12 @@ async def test_auth_handler_token_caching():
 
     mock_token = AccessToken(
         token="cached-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.return_value = mock_token
         mock_cred.return_value = mock_cred_instance
@@ -78,16 +84,18 @@ async def test_auth_handler_token_refresh():
     # Create an expired token
     expired_token = AccessToken(
         token="expired-token",
-        expires_on=int((datetime.now() - timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() - timedelta(hours=1)).timestamp()),
     )
 
     # Create a new token
     new_token = AccessToken(
         token="new-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = [expired_token, new_token]
         mock_cred.return_value = mock_cred_instance
@@ -113,8 +121,13 @@ async def test_auth_handler_azure_auto_detection():
     mock_config.get.return_value = False  # Default for other auth methods
 
     # Test 1: With client secret (Service Principal)
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
-        with patch.dict(os.environ, {"AZURE_CLIENT_SECRET": "test-secret", "AZURE_CLIENT_ID": "test"}):
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
+        with patch.dict(
+            os.environ,
+            {"AZURE_CLIENT_SECRET": "test-secret", "AZURE_CLIENT_ID": "test"},
+        ):
             # Create the handler but we're only interested in how the credential was instantiated
             AuthHandler(mock_config)
 
@@ -125,7 +138,9 @@ async def test_auth_handler_azure_auto_detection():
             assert call_kwargs["exclude_azure_powershell_credential"] is True
 
     # Test 2: Without client secret (Azure CLI/PowerShell)
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         with patch.dict(os.environ, {"AZURE_CLIENT_ID": "test"}, clear=True):
             # Create the handler but we're only interested in how the credential was instantiated
             AuthHandler(mock_config)
@@ -134,7 +149,9 @@ async def test_auth_handler_azure_auto_detection():
             call_kwargs = mock_cred.call_args.kwargs
             assert call_kwargs["exclude_azure_cli_credential"] is False
             assert call_kwargs["exclude_azure_powershell_credential"] is False
-            assert call_kwargs["exclude_interactive_browser_credential"] is True  # Always excluded
+            assert (
+                call_kwargs["exclude_interactive_browser_credential"] is True
+            )  # Always excluded
 
 
 @pytest.mark.asyncio
@@ -143,7 +160,9 @@ async def test_auth_handler_get_token_failure():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = Exception("Unknown error")
         mock_cred.return_value = mock_cred_instance
@@ -164,7 +183,9 @@ async def test_auth_handler_azure_cli_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = ClientAuthenticationError(
             "Please run 'az login' to set up an account"
@@ -177,7 +198,9 @@ async def test_auth_handler_azure_cli_error():
             with pytest.raises(OSMCPAuthError) as exc_info:
                 await auth.get_access_token()
 
-            assert "Please run 'az login' before using OSDU MCP Server" in str(exc_info.value)
+            assert "Please run 'az login' before using OSDU MCP Server" in str(
+                exc_info.value
+            )
 
 
 @pytest.mark.asyncio
@@ -186,7 +209,9 @@ async def test_auth_handler_expired_token_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = ClientAuthenticationError(
             "The refresh token has expired or is invalid"
@@ -208,7 +233,9 @@ async def test_auth_handler_no_credentials_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = ClientAuthenticationError(
             "Environment variables are not fully configured"
@@ -230,17 +257,19 @@ async def test_auth_handler_service_principal_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = ClientAuthenticationError(
             "Environment variables are not fully configured"
         )
         mock_cred.return_value = mock_cred_instance
 
-        with patch.dict(os.environ, {
-            "AZURE_CLIENT_ID": "test-client-id",
-            "AZURE_CLIENT_SECRET": "test-secret"
-        }):
+        with patch.dict(
+            os.environ,
+            {"AZURE_CLIENT_ID": "test-client-id", "AZURE_CLIENT_SECRET": "test-secret"},
+        ):
             auth = AuthHandler(mock_config)
 
             with pytest.raises(OSMCPAuthError) as exc_info:
@@ -256,7 +285,9 @@ async def test_auth_handler_invalid_scope_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = ClientAuthenticationError(
             "The scope format is invalid. AADSTS70011: The provided request must include a 'scope' input parameter."
@@ -278,7 +309,9 @@ async def test_auth_handler_network_error():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.side_effect = Exception("Connection timeout")
         mock_cred.return_value = mock_cred_instance
@@ -289,7 +322,9 @@ async def test_auth_handler_network_error():
             with pytest.raises(OSMCPAuthError) as exc_info:
                 await auth.get_access_token()
 
-            assert "Failed to connect to Azure authentication service" in str(exc_info.value)
+            assert "Failed to connect to Azure authentication service" in str(
+                exc_info.value
+            )
 
 
 @pytest.mark.asyncio
@@ -300,10 +335,12 @@ async def test_auth_handler_validate_token():
 
     mock_token = AccessToken(
         token="valid-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred_instance.get_token.return_value = mock_token
         mock_cred.return_value = mock_cred_instance
@@ -328,7 +365,9 @@ def test_auth_handler_close():
     mock_config = MagicMock(spec=ConfigManager)
     mock_config.get.return_value = False
 
-    with patch("osdu_mcp_server.shared.auth_handler.DefaultAzureCredential") as mock_cred:
+    with patch(
+        "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+    ) as mock_cred:
         mock_cred_instance = MagicMock()
         mock_cred.return_value = mock_cred_instance
 
@@ -352,18 +391,26 @@ def test_auth_handler_mode_detection_explicit():
     mock_config = MagicMock(spec=ConfigManager)
 
     # Test explicit Azure mode
-    with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "azure", "AZURE_CLIENT_ID": "test"}, clear=True):
+    with patch.dict(
+        os.environ,
+        {"OSDU_MCP_AUTH_MODE": "azure", "AZURE_CLIENT_ID": "test"},
+        clear=True,
+    ):
         auth = AuthHandler(mock_config)
         assert auth.mode == AuthenticationMode.AZURE
 
     # Test explicit AWS mode
     with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "aws"}, clear=True):
-        with pytest.raises(NotImplementedError, match="AWS authentication not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="AWS authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
     # Test explicit GCP mode
     with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "gcp"}, clear=True):
-        with pytest.raises(NotImplementedError, match="GCP authentication not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="GCP authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
 
@@ -383,22 +430,32 @@ def test_auth_handler_mode_detection_auto():
 
     # Test AWS auto-detection with ACCESS_KEY_ID
     with patch.dict(os.environ, {"AWS_ACCESS_KEY_ID": "test-key"}, clear=True):
-        with pytest.raises(NotImplementedError, match="AWS authentication not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="AWS authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
     # Test AWS auto-detection with REGION only
     with patch.dict(os.environ, {"AWS_REGION": "us-east-1"}, clear=True):
-        with pytest.raises(NotImplementedError, match="AWS authentication not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="AWS authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
     # Test GCP auto-detection with APPLICATION_CREDENTIALS
-    with patch.dict(os.environ, {"GOOGLE_APPLICATION_CREDENTIALS": "/path/to/creds"}, clear=True):
-        with pytest.raises(NotImplementedError, match="GCP authentication not yet implemented"):
+    with patch.dict(
+        os.environ, {"GOOGLE_APPLICATION_CREDENTIALS": "/path/to/creds"}, clear=True
+    ):
+        with pytest.raises(
+            NotImplementedError, match="GCP authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
     # Test GCP auto-detection with PROJECT only
     with patch.dict(os.environ, {"GOOGLE_CLOUD_PROJECT": "my-project"}, clear=True):
-        with pytest.raises(NotImplementedError, match="GCP authentication not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="GCP authentication not yet implemented"
+        ):
             AuthHandler(mock_config)
 
 
@@ -421,7 +478,9 @@ async def test_auth_handler_aws_token_not_implemented():
         auth = AuthHandler.__new__(AuthHandler)
         auth.mode = AuthenticationMode.AWS
 
-        with pytest.raises(NotImplementedError, match="AWS token retrieval not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="AWS token retrieval not yet implemented"
+        ):
             await auth._get_aws_token()
 
 
@@ -434,5 +493,7 @@ async def test_auth_handler_gcp_token_not_implemented():
         auth = AuthHandler.__new__(AuthHandler)
         auth.mode = AuthenticationMode.GCP
 
-        with pytest.raises(NotImplementedError, match="GCP token retrieval not yet implemented"):
+        with pytest.raises(
+            NotImplementedError, match="GCP token retrieval not yet implemented"
+        ):
             await auth._get_gcp_token()

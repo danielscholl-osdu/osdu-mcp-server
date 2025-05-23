@@ -1,23 +1,17 @@
 """Tool for batch retrieving legal tags."""
 
-from typing import Dict, List
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    OSMCPError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_batch_retrieve(
-    names: List[str]
-) -> Dict:
+async def legaltag_batch_retrieve(names: list[str]) -> dict:
     """Retrieve multiple legal tags by name.
 
     Args:
@@ -62,7 +56,7 @@ async def legaltag_batch_retrieve(
             "success": True,
             "legalTags": legal_tags,
             "count": len(legal_tags),
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
@@ -70,8 +64,8 @@ async def legaltag_batch_retrieve(
             extra={
                 "requested": len(names),
                 "retrieved": len(legal_tags),
-                "partition": partition
-            }
+                "partition": partition,
+            },
         )
 
         return result

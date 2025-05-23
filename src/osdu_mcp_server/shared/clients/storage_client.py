@@ -1,12 +1,12 @@
 """OSDU Storage service client."""
 
 import os
-from typing import Dict, Any, List, Optional
+from typing import Any
 
-from ..osdu_client import OsduClient
-from ..service_urls import OSMCPService, get_service_base_url
 from ..exceptions import OSMCPAPIError, OSMCPValidationError
 from ..logging_manager import get_logger
+from ..osdu_client import OsduClient
+from ..service_urls import OSMCPService, get_service_base_url
 
 logger = get_logger(__name__)
 
@@ -19,31 +19,31 @@ class StorageClient(OsduClient):
         super().__init__(*args, **kwargs)
         self._base_path = get_service_base_url(OSMCPService.STORAGE)
 
-    async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Override get to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().get(full_path, **kwargs)
 
-    async def post(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override post to include service base path."""
         full_path = f"{self._base_path}{path}"
         if data is None and "json" in kwargs:
             data = kwargs.pop("json")
         return await super().post(full_path, data, **kwargs)
 
-    async def put(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override put to include service base path."""
         full_path = f"{self._base_path}{path}"
         if data is None and "json" in kwargs:
             data = kwargs.pop("json")
         return await super().put(full_path, data, **kwargs)
 
-    async def delete(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def delete(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Override delete to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().delete(full_path, **kwargs)
 
-    def validate_record(self, record: Dict[str, Any]) -> None:
+    def validate_record(self, record: dict[str, Any]) -> None:
         """Validate basic record structure.
 
         Args:
@@ -70,7 +70,9 @@ class StorageClient(OsduClient):
                 raise OSMCPValidationError(
                     "ACL must contain both 'viewers' and 'owners' arrays. Access control lists define who can read and modify the record"
                 )
-            if not isinstance(acl["viewers"], list) or not isinstance(acl["owners"], list):
+            if not isinstance(acl["viewers"], list) or not isinstance(
+                acl["owners"], list
+            ):
                 raise OSMCPValidationError(
                     "ACL viewers and owners must be arrays. Access control lists must contain arrays of group names"
                 )
@@ -86,7 +88,9 @@ class StorageClient(OsduClient):
                 raise OSMCPValidationError(
                     "Legal must contain both 'legaltags' and 'otherRelevantDataCountries' arrays. Legal information is required for compliance"
                 )
-            if not isinstance(legal["legaltags"], list) or not isinstance(legal["otherRelevantDataCountries"], list):
+            if not isinstance(legal["legaltags"], list) or not isinstance(
+                legal["otherRelevantDataCountries"], list
+            ):
                 raise OSMCPValidationError(
                     "Legal legaltags and otherRelevantDataCountries must be arrays. Legal information must contain arrays of strings"
                 )
@@ -100,7 +104,7 @@ class StorageClient(OsduClient):
         if os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() != "true":
             raise OSMCPAPIError(
                 "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable record creation and updates",
-                status_code=403
+                status_code=403,
             )
 
     def check_delete_permission(self) -> None:
@@ -112,11 +116,12 @@ class StorageClient(OsduClient):
         if os.environ.get("OSDU_MCP_ENABLE_DELETE_MODE", "false").lower() != "true":
             raise OSMCPAPIError(
                 "Delete operations are disabled. Set OSDU_MCP_ENABLE_DELETE_MODE=true to enable record deletion",
-                status_code=403
+                status_code=403,
             )
 
-    async def create_update_records(self, records: List[Dict[str, Any]],
-                                    skip_dupes: bool = False) -> Dict[str, Any]:
+    async def create_update_records(
+        self, records: list[dict[str, Any]], skip_dupes: bool = False
+    ) -> dict[str, Any]:
         """Create or update records.
 
         Args:
@@ -131,9 +136,7 @@ class StorageClient(OsduClient):
             try:
                 self.validate_record(record)
             except OSMCPValidationError as e:
-                raise OSMCPValidationError(
-                    f"Record {i + 1} validation failed: {e}"
-                )
+                raise OSMCPValidationError(f"Record {i + 1} validation failed: {e}")
 
         # Check write permission for create/update operations
         self.check_write_permission()
@@ -148,13 +151,15 @@ class StorageClient(OsduClient):
                 "record_count": len(records),
                 "operation": "create_update_records",
                 "has_ids": any(record.get("id") for record in records),
-                "skip_dupes": skip_dupes
-            }
+                "skip_dupes": skip_dupes,
+            },
         )
 
         return await self.put("/records", json=records, params=params)
 
-    async def get_record(self, id: str, attributes: Optional[List[str]] = None) -> Dict[str, Any]:
+    async def get_record(
+        self, id: str, attributes: list[str] | None = None
+    ) -> dict[str, Any]:
         """Get the latest version of a record by ID.
 
         Args:
@@ -173,14 +178,15 @@ class StorageClient(OsduClient):
             extra={
                 "record_id": id,
                 "operation": "get_record",
-                "attributes": attributes
-            }
+                "attributes": attributes,
+            },
         )
 
         return await self.get(f"/records/{id}", params=params)
 
-    async def get_record_version(self, id: str, version: int,
-                                     attributes: Optional[List[str]] = None) -> Dict[str, Any]:
+    async def get_record_version(
+        self, id: str, version: int, attributes: list[str] | None = None
+    ) -> dict[str, Any]:
         """Get a specific version of a record by ID.
 
         Args:
@@ -201,13 +207,13 @@ class StorageClient(OsduClient):
                 "record_id": id,
                 "version": version,
                 "operation": "get_record_version",
-                "attributes": attributes
-            }
+                "attributes": attributes,
+            },
         )
 
         return await self.get(f"/records/{id}/{version}", params=params)
 
-    async def list_record_versions(self, id: str) -> Dict[str, Any]:
+    async def list_record_versions(self, id: str) -> dict[str, Any]:
         """List all versions of a record.
 
         Args:
@@ -218,16 +224,14 @@ class StorageClient(OsduClient):
         """
         logger.info(
             f"Listing versions for record {id}",
-            extra={
-                "record_id": id,
-                "operation": "list_record_versions"
-            }
+            extra={"record_id": id, "operation": "list_record_versions"},
         )
 
         return await self.get(f"/records/versions/{id}")
 
-    async def query_records_by_kind(self, kind: str, limit: int = 10,
-                                       cursor: Optional[str] = None) -> Dict[str, Any]:
+    async def query_records_by_kind(
+        self, kind: str, limit: int = 10, cursor: str | None = None
+    ) -> dict[str, Any]:
         """Get record IDs of a specific kind.
 
         Args:
@@ -248,14 +252,15 @@ class StorageClient(OsduClient):
                 "kind": kind,
                 "limit": limit,
                 "operation": "query_records_by_kind",
-                "has_cursor": bool(cursor)
-            }
+                "has_cursor": bool(cursor),
+            },
         )
 
         return await self.get("/query/records", params=params)
 
-    async def fetch_records(self, record_ids: List[str],
-                                attributes: Optional[List[str]] = None) -> Dict[str, Any]:
+    async def fetch_records(
+        self, record_ids: list[str], attributes: list[str] | None = None
+    ) -> dict[str, Any]:
         """Retrieve multiple records at once.
 
         Args:
@@ -279,13 +284,13 @@ class StorageClient(OsduClient):
             extra={
                 "record_count": len(record_ids),
                 "operation": "fetch_records",
-                "attributes": attributes
-            }
+                "attributes": attributes,
+            },
         )
 
         return await self.post("/query/records", json=body)
 
-    async def delete_record(self, id: str) -> Dict[str, Any]:
+    async def delete_record(self, id: str) -> dict[str, Any]:
         """Logically delete a record.
 
         Args:
@@ -299,16 +304,12 @@ class StorageClient(OsduClient):
 
         logger.warning(
             f"Deleting record {id}",
-            extra={
-                "record_id": id,
-                "operation": "delete_record",
-                "destructive": True
-            }
+            extra={"record_id": id, "operation": "delete_record", "destructive": True},
         )
 
         return await self.post(f"/records/{id}:delete")
 
-    async def purge_record(self, id: str, confirm: bool = False) -> Dict[str, Any]:
+    async def purge_record(self, id: str, confirm: bool = False) -> dict[str, Any]:
         """Physically delete a record permanently.
 
         Args:
@@ -335,8 +336,8 @@ class StorageClient(OsduClient):
                 "record_id": id,
                 "operation": "purge_record",
                 "destructive": True,
-                "permanent": True
-            }
+                "permanent": True,
+            },
         )
 
         return await self.delete(f"/records/{id}")

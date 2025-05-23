@@ -1,26 +1,21 @@
 """Tool for updating an existing schema."""
 
-import os
-from typing import Dict, Optional, Any
 import logging
+import os
+from typing import Any
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
-from ...shared.exceptions import (
-    OSMCPAPIError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPAPIError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
 async def schema_update(
-    id: str,
-    schema: Dict[str, Any],
-    status: Optional[str] = None
-) -> Dict[str, Any]:
+    id: str, schema: dict[str, Any], status: str | None = None
+) -> dict[str, Any]:
     """Update an existing schema in DEVELOPMENT status.
 
     WARNING: This operation modifies schema definition and requires write permissions.
@@ -66,7 +61,7 @@ async def schema_update(
     if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
         raise OSMCPAPIError(
             "Schema write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
-            status_code=403
+            status_code=403,
         )
 
     config = ConfigManager()
@@ -90,13 +85,13 @@ async def schema_update(
             if current_scope == "SHARED":
                 raise OSMCPAPIError(
                     f"Cannot update schema in SHARED scope: {id}. Only INTERNAL scope schemas can be modified.",
-                    status_code=403
+                    status_code=403,
                 )
 
             if current_status != "DEVELOPMENT" and status is None:
                 raise OSMCPAPIError(
                     f"Cannot update schema with status {current_status}: {id}. Only schemas in DEVELOPMENT status can be modified.",
-                    status_code=403
+                    status_code=403,
                 )
 
             # Validate status transition
@@ -104,13 +99,13 @@ async def schema_update(
                 if current_status == "PUBLISHED" and status != "OBSOLETE":
                     raise OSMCPAPIError(
                         f"Invalid status transition from {current_status} to {status}. PUBLISHED schemas can only transition to OBSOLETE.",
-                        status_code=400
+                        status_code=400,
                     )
 
                 if current_status == "OBSOLETE":
                     raise OSMCPAPIError(
                         f"Cannot update schema with status OBSOLETE: {id}. OBSOLETE is a terminal state.",
-                        status_code=403
+                        status_code=403,
                     )
 
         except OSMCPAPIError as e:
@@ -122,15 +117,11 @@ async def schema_update(
                 raise
 
         # Update schema
-        response = await client.update_schema(
-            id=id,
-            schema=schema,
-            status=status
-        )
+        response = await client.update_schema(id=id, schema=schema, status=status)
 
         # Determine final status
         final_status = status
-        if not final_status and 'current_status' in locals():
+        if not final_status and "current_status" in locals():
             # Use current status if known
             final_status = current_status
         elif not final_status:
@@ -153,7 +144,7 @@ async def schema_update(
             "id": id,
             "status": final_status,
             "write_enabled": True,
-            "partition": partition
+            "partition": partition,
         }
 
         # Include API response details if available
@@ -175,8 +166,8 @@ async def schema_update(
                 "authority": authority,
                 "source": source,
                 "entity": entity,
-                "version": version
-            }
+                "version": version,
+            },
         )
 
         return result

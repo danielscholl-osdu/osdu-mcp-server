@@ -1,8 +1,9 @@
 """Tests for partition_list tool."""
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from aioresponses import aioresponses
-from unittest.mock import patch, AsyncMock
 
 from osdu_mcp_server.tools.partition.list import partition_list
 
@@ -25,7 +26,9 @@ async def test_partition_list_success():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
 
                 result = await partition_list()
 
@@ -52,7 +55,9 @@ async def test_partition_list_empty():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
 
                 result = await partition_list()
 
@@ -80,7 +85,9 @@ async def test_partition_list_forbidden():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
 
                 result = await partition_list()
 
@@ -107,7 +114,9 @@ async def test_partition_list_with_detailed_metadata():
             }[(section, key)]
 
             with patch("osdu_mcp_server.tools.partition.list.AuthHandler") as mock_auth:
-                mock_auth.return_value.get_access_token = AsyncMock(return_value="test-token")
+                mock_auth.return_value.get_access_token = AsyncMock(
+                    return_value="test-token"
+                )
 
                 result = await partition_list(detailed=True)
 

@@ -1,22 +1,18 @@
 """Tool for retrieving a specific schema."""
 
-from typing import Dict, Any
 import logging
+from typing import Any
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def schema_get(
-    id: str
-) -> Dict[str, Any]:
+async def schema_get(id: str) -> dict[str, Any]:
     """Retrieve complete schema by ID.
 
     Args:
@@ -116,16 +112,13 @@ async def schema_get(
                     "partition": partition,
                     "authority": identity.get("authority"),
                     "status": status,
-                    "scope": scope
-                }
+                    "scope": scope,
+                },
             )
         else:
             logger.info(
                 "Retrieved schema successfully",
-                extra={
-                    "schema_id": id,
-                    "partition": partition
-                }
+                extra={"schema_id": id, "partition": partition},
             )
 
         return response

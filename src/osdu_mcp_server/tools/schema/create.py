@@ -1,16 +1,13 @@
 """Tool for creating a new schema."""
 
-import os
-from typing import Dict, Optional, Any
 import logging
+import os
+from typing import Any
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
-from ...shared.exceptions import (
-    OSMCPAPIError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPAPIError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +20,10 @@ async def schema_create(
     major_version: int,
     minor_version: int,
     patch_version: int,
-    schema: Dict[str, Any],
+    schema: dict[str, Any],
     status: str = "DEVELOPMENT",
-    description: Optional[str] = None
-) -> Dict[str, Any]:
+    description: str | None = None,
+) -> dict[str, Any]:
     """Create a new schema.
 
     WARNING: This operation creates a new schema and requires write permissions.
@@ -91,7 +88,7 @@ async def schema_create(
     if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
         raise OSMCPAPIError(
             "Schema write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
-            status_code=403
+            status_code=403,
         )
 
     config = ConfigManager()
@@ -104,8 +101,7 @@ async def schema_create(
 
         # Format schema ID for logging and response
         schema_id = client.format_schema_id(
-            authority, source, entity,
-            major_version, minor_version, patch_version
+            authority, source, entity, major_version, minor_version, patch_version
         )
 
         # Ensure schema has the minimum required elements
@@ -123,7 +119,9 @@ async def schema_create(
             schema["description"] = description
 
         if description and "title" not in schema:
-            schema["title"] = description.split('.')[0] if '.' in description else description
+            schema["title"] = (
+                description.split(".")[0] if "." in description else description
+            )
 
         # Create schema
         response = await client.create_schema(
@@ -135,7 +133,7 @@ async def schema_create(
             patch_version=patch_version,
             schema=schema,
             status=status,
-            description=description
+            description=description,
         )
 
         # Build response
@@ -145,7 +143,7 @@ async def schema_create(
             "id": schema_id,
             "status": status,
             "write_enabled": True,
-            "partition": partition
+            "partition": partition,
         }
 
         # Include API response details if available
@@ -165,8 +163,8 @@ async def schema_create(
                 "source": source,
                 "entity": entity,
                 "version": f"{major_version}.{minor_version}.{patch_version}",
-                "status": status
-            }
+                "status": status,
+            },
         )
 
         return result

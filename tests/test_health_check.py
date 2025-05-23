@@ -1,7 +1,8 @@
 """Tests for the health check tool."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 from osdu_mcp_server.tools.health_check import health_check
 
@@ -9,15 +10,17 @@ from osdu_mcp_server.tools.health_check import health_check
 @pytest.mark.asyncio
 async def test_health_check_success():
     """Test successful health check with mocked dependencies."""
-    with patch('osdu_mcp_server.tools.health_check.ConfigManager') as mock_config, \
-         patch('osdu_mcp_server.tools.health_check.AuthHandler') as mock_auth, \
-         patch('osdu_mcp_server.tools.health_check.OsduClient') as mock_client:
+    with (
+        patch("osdu_mcp_server.tools.health_check.ConfigManager") as mock_config,
+        patch("osdu_mcp_server.tools.health_check.AuthHandler") as mock_auth,
+        patch("osdu_mcp_server.tools.health_check.OsduClient") as mock_client,
+    ):
 
         # Setup mocks
         mock_config_instance = MagicMock()
         mock_config_instance.get_required.side_effect = lambda section, key: {
             ("server", "url"): "https://test-osdu.com",
-            ("server", "data_partition"): "test-partition"
+            ("server", "data_partition"): "test-partition",
         }[(section, key)]
         mock_config.return_value = mock_config_instance
 
@@ -44,9 +47,11 @@ async def test_health_check_success():
 @pytest.mark.asyncio
 async def test_health_check_auth_failure():
     """Test health check with authentication failure."""
-    with patch('osdu_mcp_server.tools.health_check.ConfigManager') as mock_config, \
-         patch('osdu_mcp_server.tools.health_check.AuthHandler') as mock_auth, \
-         patch('osdu_mcp_server.tools.health_check.OsduClient') as mock_client:
+    with (
+        patch("osdu_mcp_server.tools.health_check.ConfigManager") as mock_config,
+        patch("osdu_mcp_server.tools.health_check.AuthHandler") as mock_auth,
+        patch("osdu_mcp_server.tools.health_check.OsduClient") as mock_client,
+    ):
 
         # Setup mocks
         mock_config_instance = MagicMock()
@@ -69,9 +74,11 @@ async def test_health_check_auth_failure():
 @pytest.mark.asyncio
 async def test_health_check_service_unhealthy():
     """Test health check with one unhealthy service."""
-    with patch('osdu_mcp_server.tools.health_check.ConfigManager') as mock_config, \
-         patch('osdu_mcp_server.tools.health_check.AuthHandler') as mock_auth, \
-         patch('osdu_mcp_server.tools.health_check.OsduClient') as mock_client:
+    with (
+        patch("osdu_mcp_server.tools.health_check.ConfigManager") as mock_config,
+        patch("osdu_mcp_server.tools.health_check.AuthHandler") as mock_auth,
+        patch("osdu_mcp_server.tools.health_check.OsduClient") as mock_client,
+    ):
 
         # Setup mocks
         mock_config_instance = MagicMock()
@@ -84,8 +91,8 @@ async def test_health_check_service_unhealthy():
         # Storage service fails
         mock_client_instance.get.side_effect = [
             Exception("Service unavailable"),  # storage fails
-            {"version": "1.0.0"},              # search succeeds
-            {"version": "1.0.0"}               # legal succeeds
+            {"version": "1.0.0"},  # search succeeds
+            {"version": "1.0.0"},  # legal succeeds
         ]
         mock_client.return_value = mock_client_instance
 
@@ -101,9 +108,11 @@ async def test_health_check_service_unhealthy():
 @pytest.mark.asyncio
 async def test_health_check_without_services():
     """Test health check without checking services."""
-    with patch('osdu_mcp_server.tools.health_check.ConfigManager') as mock_config, \
-         patch('osdu_mcp_server.tools.health_check.AuthHandler') as mock_auth, \
-         patch('osdu_mcp_server.tools.health_check.OsduClient') as mock_client:
+    with (
+        patch("osdu_mcp_server.tools.health_check.ConfigManager") as mock_config,
+        patch("osdu_mcp_server.tools.health_check.AuthHandler") as mock_auth,
+        patch("osdu_mcp_server.tools.health_check.OsduClient") as mock_client,
+    ):
 
         # Setup mocks
         mock_config_instance = MagicMock()
@@ -124,9 +133,11 @@ async def test_health_check_without_services():
 @pytest.mark.asyncio
 async def test_health_check_with_version_info():
     """Test health check with version information."""
-    with patch('osdu_mcp_server.tools.health_check.ConfigManager') as mock_config, \
-         patch('osdu_mcp_server.tools.health_check.AuthHandler') as mock_auth, \
-         patch('osdu_mcp_server.tools.health_check.OsduClient') as mock_client:
+    with (
+        patch("osdu_mcp_server.tools.health_check.ConfigManager") as mock_config,
+        patch("osdu_mcp_server.tools.health_check.AuthHandler") as mock_auth,
+        patch("osdu_mcp_server.tools.health_check.OsduClient") as mock_client,
+    ):
 
         # Setup mocks
         mock_config_instance = MagicMock()

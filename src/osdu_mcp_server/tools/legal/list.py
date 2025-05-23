@@ -1,22 +1,17 @@
 """Tool for listing legal tags."""
 
-from typing import Dict, Optional
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_list(
-    valid_only: Optional[bool] = True
-) -> Dict:
+async def legaltag_list(valid_only: bool | None = True) -> dict:
     """List all legal tags in the current partition.
 
     Args:
@@ -61,7 +56,7 @@ async def legaltag_list(
             "success": True,
             "legalTags": legal_tags,
             "count": len(legal_tags),
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
@@ -69,8 +64,8 @@ async def legaltag_list(
             extra={
                 "count": len(legal_tags),
                 "partition": partition,
-                "valid_only": valid_only
-            }
+                "valid_only": valid_only,
+            },
         )
 
         return result
