@@ -54,19 +54,14 @@ async def legaltag_delete(name: str, confirm: bool) -> dict:
             "warning": "Associated data is now invalid",
         }
 
-        logger.info(
-            "Deleted legal tag successfully",
-            extra={"name": name, "partition": partition},
-        )
-
-        # Audit log for write operation
-        logger.audit(
-            "Legal tag deleted",
+        logger.warning(
+            "Legal tag deleted - associated data is now invalid",
             extra={
                 "operation": "delete_legal_tag",
                 "tag_name": name,
                 "partition": partition,
-                "user": "authenticated_user",  # Should be extracted from auth context
+                "destructive": True,
+                "permanent": False,
                 "warning": "Associated data is now invalid",
             },
         )

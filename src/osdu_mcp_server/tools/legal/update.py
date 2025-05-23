@@ -71,18 +71,13 @@ async def legaltag_update(
         }
 
         logger.info(
-            "Updated legal tag successfully",
-            extra={"name": name, "partition": partition},
-        )
-
-        # Audit log for write operation
-        logger.audit(
             "Legal tag updated",
             extra={
                 "operation": "update_legal_tag",
                 "tag_name": name,
                 "partition": partition,
-                "user": "authenticated_user",  # Should be extracted from auth context
+                "destructive": False,
+                "permanent": False,
             },
         )
 

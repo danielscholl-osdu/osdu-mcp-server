@@ -93,18 +93,13 @@ async def legaltag_create(
         }
 
         logger.info(
-            "Created legal tag successfully",
-            extra={"name": name, "partition": partition},
-        )
-
-        # Audit log for write operation
-        logger.audit(
             "Legal tag created",
             extra={
                 "operation": "create_legal_tag",
                 "tag_name": name,
                 "partition": partition,
-                "user": "authenticated_user",  # Should be extracted from auth context
+                "destructive": False,
+                "permanent": False,
             },
         )
 

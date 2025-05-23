@@ -45,43 +45,43 @@ from .tools.storage import (
 mcp = FastMCP("OSDU MCP Server")
 
 # Register tools
-mcp.tool()(health_check)
+mcp.tool()(health_check)  # type: ignore[arg-type]
 
 # Register partition tools
-mcp.tool()(partition_list)
-mcp.tool()(partition_get)
-mcp.tool()(partition_create)
-mcp.tool()(partition_update)
-mcp.tool()(partition_delete)
+mcp.tool()(partition_list)  # type: ignore[arg-type]
+mcp.tool()(partition_get)  # type: ignore[arg-type]
+mcp.tool()(partition_create)  # type: ignore[arg-type]
+mcp.tool()(partition_update)  # type: ignore[arg-type]
+mcp.tool()(partition_delete)  # type: ignore[arg-type]
 
 # Register entitlements tools
-mcp.tool()(entitlements_mine)
+mcp.tool()(entitlements_mine)  # type: ignore[arg-type]
 
 # Register legal tools
-mcp.tool()(legaltag_list)
-mcp.tool()(legaltag_get)
-mcp.tool()(legaltag_get_properties)
-mcp.tool()(legaltag_search)
-mcp.tool()(legaltag_batch_retrieve)
-mcp.tool()(legaltag_create)
-mcp.tool()(legaltag_update)
-mcp.tool()(legaltag_delete)
+mcp.tool()(legaltag_list)  # type: ignore[arg-type]
+mcp.tool()(legaltag_get)  # type: ignore[arg-type]
+mcp.tool()(legaltag_get_properties)  # type: ignore[arg-type]
+mcp.tool()(legaltag_search)  # type: ignore[arg-type]
+mcp.tool()(legaltag_batch_retrieve)  # type: ignore[arg-type]
+mcp.tool()(legaltag_create)  # type: ignore[arg-type]
+mcp.tool()(legaltag_update)  # type: ignore[arg-type]
+mcp.tool()(legaltag_delete)  # type: ignore[arg-type]
 
 # Register schema tools
-mcp.tool()(schema_list)
-mcp.tool()(schema_get)
-mcp.tool()(schema_search)
-mcp.tool()(schema_create)
-mcp.tool()(schema_update)
+mcp.tool()(schema_list)  # type: ignore[arg-type]
+mcp.tool()(schema_get)  # type: ignore[arg-type]
+mcp.tool()(schema_search)  # type: ignore[arg-type]
+mcp.tool()(schema_create)  # type: ignore[arg-type]
+mcp.tool()(schema_update)  # type: ignore[arg-type]
 
 # Register storage tools
-mcp.tool()(storage_create_update_records)
-mcp.tool()(storage_get_record)
-mcp.tool()(storage_get_record_version)
-mcp.tool()(storage_list_record_versions)
-mcp.tool()(storage_query_records_by_kind)
-mcp.tool()(storage_fetch_records)
-mcp.tool()(storage_delete_record)
-mcp.tool()(storage_purge_record)
+mcp.tool()(storage_create_update_records)  # type: ignore[arg-type]
+mcp.tool()(storage_get_record)  # type: ignore[arg-type]
+mcp.tool()(storage_get_record_version)  # type: ignore[arg-type]
+mcp.tool()(storage_list_record_versions)  # type: ignore[arg-type]
+mcp.tool()(storage_query_records_by_kind)  # type: ignore[arg-type]
+mcp.tool()(storage_fetch_records)  # type: ignore[arg-type]
+mcp.tool()(storage_delete_record)  # type: ignore[arg-type]
+mcp.tool()(storage_purge_record)  # type: ignore[arg-type]
 
 # This module can be imported by the main entry point
