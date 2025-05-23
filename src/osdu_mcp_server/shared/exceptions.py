@@ -54,7 +54,13 @@ def handle_osdu_exceptions(
     func: Callable[..., Coroutine[Any, Any, Any]] | None = None,
     *,
     default_message: str = "OSDU operation failed",
-) -> Callable[..., Coroutine[Any, Any, Any]] | Callable[[Callable[..., Coroutine[Any, Any, Any]]], Callable[..., Coroutine[Any, Any, Any]]]:
+) -> (
+    Callable[..., Coroutine[Any, Any, Any]]
+    | Callable[
+        [Callable[..., Coroutine[Any, Any, Any]]],
+        Callable[..., Coroutine[Any, Any, Any]],
+    ]
+):
     """Decorator to handle OSDU exceptions and convert them to MCP errors.
 
     Args:

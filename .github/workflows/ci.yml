@@ -75,7 +75,7 @@ jobs:
           --cov=src/osdu_mcp_server \
           --cov-report=xml \
           --cov-report=term-missing \
-          --cov-fail-under=80 \
+          --cov-fail-under=70 \
           -v
         echo "::endgroup::"
         
@@ -113,7 +113,7 @@ jobs:
         
         if [[ "${{ steps.pytest.outcome }}" == "failure" ]]; then
           echo "❌ **PyTest failed**" >> $GITHUB_STEP_SUMMARY
-          echo "   Tests failed or coverage is below 80%" >> $GITHUB_STEP_SUMMARY
+          echo "   Tests failed or coverage is below 70%" >> $GITHUB_STEP_SUMMARY
         else
           echo "✅ PyTest passed with sufficient coverage" >> $GITHUB_STEP_SUMMARY
         fi

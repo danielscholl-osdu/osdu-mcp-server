@@ -188,15 +188,15 @@ class AuthHandler:
                     "Azure authentication token expired. Please run 'az login' to refresh"
                 )
             elif (
-                "invalid_scope" in error_message or
-                "scope format is invalid" in error_message
+                "invalid_scope" in error_message
+                or "scope format is invalid" in error_message
             ):
                 raise OSMCPAuthError(
                     "Invalid Azure client ID. Please verify your AZURE_CLIENT_ID is correct"
                 )
             elif (
-                "no accounts were found" in error_message or
-                "environment variables are not fully configured" in error_message
+                "no accounts were found" in error_message
+                or "environment variables are not fully configured" in error_message
             ):
                 if os.environ.get("AZURE_CLIENT_SECRET"):
                     raise OSMCPAuthError(

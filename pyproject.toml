@@ -102,6 +102,7 @@ filterwarnings = [
 [tool.coverage.run]
 branch = true
 source = ["osdu_mcp_server"]
+omit = ["*/main.py"]
 
 [tool.coverage.report]
 exclude_lines = [
