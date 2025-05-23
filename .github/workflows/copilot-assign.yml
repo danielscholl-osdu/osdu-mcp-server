@@ -18,16 +18,22 @@ jobs:
           script: |
             const issue = context.issue;
             
-            // Assign the issue to copilot user
-            await github.rest.issues.addAssignees({
-              ...issue,
-              assignees: ['copilot']
-            });
+            // Try to assign the issue to copilot user, but continue if it fails
+            try {
+              await github.rest.issues.addAssignees({
+                ...issue,
+                assignees: ['copilot']
+              });
+              console.log('Successfully assigned issue to copilot user');
+            } catch (error) {
+              console.log(`Failed to assign issue: ${error.message}`);
+              // Continue with the workflow
+            }
             
             // Add a comment confirming the assignment
             await github.rest.issues.createComment({
               ...issue,
-              body: `🤖 This issue has been automatically assigned to @copilot for implementation.
+              body: `🤖 This issue has been labeled for GitHub Copilot implementation.
               
               Copilot will follow the established patterns and guidelines in:
               - \`.github/copilot-instructions.md\`
