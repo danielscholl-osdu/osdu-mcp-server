@@ -54,6 +54,16 @@ After successful implementation and validation, the AI agent reassesses the proj
 
 This step ensures ADRs and specifications remain accurate, living documents that grow with the code. By closing this loop, the AI keeps documentation aligned with the evolving system, preserving architectural clarity and supporting sustainable development.
 
+#### Updating AI_EVOLUTION.md
+
+When completing significant features or architectural changes, update AI_EVOLUTION.md with:
+- The challenge that was solved
+- Key insights or patterns discovered
+- Lessons learned for future development
+- Evolution of existing patterns
+
+This creates a knowledge base that helps future AI agents understand not just what exists, but why it exists.
+
 ### 6. Merge Request
 
 After validation and documentation updates, the AI agent prepares a Merge Request (MR) to propose integrating changes into the main branch.
@@ -81,6 +91,34 @@ At the end of each development cycle, the AI agent records a session log to capt
 Session logs serve as an evolving memory for ongoing workstreams, enabling the AI to 'remember' past activities, maintain continuity across phases, and provide rich context when revisiting or expanding on larger features and epics.
 
 By preserving this knowledge, session logs ensure the AI stays aligned with project goals and maintains situational awareness throughout long-running initiatives.
+
+## Working with GitHub Copilot Coding Agent
+
+This project is optimized for collaboration with GitHub Copilot coding agent. To assign tasks to Copilot:
+
+1. **Create Well-Scoped Issues**: Use the "Copilot Task" issue template
+2. **Clear Acceptance Criteria**: Define exactly what success looks like
+3. **Reference Patterns**: Point to existing code patterns to follow
+4. **Specify Files**: List which files need modification
+
+Copilot will:
+- Follow the patterns defined in `.github/copilot-instructions.md`
+- Use the pre-configured development environment
+- Run quality checks before creating pull requests
+- Respond to review comments for iterations
+
+Best tasks for Copilot:
+- Adding new tools following existing patterns
+- Improving test coverage
+- Fixing type errors or lint issues
+- Updating documentation
+- Small, well-defined features
+
+Avoid assigning Copilot:
+- Major architectural changes
+- Security-critical modifications
+- Complex cross-service refactoring
+- Ambiguous or exploratory tasks
 
 ## Development Workflow Overview
 
