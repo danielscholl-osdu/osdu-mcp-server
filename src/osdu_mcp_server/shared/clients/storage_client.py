@@ -24,15 +24,19 @@ class StorageClient(OsduClient):
         full_path = f"{self._base_path}{path}"
         return await super().get(full_path, **kwargs)
 
-    async def post(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
         """Override post to include service base path."""
         full_path = f"{self._base_path}{path}"
-        return await super().post(full_path, **kwargs)
+        if data is None and "json" in kwargs:
+            data = kwargs.pop("json")
+        return await super().post(full_path, data, **kwargs)
 
-    async def put(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
         """Override put to include service base path."""
         full_path = f"{self._base_path}{path}"
-        return await super().put(full_path, **kwargs)
+        if data is None and "json" in kwargs:
+            data = kwargs.pop("json")
+        return await super().put(full_path, data, **kwargs)
 
     async def delete(self, path: str, **kwargs: Any) -> Dict[str, Any]:
         """Override delete to include service base path."""
