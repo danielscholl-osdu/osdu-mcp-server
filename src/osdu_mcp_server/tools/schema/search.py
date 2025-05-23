@@ -1,6 +1,7 @@
 """Tool for advanced schema discovery with rich filtering and text search."""
 
 import fnmatch
+from typing import Dict, List, Union
 
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
@@ -97,8 +98,8 @@ async def schema_search(
     filter = filter or {}
 
     # Analyze what can be server-side filtered
-    server_filters = {}
-    client_filters = {}
+    server_filters: Dict[str, List[str]] = {}
+    client_filters: Dict[str, Union[str, List[str]]] = {}
 
     try:
         # Get current partition
@@ -106,16 +107,25 @@ async def schema_search(
 
         # Process server-side filtering
         # These are filters that can be directly passed to the API
-        if isinstance(filter.get("authority"), str):
-            server_filters["authority"] = filter["authority"]
-        if isinstance(filter.get("source"), str):
-            server_filters["source"] = filter["source"]
-        if isinstance(filter.get("entity"), str):
-            server_filters["entityType"] = filter["entity"]
-        if isinstance(filter.get("status"), str):
-            server_filters["status"] = filter["status"]
-        if isinstance(filter.get("scope"), str):
-            server_filters["scope"] = filter["scope"]
+        authority_val = filter.get("authority")
+        if isinstance(authority_val, str):
+            server_filters["authority"] = [authority_val]
+
+        source_val = filter.get("source")
+        if isinstance(source_val, str):
+            server_filters["source"] = [source_val]
+
+        entity_val = filter.get("entity")
+        if isinstance(entity_val, str):
+            server_filters["entityType"] = [entity_val]
+
+        status_val = filter.get("status")
+        if isinstance(status_val, str):
+            server_filters["status"] = [status_val]
+
+        scope_val = filter.get("scope")
+        if isinstance(scope_val, str):
+            server_filters["scope"] = [scope_val]
 
         # Collect filters that need client-side processing
         # These include array filters and other advanced criteria

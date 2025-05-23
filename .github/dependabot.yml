@@ -1,0 +1,37 @@
+# Dependabot configuration for automated dependency updates
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 5
+    groups:
+      python-dev:
+        patterns:
+          - "pytest*"
+          - "mypy"
+          - "black"
+          - "ruff"
+          - "flake8"
+      python-prod:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "pytest*"
+          - "mypy"
+          - "black"
+          - "ruff"
+          - "flake8"
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 3

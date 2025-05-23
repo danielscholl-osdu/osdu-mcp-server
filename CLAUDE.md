@@ -1,46 +1,69 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file guides AI assistants working with the OSDU MCP Server codebase.
 
-## Project Overview
+## Project Context
 
-OSDU MCP Server is a Model Context Protocol server that provides AI assistants with access to OSDU platform capabilities. The project adapts patterns from the OSDU CLI while building an independent implementation optimized for MCP.
+OSDU MCP Server provides Model Context Protocol access to the OSDU platform. It adapts proven patterns from the OSDU CLI while being optimized for MCP's headless, long-running service model.
 
-## Development Commands
+## AI-Driven Development Workflow
 
-- Testing framework setup (pytest)
-- github `gh` command
+This project follows an AI-agent driven workflow. See @CONTRIBUTING.md for the full process.
 
-## Key Documentation
+Key principles:
+- Architecture first: ADRs define decisions, specs define behavior
+- Test-driven: Minimum 80% coverage, behavior-focused tests (ADR-010)
+- Incremental: Build features phase by phase with validation
 
-@CONTRIBUTING.md
-@docs/adr/README.md
-@docs/project-architect.md
+## Essential Commands
 
+```bash
+# Quality checks (run before committing)
+uv run mypy . && uv run flake8 src/ && uv run pytest
 
-## Guidance
+# Individual commands
+uv run pytest                    # Run all tests
+uv run pytest -xvs              # Run tests, stop on first failure
+uv run mypy .                   # Type checking
+uv run flake8 src/              # Linting
+uv run black src/ tests/        # Format code
 
-1. Branch Naming:
-   - Use: agent/<issue-number>-<short-description>
-   - Example: agent/42-fix-login-bug
+# Git workflow
+git checkout -b agent/<issue-number>-<description>
+git commit -m "feat: add new feature"  # Conventional commits
+gh pr create                           # Create pull request
+```
 
-2. Commit Message Format (Release Please):
-   - Use Conventional Commits style for Release Please automation
-   - Format: <type>[optional scope]: <description>
-   - Types that trigger releases:
-     - feat: - New feature (minor version bump)
-     - fix: - Bug fix (patch version bump)
-     - feat!: or fix!: - Breaking change (major version bump)
-   - Types for maintenance (no version bump):
-     - chore: - Maintenance tasks, dependency updates
-     - docs: - Documentation changes
-     - style: - Code formatting, no logic changes
-     - refactor: - Code refactoring without new features
-     - test: - Adding or updating tests
+## Key Architecture Patterns
 
-3. Merge Request (MR) Template:
-   - Description: Brief summary of the changes and why they were made
-   - Related Issues: List related issues (e.g., Closes #42, Relates to #15)
-   - Type of Change: Bug fix, New feature, Breaking change, or Documentation update
-   - Checklist: Code builds and passes tests, Documentation updated, Conventional commit format used, Reviewer assigned
-   - Additional Notes: Any extra context, screenshots, or deployment considerations
+1. **Tool Implementation**: See any file in `src/osdu_mcp_server/tools/` for the pattern
+2. **Service Clients**: Inherit from OsduClient, see `shared/clients/`
+3. **Error Handling**: Use @handle_osdu_exceptions decorator
+4. **Write Protection**: Check ADR-020 for dual permission model
+5. **Authentication**: DefaultAzureCredential with configurable exclusions (ADR-002)
+
+## Core Documentation
+
+- @CONTRIBUTING.md - AI-driven development workflow
+- @docs/adr/README.md - Architectural decisions index
+- @docs/project-architect.md - System architecture
+- @CHANGELOG.md - Feature history with architectural context
+- @AI_EVOLUTION.md - Project evolution story for AI understanding
+
+## Development Guidelines
+
+1. **Commits**: Use conventional commits (feat:, fix:, chore:, docs:, etc.)
+2. **Branches**: `agent/<issue>-<description>` format
+3. **Testing**: Write behavior-driven tests, not implementation tests
+4. **Type Safety**: Fix all mypy errors before committing
+5. **Documentation**: Update ADRs when architecture changes
+
+## Current Phase
+
+The project is in active development. Check recent issues and ADRs to understand the current focus areas.
+
+## Working with Other AI Assistants
+
+- **GitHub Copilot**: See `.github/copilot-instructions.md` for GitHub Copilot coding agent guidance
+- **Context Sharing**: Key patterns and guidelines are documented consistently across CLAUDE.md and copilot-instructions.md
+- **Workflow Integration**: All AI assistants should follow the same architectural patterns and testing standards
