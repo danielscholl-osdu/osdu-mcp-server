@@ -1,0 +1,53 @@
+name: Setup OSDU MCP Server Development Environment
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv package manager
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          # Install all dependencies including dev tools
+          uv sync --frozen
+          uv pip install -e .[dev]
+
+      - name: Verify installation
+        run: |
+          # Verify key tools are available
+          uv run python --version
+          uv run pytest --version
+          uv run mypy --version
+          uv run black --version
+          uv run flake8 --version
+
+      - name: Run initial checks
+        run: |
+          # Run type checking to ensure environment is valid
+          uv run mypy . || echo "Type checking completed with warnings"
+          
+          # Ensure code is properly formatted
+          uv run black --check src/ tests/ || echo "Code formatting check completed"
+
+      - name: Display project info
+        run: |
+          echo "OSDU MCP Server development environment ready!"
+          echo "Key commands:"
+          echo "  - Test: uv run pytest"
+          echo "  - Type check: uv run mypy ."
+          echo "  - Format: uv run black src/ tests/"
+          echo "  - Lint: uv run flake8 src/"
