@@ -11,6 +11,13 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.1.2](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.1...v0.1.2) (2025-05-23)
+
+
+### Bug Fixes
+
+* **github:** Fix Auto-Assign Copilot Workflow Error Handling ([ad30b3e](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/ad30b3eeb620e00cb725374dc91e99521381b999))
+
 ## [0.1.1](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.0...v0.1.1) (2025-05-23)
 
 
