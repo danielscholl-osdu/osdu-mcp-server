@@ -21,16 +21,14 @@ class SchemaClient(OsduClient):
         full_path = f"{self._base_path}{path}"
         return await super().get(full_path, **kwargs)
 
-    async def post(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
         """Override post to include service base path."""
         full_path = f"{self._base_path}{path}"
-        data = kwargs.pop("json", None)
         return await super().post(full_path, data, **kwargs)
 
-    async def put(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
         """Override put to include service base path."""
         full_path = f"{self._base_path}{path}"
-        data = kwargs.pop("json", None)
         return await super().put(full_path, data, **kwargs)
 
     def format_schema_id(self, authority: str, source: str, entity: str,
