@@ -70,11 +70,11 @@ Use Conventional Commits for Release Please automation:
 When creating GitHub issues, apply appropriate labels from these categories:
 1. **Type** (required): bug, enhancement, documentation, refactor, cleanup, testing, security, performance
 2. **Priority**: high-priority, medium-priority, low-priority
-3. **Service**: service:partition, service:legal, service:schema, service:storage, service:entitlements
-4. **Component**: configuration, dependencies, github_actions, code-quality, ADR
-5. **Status**: needs-triage, blocked, breaking-change, help wanted, good first issue
+3. **Component**: configuration, dependencies, github_actions, code-quality, ADR
+4. **Status**: needs-triage, blocked, breaking-change, help wanted, good first issue
+5. **AI Agent**: copilot (for issues suitable for Copilot implementation)
 
-Example: `gh issue create -l "bug,service:storage,high-priority"`
+Example: `gh issue create -l "bug,high-priority,copilot"`
 See `docs/label-strategy.md` for complete guidelines.
 
 ## Important Context

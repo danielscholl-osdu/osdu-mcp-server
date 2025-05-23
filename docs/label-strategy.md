@@ -73,14 +73,14 @@ Apply the **copilot** label to issues that are:
 
 ## Label Selection Examples
 
-### Example 1: Bug in Storage Service
+### Example 1: Bug in Authentication
 ```
-Labels: bug, service:storage, high-priority
+Labels: bug, configuration, high-priority
 ```
 
-### Example 2: Add Documentation for Schema Tools
+### Example 2: Add Documentation for Tools
 ```
-Labels: documentation, service:schema, low-priority
+Labels: documentation, low-priority
 ```
 
 ### Example 3: Refactor Authentication Code
@@ -93,9 +93,9 @@ Labels: refactor, configuration, medium-priority
 Labels: dependencies, cleanup, low-priority
 ```
 
-### Example 5: New Feature for Legal Tags
+### Example 5: New Feature Request
 ```
-Labels: enhancement, service:legal, medium-priority
+Labels: enhancement, medium-priority
 ```
 
 ### Example 6: Fix Security Vulnerability in Auth
@@ -105,12 +105,12 @@ Labels: security, bug, high-priority, configuration
 
 ### Example 7: Improve Query Performance
 ```
-Labels: performance, enhancement, service:storage
+Labels: performance, enhancement
 ```
 
-### Example 8: Add Tests for Schema Validation
+### Example 8: Add Tests for Validation Logic
 ```
-Labels: testing, service:schema, medium-priority
+Labels: testing, medium-priority
 ```
 
 ### Example 9: Breaking API Change
