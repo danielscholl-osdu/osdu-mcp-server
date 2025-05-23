@@ -40,25 +40,95 @@ jobs:
         uv sync --frozen
         uv pip install -e .[dev]
         
-    # Run all quality checks
+    # Run all quality checks - continue on error to see all failures
     - name: Check code formatting with black
-      run: uv run black --check src/ tests/
+      id: black
+      continue-on-error: true
+      run: |
+        echo "::group::Black Formatting Check"
+        uv run black --check src/ tests/ --diff --color
+        echo "::endgroup::"
       
     - name: Lint with flake8
-      run: uv run flake8 src/ --count --statistics
+      id: flake8
+      continue-on-error: true
+      run: |
+        echo "::group::Flake8 Linting"
+        uv run flake8 src/ --count --statistics --show-source --color always
+        echo "::endgroup::"
       
     - name: Type check with mypy
-      run: uv run mypy .
-      
-    # Run tests with coverage
-    - name: Run tests with coverage
+      id: mypy
+      continue-on-error: true
       run: |
+        echo "::group::MyPy Type Checking"
+        uv run mypy . --pretty --color-output
+        echo "::endgroup::"
+      
+    # Run tests with coverage - continue on error to get results
+    - name: Run tests with coverage
+      id: pytest
+      continue-on-error: true
+      run: |
+        echo "::group::PyTest with Coverage"
         uv run pytest \
           --cov=src/osdu_mcp_server \
           --cov-report=xml \
           --cov-report=term-missing \
           --cov-fail-under=80 \
           -v
+        echo "::endgroup::"
+        
+    # Generate quality check summary
+    - name: Quality Check Summary
+      if: always()
+      run: |
+        echo "## Quality Check Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Check each step's outcome
+        if [[ "${{ steps.black.outcome }}" == "failure" ]]; then
+          echo "❌ **Black formatting check failed**" >> $GITHUB_STEP_SUMMARY
+          echo "   Run \`black src/ tests/\` locally to fix formatting issues" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ Black formatting check passed" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [[ "${{ steps.flake8.outcome }}" == "failure" ]]; then
+          echo "❌ **Flake8 linting failed**" >> $GITHUB_STEP_SUMMARY
+          echo "   Check the logs above for specific linting errors" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ Flake8 linting passed" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [[ "${{ steps.mypy.outcome }}" == "failure" ]]; then
+          echo "❌ **MyPy type checking failed**" >> $GITHUB_STEP_SUMMARY
+          echo "   Fix type errors shown in the logs above" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ MyPy type checking passed" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [[ "${{ steps.pytest.outcome }}" == "failure" ]]; then
+          echo "❌ **PyTest failed**" >> $GITHUB_STEP_SUMMARY
+          echo "   Tests failed or coverage is below 80%" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "✅ PyTest passed with sufficient coverage" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        # Overall status
+        if [[ "${{ steps.black.outcome }}" == "failure" ]] || \
+           [[ "${{ steps.flake8.outcome }}" == "failure" ]] || \
+           [[ "${{ steps.mypy.outcome }}" == "failure" ]] || \
+           [[ "${{ steps.pytest.outcome }}" == "failure" ]]; then
+          echo "### ⚠️ Quality checks failed - see details above" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        else
+          echo "### ✅ All quality checks passed!" >> $GITHUB_STEP_SUMMARY
+        fi
           
     # Upload coverage (optional)
     - name: Upload coverage to Codecov (optional)
