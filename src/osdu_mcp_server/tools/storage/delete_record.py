@@ -1,6 +1,5 @@
 """Tool for logically deleting a record."""
 
-
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
 from ...shared.config_manager import ConfigManager

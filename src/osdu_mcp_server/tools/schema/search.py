@@ -130,13 +130,18 @@ async def schema_search(
         # Collect filters that need client-side processing
         # These include array filters and other advanced criteria
         for key, value in filter.items():
-            if key in [
-                "authority",
-                "source",
-                "entity",
-                "status",
-                "scope",
-            ] and isinstance(value, list) or key not in ["authority", "source", "entity", "status", "scope"]:
+            if (
+                key
+                in [
+                    "authority",
+                    "source",
+                    "entity",
+                    "status",
+                    "scope",
+                ]
+                and isinstance(value, list)
+                or key not in ["authority", "source", "entity", "status", "scope"]
+            ):
                 client_filters[key] = value
 
         # Apply server-side filtering through the API
@@ -251,7 +256,18 @@ def _matches_client_filters(
         if not isinstance(values, list):
             continue
 
-        if key == "authority" and schema_identity.get("authority") not in values or key == "source" and schema_identity.get("source") not in values or key == "entity" and schema_identity.get("entityType") not in values or key == "status" and schema.get("status") not in values or key == "scope" and schema.get("scope") not in values:
+        if (
+            key == "authority"
+            and schema_identity.get("authority") not in values
+            or key == "source"
+            and schema_identity.get("source") not in values
+            or key == "entity"
+            and schema_identity.get("entityType") not in values
+            or key == "status"
+            and schema.get("status") not in values
+            or key == "scope"
+            and schema.get("scope") not in values
+        ):
             return False
 
     # Check version pattern if provided
@@ -283,23 +299,23 @@ async def _matches_text_search(
 
     # Check in identity fields
     if (
-        "id" in search_fields and
-        schema_identity.get("id", "").lower().find(text_lower) != -1
+        "id" in search_fields
+        and schema_identity.get("id", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "authority" in search_fields and
-        schema_identity.get("authority", "").lower().find(text_lower) != -1
+        "authority" in search_fields
+        and schema_identity.get("authority", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "source" in search_fields and
-        schema_identity.get("source", "").lower().find(text_lower) != -1
+        "source" in search_fields
+        and schema_identity.get("source", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "entityType" in search_fields and
-        schema_identity.get("entityType", "").lower().find(text_lower) != -1
+        "entityType" in search_fields
+        and schema_identity.get("entityType", "").lower().find(text_lower) != -1
     ):
         return True
 
@@ -323,13 +339,13 @@ async def _matches_text_search(
 
         # Search in schema content fields
         if (
-            "title" in search_fields and
-            schema_content.get("title", "").lower().find(text_lower) != -1
+            "title" in search_fields
+            and schema_content.get("title", "").lower().find(text_lower) != -1
         ):
             return True
         if (
-            "description" in search_fields and
-            schema_content.get("description", "").lower().find(text_lower) != -1
+            "description" in search_fields
+            and schema_content.get("description", "").lower().find(text_lower) != -1
         ):
             return True
 
@@ -365,7 +381,12 @@ def _search_in_object(obj: dict, text: str) -> bool:
         # Check in list elements
         elif isinstance(value, list):
             for item in value:
-                if isinstance(item, dict) and _search_in_object(item, text) or isinstance(item, str) and text in item.lower():
+                if (
+                    isinstance(item, dict)
+                    and _search_in_object(item, text)
+                    or isinstance(item, str)
+                    and text in item.lower()
+                ):
                     return True
 
     return False
