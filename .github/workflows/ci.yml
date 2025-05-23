@@ -62,7 +62,7 @@ jobs:
           
     # Upload coverage (optional)
     - name: Upload coverage to Codecov (optional)
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       if: matrix.python-version == '3.12'  # Only upload once
       continue-on-error: true  # Don't fail if service is down
       with:
