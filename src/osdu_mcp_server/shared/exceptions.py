@@ -4,12 +4,10 @@ This module implements the exception hierarchy as defined in ADR-004.
 """
 
 from functools import wraps
-from typing import Any, Awaitable, Callable, Optional, TypeVar, Union
+from typing import Any, Awaitable, Callable, Coroutine, Optional, TypeVar, Union
 
 from mcp import McpError
 from mcp.types import ErrorData
-
-T = TypeVar("T", bound=Awaitable[Any])
 
 
 class OSMCPError(Exception):
@@ -52,23 +50,26 @@ class OSMCPValidationError(OSMCPError):
 
 
 def handle_osdu_exceptions(
-    func: Optional[Callable[..., T]] = None,
+    func: Optional[Callable[..., Coroutine[Any, Any, Any]]] = None,
     *,
     default_message: str = "OSDU operation failed",
-) -> Union[Callable[..., T], Callable[[Callable[..., T]], Callable[..., T]]]:
+) -> Union[
+    Callable[..., Coroutine[Any, Any, Any]],
+    Callable[[Callable[..., Coroutine[Any, Any, Any]]], Callable[..., Coroutine[Any, Any, Any]]]
+]:
     """Decorator to handle OSDU exceptions and convert them to MCP errors.
 
     Args:
-        func: Function to wrap (provided by decoration)
+        func: Async function to wrap (provided by decoration)
         default_message: Default error message if none provided
 
     Returns:
-        Decorated function that handles OSDU exceptions
+        Decorated async function that handles OSDU exceptions
     """
 
-    def decorator(wrapped_func: Callable[..., T]) -> Callable[..., T]:
+    def decorator(wrapped_func: Callable[..., Coroutine[Any, Any, Any]]) -> Callable[..., Coroutine[Any, Any, Any]]:
         @wraps(wrapped_func)
-        async def wrapper(*args: Any, **kwargs: Any) -> T:
+        async def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 return await wrapped_func(*args, **kwargs)
             except OSMCPAuthError as e:
