@@ -1,10 +1,37 @@
 # OSDU MCP Server
 
+[![CI](https://github.com/danielscholl-osdu/osdu-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/danielscholl-osdu/osdu-mcp-server/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.12%20|%203.13-blue)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Checked with mypy](https://img.shields.io/badge/mypy-checked-blue)](http://mypy-lang.org/)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-green)](https://modelcontextprotocol.io)
+
 A Model Context Protocol (MCP) server that provides AI assistants with access to OSDU platform capabilities.
 
 ## Purpose
 
 This server enables AI assistants to interact with OSDU platform services including search, data management, and schema operations through the MCP protocol.
+
+## AI-Driven Development
+
+[![AI-Driven](https://img.shields.io/badge/AI--Driven-Development-blueviolet)](https://github.com/danielscholl-osdu/osdu-mcp-server/blob/main/case-study.md)
+[![Copilot-Ready](https://img.shields.io/badge/GitHub%20Copilot-Ready-8A2BE2?logo=github)](https://github.com/danielscholl-osdu/osdu-mcp-server/blob/main/.github/copilot-instructions.md)
+
+This project follows an AI-driven development workflow:
+- 🤖 **Built with AI** - Developed using Claude Code and GitHub Copilot
+- 📋 **AI Task Assignment** - Issues labeled with `copilot` are automatically assigned
+- 📚 **AI-Friendly Documentation** - Comprehensive guides for AI agents in [CLAUDE.md](CLAUDE.md) and [.github/copilot-instructions.md](.github/copilot-instructions.md)
+- 🔄 **Multi-Agent Orchestration** - Different AI agents handle different tasks based on their strengths
+
+See our [Case Study](case-study.md) for insights on building quality code with AI agents.
+
+## Documentation
+
+- [Project Brief](docs/project-brief.md)
+- [Project Requirements](docs/project-prd.md)
+- [Architecture Overview](docs/project-architect.md)
+- [Architecture Design Decisions](docs/adr/README.md)
 
 ## Installation
 
@@ -82,7 +109,7 @@ The MCP server uses structured JSON logging that follows [ADR-016](docs/adr/016-
 ```json
 "env": {
   "OSDU_MCP_LOGGING_ENABLED": "true",
-  "OSDU_MCP_LOGGING_LEVEL": "INFO"  // Optional, defaults to INFO
+  "OSDU_MCP_LOGGING_LEVEL": "INFO" 
 }
 ```
 
@@ -130,30 +157,6 @@ This returns the health status of your OSDU platform, checking authentication an
 - **schema_create**: Create a new schema (write-protected)
 - **schema_update**: Update an existing schema (write-protected)
 
-#### Advanced Schema Search
-
-The `schema_search` tool provides powerful capabilities for discovering schemas:
-
-```python
-# Find all schemas containing "pressure" in their description
-schema_search(text="pressure", search_in=["description"])
-
-# Get all schemas with version 1.1.* across any authority
-schema_search(version_pattern="1.1.*")
-
-# Search for schemas with specific combinations of properties
-schema_search(
-    filter={
-        "authority": ["osdu", "lab"],
-        "status": ["PUBLISHED"],
-        "scope": "SHARED"
-    }
-)
-
-# Include full schema content in results
-schema_search(include_content=True)
-```
-
 ### Storage Service
 - **storage_create_update_records**: Create or update records (write-protected)
 - **storage_get_record**: Get latest version of a record by ID
@@ -164,29 +167,5 @@ schema_search(include_content=True)
 - **storage_delete_record**: Logically delete a record (delete-protected)
 - **storage_purge_record**: Permanently delete a record (delete-protected)
 
-#### Storage Operations and Protection
 
-The Storage Service implements two levels of protection for different types of operations:
 
-- **Write Operations** (create, update): Controlled by `OSDU_MCP_ENABLE_WRITE_MODE=true`
-- **Delete Operations** (delete, purge): Controlled by `OSDU_MCP_ENABLE_DELETE_MODE=true`
-
-This provides granular control over data lifecycle operations, allowing environments to permit data creation while preventing deletion.
-
-### High Level Roadmap
-- Phase 2 (completed): Partition, Legal, and Entitlements services
-- Phase 3 (completed): Schema Service and advanced search functionality
-- Phase 4 (completed): Storage service and data validation
-- Phase 5 (future): Advanced features and integrations
-
-## Documentation
-
-- [Project Brief](docs/project-brief.md)
-- [Project Requirements](docs/project-prd.md)
-- [Architecture Overview](docs/project-architect.md)
-- [Architecture Design Decisions](docs/adr/README.md)
-- [Foundation Spec](specs/foundation-spec.md)
-
-## Project Development
-
-This is an AI-developed project, built using AI coding tools to accelerate development while striving to maintain high quality standards.  Read the [case-study](case-study.md) to dive into what was found to work.
