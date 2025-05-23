@@ -273,23 +273,23 @@ async def _matches_text_search(
 
     # Check in identity fields
     if (
-        "id" in search_fields
-        and schema_identity.get("id", "").lower().find(text_lower) != -1
+        "id" in search_fields and
+        schema_identity.get("id", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "authority" in search_fields
-        and schema_identity.get("authority", "").lower().find(text_lower) != -1
+        "authority" in search_fields and
+        schema_identity.get("authority", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "source" in search_fields
-        and schema_identity.get("source", "").lower().find(text_lower) != -1
+        "source" in search_fields and
+        schema_identity.get("source", "").lower().find(text_lower) != -1
     ):
         return True
     if (
-        "entityType" in search_fields
-        and schema_identity.get("entityType", "").lower().find(text_lower) != -1
+        "entityType" in search_fields and
+        schema_identity.get("entityType", "").lower().find(text_lower) != -1
     ):
         return True
 
@@ -313,13 +313,13 @@ async def _matches_text_search(
 
         # Search in schema content fields
         if (
-            "title" in search_fields
-            and schema_content.get("title", "").lower().find(text_lower) != -1
+            "title" in search_fields and
+            schema_content.get("title", "").lower().find(text_lower) != -1
         ):
             return True
         if (
-            "description" in search_fields
-            and schema_content.get("description", "").lower().find(text_lower) != -1
+            "description" in search_fields and
+            schema_content.get("description", "").lower().find(text_lower) != -1
         ):
             return True
 
