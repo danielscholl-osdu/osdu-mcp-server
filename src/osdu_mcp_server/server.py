@@ -2,43 +2,43 @@
 
 from mcp.server.fastmcp import FastMCP
 
-from .tools.health_check import health_check
-from .tools.partition import (
-    partition_list,
-    partition_get,
-    partition_create,
-    partition_update,
-    partition_delete,
-)
 from .tools.entitlements import (
     entitlements_mine,
 )
+from .tools.health_check import health_check
 from .tools.legal import (
-    legaltag_list,
-    legaltag_get,
-    legaltag_get_properties,
-    legaltag_search,
     legaltag_batch_retrieve,
     legaltag_create,
-    legaltag_update,
     legaltag_delete,
+    legaltag_get,
+    legaltag_get_properties,
+    legaltag_list,
+    legaltag_search,
+    legaltag_update,
+)
+from .tools.partition import (
+    partition_create,
+    partition_delete,
+    partition_get,
+    partition_list,
+    partition_update,
 )
 from .tools.schema import (
-    schema_list,
-    schema_get,
-    schema_search,
     schema_create,
+    schema_get,
+    schema_list,
+    schema_search,
     schema_update,
 )
 from .tools.storage import (
     storage_create_update_records,
+    storage_delete_record,
+    storage_fetch_records,
     storage_get_record,
     storage_get_record_version,
     storage_list_record_versions,
-    storage_query_records_by_kind,
-    storage_fetch_records,
-    storage_delete_record,
     storage_purge_record,
+    storage_query_records_by_kind,
 )
 
 # Create FastMCP server instance

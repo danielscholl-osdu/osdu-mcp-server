@@ -1,12 +1,12 @@
 """Tests for schema_list tool."""
 
-import pytest
-from aioresponses import aioresponses
-from unittest.mock import patch, MagicMock
 import os
 import re
 from datetime import datetime, timedelta
+from unittest.mock import MagicMock, patch
 
+import pytest
+from aioresponses import aioresponses
 from azure.core.credentials import AccessToken
 
 from osdu_mcp_server.tools.schema.list import schema_list
@@ -26,7 +26,7 @@ async def test_schema_list_success():
                 "status": "PUBLISHED",
                 "scope": "INTERNAL",
                 "createdBy": "user@example.com",
-                "dateCreated": "2025-01-15T10:30:00Z"
+                "dateCreated": "2025-01-15T10:30:00Z",
             },
             {
                 "id": "osdu:wks:welllog:2.0.0",
@@ -37,27 +37,29 @@ async def test_schema_list_success():
                 "status": "PUBLISHED",
                 "scope": "INTERNAL",
                 "createdBy": "user@example.com",
-                "dateCreated": "2025-02-20T14:45:00Z"
-            }
+                "dateCreated": "2025-02-20T14:45:00Z",
+            },
         ],
-        "totalCount": 2
+        "totalCount": 2,
     }
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
@@ -65,7 +67,7 @@ async def test_schema_list_success():
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/schema-service/v1/schema?limit=10",
-                    payload=mock_response
+                    payload=mock_response,
                 )
 
                 result = await schema_list()
@@ -95,41 +97,43 @@ async def test_schema_list_with_filters():
                 "status": "PUBLISHED",
                 "scope": "INTERNAL",
                 "createdBy": "user@example.com",
-                "dateCreated": "2025-01-15T10:30:00Z"
+                "dateCreated": "2025-01-15T10:30:00Z",
             }
         ],
-        "totalCount": 1
+        "totalCount": 1,
     }
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
 
             with aioresponses() as mocked:
                 mocked.get(
-                    re.compile(r"https://test\.osdu\.com/api/schema-service/v1/schema\?(?=.*authority=osdu)(?=.*entityType=wellbore)(?=.*limit=10)(?=.*source=wks).*"),
-                    payload=mock_response
+                    re.compile(
+                        r"https://test\.osdu\.com/api/schema-service/v1/schema\?(?=.*authority=osdu)(?=.*entityType=wellbore)(?=.*limit=10)(?=.*source=wks).*"
+                    ),
+                    payload=mock_response,
                 )
 
                 result = await schema_list(
-                    authority="osdu",
-                    source="wks",
-                    entity="wellbore"
+                    authority="osdu", source="wks", entity="wellbore"
                 )
 
         assert result["success"] is True
@@ -143,34 +147,35 @@ async def test_schema_list_with_filters():
 @pytest.mark.asyncio
 async def test_schema_list_empty():
     """Test when no schemas exist or match filters."""
-    mock_response = {
-        "schemas": [],
-        "totalCount": 0
-    }
+    mock_response = {"schemas": [], "totalCount": 0}
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
 
             with aioresponses() as mocked:
                 mocked.get(
-                    re.compile(r"https://test\.osdu\.com/api/schema-service/v1/schema\?(?=.*authority=unknown)(?=.*limit=10).*"),
-                    payload=mock_response
+                    re.compile(
+                        r"https://test\.osdu\.com/api/schema-service/v1/schema\?(?=.*authority=unknown)(?=.*limit=10).*"
+                    ),
+                    payload=mock_response,
                 )
 
                 result = await schema_list(authority="unknown")

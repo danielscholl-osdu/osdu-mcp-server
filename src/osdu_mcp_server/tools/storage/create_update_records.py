@@ -1,10 +1,9 @@
 """Tool for creating or updating records."""
 
-from typing import Dict, List
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -13,9 +12,8 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_create_update_records(
-    records: List[Dict],
-    skip_dupes: bool = False
-) -> Dict:
+    records: list[dict], skip_dupes: bool = False
+) -> dict:
     """Create new records or update existing ones.
 
     Args:
@@ -69,7 +67,7 @@ async def storage_create_update_records(
             "records": [],
             "created": True,
             "write_enabled": True,
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         # Transform the OSDU response to our format
@@ -79,7 +77,9 @@ async def storage_create_update_records(
         for i, record_id in enumerate(record_ids):
             record_info = {
                 "id": record_id,
-                "kind": records[i].get("kind", "unknown") if i < len(records) else "unknown"
+                "kind": (
+                    records[i].get("kind", "unknown") if i < len(records) else "unknown"
+                ),
             }
 
             # Add version if available
@@ -98,8 +98,8 @@ async def storage_create_update_records(
             extra={
                 "record_count": len(record_ids),
                 "operation": "create_update_records",
-                "skipped_count": len(skipped_records)
-            }
+                "skipped_count": len(skipped_records),
+            },
         )
 
         return result

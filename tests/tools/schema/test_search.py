@@ -1,7 +1,8 @@
 """Tests for schema_search tool."""
 
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, MagicMock
 
 from osdu_mcp_server.tools.schema.search import schema_search
 
@@ -20,20 +21,22 @@ async def test_schema_search_basic():
                     "schemaVersionMajor": 1,
                     "schemaVersionMinor": 0,
                     "schemaVersionPatch": 0,
-                    "id": "osdu:wks:TestSchema:1.0.0"
+                    "id": "osdu:wks:TestSchema:1.0.0",
                 },
                 "status": "PUBLISHED",
-                "scope": "SHARED"
+                "scope": "SHARED",
             }
         ],
         "count": 1,
         "totalCount": 1,
-        "offset": 0
+        "offset": 0,
     }
 
-    with patch("osdu_mcp_server.tools.schema.search.ConfigManager"), \
-         patch("osdu_mcp_server.tools.schema.search.AuthHandler"), \
-         patch("osdu_mcp_server.tools.schema.search.SchemaClient") as mock_client_class:
+    with (
+        patch("osdu_mcp_server.tools.schema.search.ConfigManager"),
+        patch("osdu_mcp_server.tools.schema.search.AuthHandler"),
+        patch("osdu_mcp_server.tools.schema.search.SchemaClient") as mock_client_class,
+    ):
 
         # Setup the mock client
         mock_client = AsyncMock()
@@ -52,7 +55,9 @@ async def test_schema_search_basic():
         assert len(result["schemas"]) == 1
         assert result["count"] == 1
         assert "schemas" in result
-        assert result["schemas"][0]["schemaIdentity"]["id"] == "osdu:wks:TestSchema:1.0.0"
+        assert (
+            result["schemas"][0]["schemaIdentity"]["id"] == "osdu:wks:TestSchema:1.0.0"
+        )
 
         # Verify the mock was called correctly
         mock_client.search_schemas.assert_called_once()
@@ -72,15 +77,15 @@ async def test_schema_search_with_text():
                     "schemaVersionMajor": 1,
                     "schemaVersionMinor": 0,
                     "schemaVersionPatch": 0,
-                    "id": "osdu:wks:TestSchema:1.0.0"
+                    "id": "osdu:wks:TestSchema:1.0.0",
                 },
                 "status": "PUBLISHED",
-                "scope": "SHARED"
+                "scope": "SHARED",
             }
         ],
         "count": 1,
         "totalCount": 1,
-        "offset": 0
+        "offset": 0,
     }
 
     # Mock the schema content response
@@ -90,14 +95,16 @@ async def test_schema_search_with_text():
         "properties": {
             "testField": {
                 "type": "string",
-                "description": "Test field with pressure measurements"
+                "description": "Test field with pressure measurements",
             }
-        }
+        },
     }
 
-    with patch("osdu_mcp_server.tools.schema.search.ConfigManager"), \
-         patch("osdu_mcp_server.tools.schema.search.AuthHandler"), \
-         patch("osdu_mcp_server.tools.schema.search.SchemaClient") as mock_client_class:
+    with (
+        patch("osdu_mcp_server.tools.schema.search.ConfigManager"),
+        patch("osdu_mcp_server.tools.schema.search.AuthHandler"),
+        patch("osdu_mcp_server.tools.schema.search.SchemaClient") as mock_client_class,
+    ):
 
         # Setup the mock client
         mock_client = AsyncMock()
@@ -114,7 +121,9 @@ async def test_schema_search_with_text():
 
         # Verify the result contains the expected data
         assert result["success"] is True
-        assert len(result["schemas"]) == 1  # Should find the schema with "pressure" in description
+        assert (
+            len(result["schemas"]) == 1
+        )  # Should find the schema with "pressure" in description
         assert result["count"] == 1
         assert result["query"] == "pressure"
 

@@ -1,10 +1,9 @@
 """Tool for querying records by kind."""
 
-from typing import Dict, Optional
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -13,10 +12,8 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_query_records_by_kind(
-    kind: str,
-    limit: int = 10,
-    cursor: Optional[str] = None
-) -> Dict:
+    kind: str, limit: int = 10, cursor: str | None = None
+) -> dict:
     """Get record IDs of a specific kind.
 
     Args:
@@ -52,7 +49,7 @@ async def storage_query_records_by_kind(
             "cursor": response.get("cursor"),
             "results": response.get("results", []),
             "count": len(response.get("results", [])),
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.info(
@@ -62,8 +59,8 @@ async def storage_query_records_by_kind(
                 "record_count": result["count"],
                 "limit": limit,
                 "operation": "query_records_by_kind",
-                "has_cursor": bool(cursor)
-            }
+                "has_cursor": bool(cursor),
+            },
         )
 
         return result

@@ -5,7 +5,7 @@ and retry logic as defined in ADR-005.
 """
 
 import asyncio
-from typing import Any, Dict, Optional
+from typing import Any
 from urllib.parse import urljoin
 
 import aiohttp
@@ -28,7 +28,7 @@ class OsduClient:
         """
         self.config = config
         self.auth_handler = auth_handler
-        self._session: Optional[ClientSession] = None
+        self._session: ClientSession | None = None
         self._base_url = config.get_required("server", "url")
         self._data_partition = config.get_required("server", "data_partition")
         self._timeout = config.get("server", "timeout", 30)
@@ -49,7 +49,7 @@ class OsduClient:
         method: str,
         path: str,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Make HTTP request with retry logic.
 
         Args:
@@ -69,7 +69,9 @@ class OsduClient:
 
         # Set up headers
         headers = kwargs.get("headers", {})
-        headers["Authorization"] = f"Bearer {await self.auth_handler.get_access_token()}"
+        headers["Authorization"] = (
+            f"Bearer {await self.auth_handler.get_access_token()}"
+        )
         headers["data-partition-id"] = self._data_partition
         headers["Content-Type"] = "application/json"
         kwargs["headers"] = headers
@@ -107,11 +109,10 @@ class OsduClient:
                 if "OSMCPAPIError" in str(type(e)):
                     raise
                 raise OSMCPAPIError(f"Unexpected error: {e}")
-                
         # If all retries failed but we didn't explicitly raise an exception
         raise OSMCPConnectionError("Maximum retry attempts reached without success")
 
-    async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """GET request with retry logic.
 
         Args:
@@ -123,7 +124,7 @@ class OsduClient:
         """
         return await self._make_request("GET", path, **kwargs)
 
-    async def post(self, path: str, data: Any, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any, **kwargs: Any) -> dict[str, Any]:
         """POST request with retry logic.
 
         Args:
@@ -137,7 +138,7 @@ class OsduClient:
         kwargs["json"] = data
         return await self._make_request("POST", path, **kwargs)
 
-    async def put(self, path: str, data: Any, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any, **kwargs: Any) -> dict[str, Any]:
         """PUT request with retry logic.
 
         Args:
@@ -151,7 +152,7 @@ class OsduClient:
         kwargs["json"] = data
         return await self._make_request("PUT", path, **kwargs)
 
-    async def delete(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def delete(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """DELETE request with retry logic.
 
         Args:

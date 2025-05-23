@@ -1,7 +1,7 @@
 """Client for OSDU Partition Service operations."""
 
 import logging
-from typing import Any, Dict, List
+from typing import Any
 
 from ..auth_handler import AuthHandler
 from ..config_manager import ConfigManager
@@ -25,7 +25,7 @@ class PartitionClient(OsduClient):
         super().__init__(config, auth_handler)
         self._base_path = get_service_base_url(OSMCPService.PARTITION)
 
-    async def list_partitions(self) -> List[str]:
+    async def list_partitions(self) -> list[str]:
         """List all accessible partitions.
 
         Returns:
@@ -54,12 +54,14 @@ class PartitionClient(OsduClient):
                 return []
             elif e.status_code == 403:
                 logger.warning("Insufficient permissions to list partitions")
-                raise OSMCPAPIError("Insufficient permissions to list partitions", e.status_code)
+                raise OSMCPAPIError(
+                    "Insufficient permissions to list partitions", e.status_code
+                )
             else:
                 logger.error(f"API error listing partitions: {e}")
                 raise
 
-    async def get_partition(self, partition_id: str) -> Dict[str, Any]:
+    async def get_partition(self, partition_id: str) -> dict[str, Any]:
         """Get properties for a specific partition.
 
         Args:
@@ -98,13 +100,19 @@ class PartitionClient(OsduClient):
                 logger.warning(f"Authentication required for partition: {partition_id}")
                 raise
             elif e.status_code == 403:
-                logger.warning(f"Insufficient permissions for partition: {partition_id}")
-                raise OSMCPAPIError(f"Insufficient permissions for partition '{partition_id}'", 403)
+                logger.warning(
+                    f"Insufficient permissions for partition: {partition_id}"
+                )
+                raise OSMCPAPIError(
+                    f"Insufficient permissions for partition '{partition_id}'", 403
+                )
             else:
                 logger.error(f"API error getting partition {partition_id}: {e}")
                 raise
 
-    async def create_partition(self, partition_id: str, properties: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_partition(
+        self, partition_id: str, properties: dict[str, Any]
+    ) -> dict[str, Any]:
         """Create a new partition.
 
         Note: This operation requires write permissions to be enabled via
@@ -122,7 +130,10 @@ class PartitionClient(OsduClient):
             OSMCPValidationError: For invalid partition data
         """
         if not self._is_write_allowed():
-            raise OSMCPAPIError("Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.", 403)
+            raise OSMCPAPIError(
+                "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.",
+                403,
+            )
 
         if not partition_id or not partition_id.strip():
             raise OSMCPValidationError("Partition ID cannot be empty")
@@ -145,7 +156,9 @@ class PartitionClient(OsduClient):
                 raise OSMCPAPIError(f"Partition '{partition_id}' already exists", 409)
             raise
 
-    async def update_partition(self, partition_id: str, properties: Dict[str, Any]) -> Dict[str, Any]:
+    async def update_partition(
+        self, partition_id: str, properties: dict[str, Any]
+    ) -> dict[str, Any]:
         """Update partition properties.
 
         Note: This operation requires write permissions to be enabled.
@@ -162,7 +175,10 @@ class PartitionClient(OsduClient):
             OSMCPValidationError: For invalid partition data
         """
         if not self._is_write_allowed():
-            raise OSMCPAPIError("Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.", 403)
+            raise OSMCPAPIError(
+                "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.",
+                403,
+            )
 
         if not partition_id or not partition_id.strip():
             raise OSMCPValidationError("Partition ID cannot be empty")
@@ -198,7 +214,10 @@ class PartitionClient(OsduClient):
             OSMCPValidationError: For invalid partition ID
         """
         if not self._is_write_allowed():
-            raise OSMCPAPIError("Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.", 403)
+            raise OSMCPAPIError(
+                "Write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable.",
+                403,
+            )
 
         if not partition_id or not partition_id.strip():
             raise OSMCPValidationError("Partition ID cannot be empty")
@@ -220,9 +239,10 @@ class PartitionClient(OsduClient):
     def _is_write_allowed(self) -> bool:
         """Check if write operations are allowed."""
         import os
+
         return os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true"
 
-    def _validate_properties(self, properties: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_properties(self, properties: dict[str, Any]) -> dict[str, Any]:
         """Validate and normalize partition properties.
 
         Args:
@@ -240,13 +260,12 @@ class PartitionClient(OsduClient):
             if isinstance(value, dict):
                 # Already in correct format
                 if "value" not in value:
-                    raise OSMCPValidationError(f"Property '{key}' must have a 'value' field")
+                    raise OSMCPValidationError(
+                        f"Property '{key}' must have a 'value' field"
+                    )
                 validated[key] = value
             else:
                 # Convert simple value to property format
-                validated[key] = {
-                    "value": value,
-                    "sensitive": False
-                }
+                validated[key] = {"value": value, "sensitive": False}
 
         return validated

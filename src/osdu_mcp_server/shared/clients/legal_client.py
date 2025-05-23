@@ -2,11 +2,11 @@
 
 import os
 import re
-from typing import Dict, Any, List, Optional
+from typing import Any
 
+from ..exceptions import OSMCPAPIError
 from ..osdu_client import OsduClient
 from ..service_urls import OSMCPService, get_service_base_url
-from ..exceptions import OSMCPAPIError
 
 
 class LegalClient(OsduClient):
@@ -17,26 +17,26 @@ class LegalClient(OsduClient):
         super().__init__(*args, **kwargs)
         self._base_path = get_service_base_url(OSMCPService.LEGAL)
 
-    async def get(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def get(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Override get to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().get(full_path, **kwargs)
 
-    async def post(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def post(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override post to include service base path."""
         full_path = f"{self._base_path}{path}"
         if data is None and "json" in kwargs:
             data = kwargs.pop("json")
         return await super().post(full_path, data, **kwargs)
 
-    async def put(self, path: str, data: Any = None, **kwargs: Any) -> Dict[str, Any]:
+    async def put(self, path: str, data: Any = None, **kwargs: Any) -> dict[str, Any]:
         """Override put to include service base path."""
         full_path = f"{self._base_path}{path}"
         if data is None and "json" in kwargs:
             data = kwargs.pop("json")
         return await super().put(full_path, data, **kwargs)
 
-    async def delete(self, path: str, **kwargs: Any) -> Dict[str, Any]:
+    async def delete(self, path: str, **kwargs: Any) -> dict[str, Any]:
         """Override delete to include service base path."""
         full_path = f"{self._base_path}{path}"
         return await super().delete(full_path, **kwargs)
@@ -78,10 +78,10 @@ class LegalClient(OsduClient):
         if not os.environ.get("OSDU_MCP_ENABLE_DELETE_MODE", "false").lower() == "true":
             raise OSMCPAPIError(
                 "Delete operations are disabled. Set OSDU_MCP_ENABLE_DELETE_MODE=true to enable legal tag deletion",
-                status_code=403
+                status_code=403,
             )
 
-    async def list_legal_tags(self, valid: Optional[bool] = None) -> Dict[str, Any]:
+    async def list_legal_tags(self, valid: bool | None = None) -> dict[str, Any]:
         """List all legal tags.
 
         Args:
@@ -96,7 +96,7 @@ class LegalClient(OsduClient):
 
         return await self.get("/legaltags", params=params)
 
-    async def get_legal_tag(self, name: str) -> Dict[str, Any]:
+    async def get_legal_tag(self, name: str) -> dict[str, Any]:
         """Get a specific legal tag.
 
         Args:
@@ -108,7 +108,7 @@ class LegalClient(OsduClient):
         full_name = self.ensure_full_tag_name(name)
         return await self.get(f"/legaltags/{full_name}")
 
-    async def get_legal_tag_properties(self) -> Dict[str, Any]:
+    async def get_legal_tag_properties(self) -> dict[str, Any]:
         """Get allowed property values for legal tags.
 
         Returns:
@@ -116,10 +116,13 @@ class LegalClient(OsduClient):
         """
         return await self.get("/legaltags:properties")
 
-    async def search_legal_tags(self, query: Optional[List[str]] = None,
-                                   sort_by: Optional[str] = None,
-                                   sort_order: Optional[str] = None,
-                                   limit: Optional[int] = None) -> Dict[str, Any]:
+    async def search_legal_tags(
+        self,
+        query: list[str] | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        limit: int | None = None,
+    ) -> dict[str, Any]:
         """Search legal tags with filter conditions.
 
         Args:
@@ -143,7 +146,7 @@ class LegalClient(OsduClient):
 
         return await self.post("/legaltags:query", json=body)
 
-    async def batch_retrieve_legal_tags(self, names: List[str]) -> Dict[str, Any]:
+    async def batch_retrieve_legal_tags(self, names: list[str]) -> dict[str, Any]:
         """Retrieve multiple legal tags by name.
 
         Args:
@@ -155,7 +158,7 @@ class LegalClient(OsduClient):
         if len(names) > 25:
             raise OSMCPAPIError(
                 "Too many legal tags requested. Maximum 25 legal tags can be retrieved at once",
-                status_code=400
+                status_code=400,
             )
 
         # Ensure all names have partition prefix
@@ -163,8 +166,9 @@ class LegalClient(OsduClient):
 
         return await self.post("/legaltags:batchRetrieve", json={"names": full_names})
 
-    async def create_legal_tag(self, name: str, description: str,
-                                  properties: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_legal_tag(
+        self, name: str, description: str, properties: dict[str, Any]
+    ) -> dict[str, Any]:
         """Create a new legal tag.
 
         Args:
@@ -178,15 +182,19 @@ class LegalClient(OsduClient):
         body = {
             "name": name,  # API expects name without partition prefix
             "description": description,
-            "properties": properties
+            "properties": properties,
         }
 
         return await self.post("/legaltags", json=body)
 
-    async def update_legal_tag(self, name: str, description: Optional[str] = None,
-                                  contract_id: Optional[str] = None,
-                                  expiration_date: Optional[str] = None,
-                                  extension_properties: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def update_legal_tag(
+        self,
+        name: str,
+        description: str | None = None,
+        contract_id: str | None = None,
+        expiration_date: str | None = None,
+        extension_properties: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Update an existing legal tag.
 
         Args:

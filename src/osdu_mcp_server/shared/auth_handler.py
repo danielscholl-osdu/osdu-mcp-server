@@ -7,7 +7,6 @@ with mode-based selection following OSDU CLI patterns.
 import os
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Optional
 
 from azure.core.credentials import AccessToken
 from azure.core.exceptions import ClientAuthenticationError
@@ -19,6 +18,7 @@ from .exceptions import OSMCPAuthError
 
 class AuthenticationMode(Enum):
     """Supported authentication modes."""
+
     AZURE = "azure"
     AWS = "aws"
     GCP = "gcp"
@@ -34,8 +34,8 @@ class AuthHandler:
             config: Configuration manager instance
         """
         self.config = config
-        self._credential: Optional[DefaultAzureCredential] = None
-        self._cached_token: Optional[AccessToken] = None
+        self._credential: DefaultAzureCredential | None = None
+        self._cached_token: AccessToken | None = None
         self.mode = self._detect_authentication_mode()
         self._initialize_credential()
 
@@ -57,7 +57,9 @@ class AuthHandler:
             detected_mode = AuthenticationMode.AZURE
         elif os.environ.get("AWS_ACCESS_KEY_ID") or os.environ.get("AWS_REGION"):
             detected_mode = AuthenticationMode.AWS
-        elif os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or os.environ.get("GOOGLE_CLOUD_PROJECT"):
+        elif os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or os.environ.get(
+            "GOOGLE_CLOUD_PROJECT"
+        ):
             detected_mode = AuthenticationMode.GCP
         else:
             detected_mode = None
@@ -185,11 +187,17 @@ class AuthHandler:
                 raise OSMCPAuthError(
                     "Azure authentication token expired. Please run 'az login' to refresh"
                 )
-            elif "invalid_scope" in error_message or "scope format is invalid" in error_message:
+            elif (
+                "invalid_scope" in error_message
+                or "scope format is invalid" in error_message
+            ):
                 raise OSMCPAuthError(
                     "Invalid Azure client ID. Please verify your AZURE_CLIENT_ID is correct"
                 )
-            elif "no accounts were found" in error_message or "environment variables are not fully configured" in error_message:
+            elif (
+                "no accounts were found" in error_message
+                or "environment variables are not fully configured" in error_message
+            ):
                 if os.environ.get("AZURE_CLIENT_SECRET"):
                     raise OSMCPAuthError(
                         "Service Principal authentication failed. Please check your AZURE_CLIENT_ID, "

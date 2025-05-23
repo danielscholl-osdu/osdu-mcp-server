@@ -1,16 +1,13 @@
 """Tool for updating legal tags (write-protected)."""
 
-import os
-from typing import Dict, Optional, Any
 import logging
+import os
+from typing import Any
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    OSMCPAPIError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPAPIError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
@@ -18,11 +15,11 @@ logger = logging.getLogger(__name__)
 @handle_osdu_exceptions
 async def legaltag_update(
     name: str,
-    description: Optional[str] = None,
-    contract_id: Optional[str] = None,
-    expiration_date: Optional[str] = None,
-    extension_properties: Optional[Dict[str, Any]] = None
-) -> Dict:
+    description: str | None = None,
+    contract_id: str | None = None,
+    expiration_date: str | None = None,
+    extension_properties: dict[str, Any] | None = None,
+) -> dict:
     """Update an existing legal tag.
 
     Args:
@@ -41,7 +38,7 @@ async def legaltag_update(
     if not os.environ.get("OSDU_MCP_ENABLE_WRITE_MODE", "false").lower() == "true":
         raise OSMCPAPIError(
             "Legal tag write operations are disabled. Set OSDU_MCP_ENABLE_WRITE_MODE=true to enable write operations",
-            status_code=403
+            status_code=403,
         )
 
     config = ConfigManager()
@@ -58,7 +55,7 @@ async def legaltag_update(
             description=description,
             contract_id=contract_id,
             expiration_date=expiration_date,
-            extension_properties=extension_properties
+            extension_properties=extension_properties,
         )
 
         # Extract tag data
@@ -70,15 +67,12 @@ async def legaltag_update(
             "legalTag": tag,
             "updated": True,
             "write_enabled": True,
-            "partition": partition
+            "partition": partition,
         }
 
         logger.info(
             "Updated legal tag successfully",
-            extra={
-                "name": name,
-                "partition": partition
-            }
+            extra={"name": name, "partition": partition},
         )
 
         # Audit log for write operation
@@ -88,8 +82,8 @@ async def legaltag_update(
                 "operation": "update_legal_tag",
                 "tag_name": name,
                 "partition": partition,
-                "user": "authenticated_user"  # Should be extracted from auth context
-            }
+                "user": "authenticated_user",  # Should be extracted from auth context
+            },
         )
 
         return result

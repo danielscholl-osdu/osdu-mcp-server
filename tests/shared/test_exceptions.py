@@ -1,16 +1,15 @@
 """Tests for the exceptions module."""
 
 import pytest
-
 from mcp import McpError
 
 from osdu_mcp_server.shared.exceptions import (
-    OSMCPError,
-    OSMCPAuthError,
     OSMCPAPIError,
+    OSMCPAuthError,
     OSMCPConfigError,
     OSMCPConnectionError,
-    handle_osdu_exceptions
+    OSMCPError,
+    handle_osdu_exceptions,
 )
 
 
@@ -39,6 +38,7 @@ def test_api_error_without_status_code():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_auth_error():
     """Test exception handler with authentication error."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPAuthError("Auth failed")
@@ -52,6 +52,7 @@ async def test_handle_osdu_exceptions_auth_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_api_error():
     """Test exception handler with API error."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPAPIError("API failed", status_code=500)
@@ -65,6 +66,7 @@ async def test_handle_osdu_exceptions_api_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_config_error():
     """Test exception handler with configuration error."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPConfigError("Config missing")
@@ -78,6 +80,7 @@ async def test_handle_osdu_exceptions_config_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_connection_error():
     """Test exception handler with connection error."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPConnectionError("Connection lost")
@@ -91,6 +94,7 @@ async def test_handle_osdu_exceptions_connection_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_base_error():
     """Test exception handler with base OSDU error."""
+
     @handle_osdu_exceptions(default_message="Custom error")
     async def failing_func():
         raise OSMCPError("Base error")
@@ -104,6 +108,7 @@ async def test_handle_osdu_exceptions_base_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_unexpected_error():
     """Test exception handler with unexpected error."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise ValueError("Unexpected")
@@ -117,6 +122,7 @@ async def test_handle_osdu_exceptions_unexpected_error():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_success():
     """Test exception handler with successful execution."""
+
     @handle_osdu_exceptions
     async def successful_func():
         return "success"
@@ -128,6 +134,7 @@ async def test_handle_osdu_exceptions_success():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_with_parameters():
     """Test exception handler as decorator with parameters."""
+
     @handle_osdu_exceptions(default_message="Test operation failed")
     async def failing_func():
         raise OSMCPError("Error")
@@ -141,6 +148,7 @@ async def test_handle_osdu_exceptions_with_parameters():
 @pytest.mark.asyncio
 async def test_handle_osdu_exceptions_without_parameters():
     """Test exception handler as decorator without parameters."""
+
     @handle_osdu_exceptions
     async def failing_func():
         raise OSMCPError("Error")

@@ -60,6 +60,8 @@ target-version = ['py312']
 [tool.ruff]
 line-length = 88
 target-version = "py312"
+
+[tool.ruff.lint]
 select = [
     "E",    # pycodestyle errors
     "F",    # pyflakes
@@ -72,6 +74,9 @@ select = [
 ignore = [
     "E501",  # line too long
     "B008",  # do not perform function calls in argument defaults
+    "B904",  # allow raise without from in except
+    "SIM117", # allow nested with statements for readability
+    "B011",  # allow assert False in tests
 ]
 
 [tool.mypy]
@@ -90,6 +95,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+filterwarnings = [
+    "ignore:Field name.*shadows an attribute in parent.*:UserWarning:pydantic._internal._fields"
+]
 
 [tool.coverage.run]
 branch = true

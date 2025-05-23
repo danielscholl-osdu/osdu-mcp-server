@@ -3,13 +3,13 @@
 import json
 import logging
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from osdu_mcp_server.shared.logging_manager import (
-    LoggingManager,
     JSONFormatter,
+    LoggingManager,
     configure_logging,
-    get_logger
+    get_logger,
 )
 
 
@@ -48,11 +48,23 @@ class TestLoggingManager(unittest.TestCase):
     def test_logging_enabled(self):
         """Test that logging is configured when enabled."""
         # Patch config for this test
-        with patch("osdu_mcp_server.shared.logging_manager.ConfigManager") as mock_config:
+        with patch(
+            "osdu_mcp_server.shared.logging_manager.ConfigManager"
+        ) as mock_config:
             with patch("osdu_mcp_server.shared.logging_manager.sys.modules", {}):
                 # Mock config to return logging enabled
                 mock_config_instance = MagicMock()
-                mock_config_instance.get.side_effect = lambda section, key, default=None: True if section == "logging" and key == "enabled" else "INFO" if section == "logging" and key == "level" else default
+                mock_config_instance.get.side_effect = (
+                    lambda section, key, default=None: (
+                        True
+                        if section == "logging" and key == "enabled"
+                        else (
+                            "INFO"
+                            if section == "logging" and key == "level"
+                            else default
+                        )
+                    )
+                )
                 mock_config.return_value = mock_config_instance
 
                 # Create logging manager and configure
@@ -81,7 +93,7 @@ class TestLoggingManager(unittest.TestCase):
             lineno=42,
             msg="Test message",
             args={},
-            exc_info=None
+            exc_info=None,
         )
 
         # Add extra fields
@@ -105,7 +117,11 @@ class TestLoggingManager(unittest.TestCase):
         """Test get_logger returns configured logger."""
         # Mock config to return logging enabled
         mock_config_instance = MagicMock()
-        mock_config_instance.get.side_effect = lambda section, key, default=None: True if section == "logging" and key == "enabled" else "INFO" if section == "logging" and key == "level" else default
+        mock_config_instance.get.side_effect = lambda section, key, default=None: (
+            True
+            if section == "logging" and key == "enabled"
+            else "INFO" if section == "logging" and key == "level" else default
+        )
         mock_config.return_value = mock_config_instance
 
         # Get a logger
@@ -116,10 +132,16 @@ class TestLoggingManager(unittest.TestCase):
 
     def test_configure_global(self):
         """Test the global configure_logging function."""
-        with patch("osdu_mcp_server.shared.logging_manager.ConfigManager") as mock_config:
+        with patch(
+            "osdu_mcp_server.shared.logging_manager.ConfigManager"
+        ) as mock_config:
             # Mock config to return logging enabled
             mock_config_instance = MagicMock()
-            mock_config_instance.get.side_effect = lambda section, key, default=None: True if section == "logging" and key == "enabled" else "DEBUG" if section == "logging" and key == "level" else default
+            mock_config_instance.get.side_effect = lambda section, key, default=None: (
+                True
+                if section == "logging" and key == "enabled"
+                else "DEBUG" if section == "logging" and key == "level" else default
+            )
             mock_config.return_value = mock_config_instance
 
             # Configure logging using global function
@@ -127,7 +149,9 @@ class TestLoggingManager(unittest.TestCase):
 
             # Verify we didn't modify the root logger
             root_logger = logging.getLogger()
-            self.assertEqual(root_logger.level, logging.WARNING)  # Default root logger level
+            self.assertEqual(
+                root_logger.level, logging.WARNING
+            )  # Default root logger level
 
 
 if __name__ == "__main__":

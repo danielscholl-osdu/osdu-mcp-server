@@ -1,15 +1,12 @@
 """Tool for advanced schema discovery with rich filtering and text search."""
 
 import fnmatch
-from typing import Dict, Optional, List, Union
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.schema_client import SchemaClient
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
 
 # Get a logger with feature flag support
 logger = get_logger(__name__)
@@ -18,25 +15,21 @@ logger = get_logger(__name__)
 @handle_osdu_exceptions
 async def schema_search(
     # Text search parameters
-    text: Optional[str] = None,
-    search_in: List[str] = None,
-
+    text: str | None = None,
+    search_in: list[str] = None,
     # Version filtering
-    version_pattern: Optional[str] = None,
-
+    version_pattern: str | None = None,
     # Rich filtering
-    filter: Optional[Dict[str, Union[str, List[str]]]] = None,
-
+    filter: dict[str, str | list[str]] | None = None,
     # Common parameters
     latest_version: bool = False,
     limit: int = 100,
     offset: int = 0,
-
     # Advanced options
     include_content: bool = False,
     sort_by: str = "dateCreated",
-    sort_order: str = "DESC"
-) -> Dict:
+    sort_order: str = "DESC",
+) -> dict:
     """Advanced schema discovery with rich filtering and text search.
 
     Args:
@@ -127,9 +120,13 @@ async def schema_search(
         # Collect filters that need client-side processing
         # These include array filters and other advanced criteria
         for key, value in filter.items():
-            if key in ["authority", "source", "entity", "status", "scope"] and isinstance(value, list):
-                client_filters[key] = value
-            elif key not in ["authority", "source", "entity", "status", "scope"]:
+            if key in [
+                "authority",
+                "source",
+                "entity",
+                "status",
+                "scope",
+            ] and isinstance(value, list) or key not in ["authority", "source", "entity", "status", "scope"]:
                 client_filters[key] = value
 
         # Apply server-side filtering through the API
@@ -144,7 +141,7 @@ async def schema_search(
                 filter_criteria=server_filters,
                 latest_version=latest_version,
                 limit=api_limit,
-                offset=offset
+                offset=offset,
             )
 
             # Extract schemas from response - API returns "schemaInfos" but we map to "schemas" for consistency
@@ -160,12 +157,14 @@ async def schema_search(
             return {
                 "success": False,
                 "error": f"Failed to retrieve schemas: {str(e)}",
-                "partition": partition
+                "partition": partition,
             }
 
         total_count = response.get("totalCount", len(schemas))
 
-        logger.info(f"Retrieved {len(schemas)} schemas from server, applying client-side filtering")
+        logger.info(
+            f"Retrieved {len(schemas)} schemas from server, applying client-side filtering"
+        )
 
         # Apply client-side filtering
         filtered_schemas = []
@@ -173,7 +172,9 @@ async def schema_search(
             if _matches_client_filters(schema, client_filters, version_pattern):
                 # If text search is enabled, check if schema matches
                 if text:
-                    matches = await _matches_text_search(schema, text, search_in, include_content, client)
+                    matches = await _matches_text_search(
+                        schema, text, search_in, include_content, client
+                    )
                     if not matches:
                         continue
 
@@ -187,7 +188,9 @@ async def schema_search(
                         schema_content = await client.get_schema(schema_id)
                         schema["schemaContent"] = schema_content.get("schema", {})
                     except Exception as e:
-                        logger.warning(f"Failed to fetch schema content for {schema_id}: {e}")
+                        logger.warning(
+                            f"Failed to fetch schema content for {schema_id}: {e}"
+                        )
 
         # Apply sorting if needed
         if sort_by:
@@ -207,7 +210,7 @@ async def schema_search(
             "offset": offset,
             "partition": partition,
             "filteredCount": len(filtered_schemas),  # Additional info for transparency
-            "query": text if text else None  # Include search query for reference
+            "query": text if text else None,  # Include search query for reference
         }
 
         logger.info(
@@ -216,8 +219,8 @@ async def schema_search(
                 "requested": api_limit,
                 "retrieved": len(schemas),
                 "filtered": len(filtered_schemas),
-                "returned": len(paginated_schemas)
-            }
+                "returned": len(paginated_schemas),
+            },
         )
 
         return result
@@ -226,7 +229,9 @@ async def schema_search(
         await client.close()
 
 
-def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Optional[str]) -> bool:
+def _matches_client_filters(
+    schema: dict, filters: dict, version_pattern: str | None
+) -> bool:
     """Apply client-side filters to a schema."""
     # Extract schema identity for easier access
     schema_identity = schema.get("schemaIdentity", {})
@@ -236,15 +241,7 @@ def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Option
         if not isinstance(values, list):
             continue
 
-        if key == "authority" and schema_identity.get("authority") not in values:
-            return False
-        elif key == "source" and schema_identity.get("source") not in values:
-            return False
-        elif key == "entity" and schema_identity.get("entityType") not in values:
-            return False
-        elif key == "status" and schema.get("status") not in values:
-            return False
-        elif key == "scope" and schema.get("scope") not in values:
+        if key == "authority" and schema_identity.get("authority") not in values or key == "source" and schema_identity.get("source") not in values or key == "entity" and schema_identity.get("entityType") not in values or key == "status" and schema.get("status") not in values or key == "scope" and schema.get("scope") not in values:
             return False
 
     # Check version pattern if provided
@@ -261,11 +258,11 @@ def _matches_client_filters(schema: Dict, filters: Dict, version_pattern: Option
 
 
 async def _matches_text_search(
-    schema: Dict,
+    schema: dict,
     text: str,
-    search_fields: List[str],
+    search_fields: list[str],
     include_content: bool,
-    client: SchemaClient
+    client: SchemaClient,
 ) -> bool:
     """Check if schema matches text search criteria."""
     # Convert to lowercase for case-insensitive search
@@ -275,17 +272,32 @@ async def _matches_text_search(
     schema_identity = schema.get("schemaIdentity", {})
 
     # Check in identity fields
-    if "id" in search_fields and schema_identity.get("id", "").lower().find(text_lower) != -1:
+    if (
+        "id" in search_fields
+        and schema_identity.get("id", "").lower().find(text_lower) != -1
+    ):
         return True
-    if "authority" in search_fields and schema_identity.get("authority", "").lower().find(text_lower) != -1:
+    if (
+        "authority" in search_fields
+        and schema_identity.get("authority", "").lower().find(text_lower) != -1
+    ):
         return True
-    if "source" in search_fields and schema_identity.get("source", "").lower().find(text_lower) != -1:
+    if (
+        "source" in search_fields
+        and schema_identity.get("source", "").lower().find(text_lower) != -1
+    ):
         return True
-    if "entityType" in search_fields and schema_identity.get("entityType", "").lower().find(text_lower) != -1:
+    if (
+        "entityType" in search_fields
+        and schema_identity.get("entityType", "").lower().find(text_lower) != -1
+    ):
         return True
 
     # Need to fetch full schema if searching in content
-    if any(field in search_fields for field in ["title", "description", "properties", "content"]):
+    if any(
+        field in search_fields
+        for field in ["title", "description", "properties", "content"]
+    ):
         if include_content and "schemaContent" in schema:
             schema_content = schema["schemaContent"]
         else:
@@ -300,9 +312,15 @@ async def _matches_text_search(
                 return False
 
         # Search in schema content fields
-        if "title" in search_fields and schema_content.get("title", "").lower().find(text_lower) != -1:
+        if (
+            "title" in search_fields
+            and schema_content.get("title", "").lower().find(text_lower) != -1
+        ):
             return True
-        if "description" in search_fields and schema_content.get("description", "").lower().find(text_lower) != -1:
+        if (
+            "description" in search_fields
+            and schema_content.get("description", "").lower().find(text_lower) != -1
+        ):
             return True
 
         # Search in properties (recursively)
@@ -314,7 +332,7 @@ async def _matches_text_search(
     return False
 
 
-def _search_in_object(obj: Dict, text: str) -> bool:
+def _search_in_object(obj: dict, text: str) -> bool:
     """Recursively search for text in a nested object."""
     if not isinstance(obj, dict):
         return False
@@ -337,15 +355,13 @@ def _search_in_object(obj: Dict, text: str) -> bool:
         # Check in list elements
         elif isinstance(value, list):
             for item in value:
-                if isinstance(item, dict) and _search_in_object(item, text):
-                    return True
-                elif isinstance(item, str) and text in item.lower():
+                if isinstance(item, dict) and _search_in_object(item, text) or isinstance(item, str) and text in item.lower():
                     return True
 
     return False
 
 
-def _sort_schemas(schemas: List[Dict], sort_by: str, sort_order: str) -> List[Dict]:
+def _sort_schemas(schemas: list[dict], sort_by: str, sort_order: str) -> list[dict]:
     """Sort schemas by the specified field."""
     # Map sort_by values to actual schema keys
     sort_field_mapping = {
@@ -356,7 +372,12 @@ def _sort_schemas(schemas: List[Dict], sort_by: str, sort_order: str) -> List[Di
         "status": "status",
         "scope": "scope",
         "id": ["schemaIdentity", "id"],
-        "version": ["schemaIdentity", "schemaVersionMajor", "schemaVersionMinor", "schemaVersionPatch"]
+        "version": [
+            "schemaIdentity",
+            "schemaVersionMajor",
+            "schemaVersionMinor",
+            "schemaVersionPatch",
+        ],
     }
 
     # Get actual field(s) to sort by
@@ -383,7 +404,7 @@ def _sort_schemas(schemas: List[Dict], sort_by: str, sort_order: str) -> List[Di
     sorted_schemas = sorted(
         schemas,
         key=lambda s: (_get_sort_key(s) is None, _get_sort_key(s)),
-        reverse=(sort_order.upper() == "DESC")
+        reverse=(sort_order.upper() == "DESC"),
     )
 
     return sorted_schemas

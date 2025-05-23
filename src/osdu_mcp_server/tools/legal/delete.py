@@ -1,24 +1,17 @@
 """Tool for deleting legal tags (write-protected)."""
 
-from typing import Dict
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    OSMCPAPIError,
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import OSMCPAPIError, handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_delete(
-    name: str,
-    confirm: bool
-) -> Dict:
+async def legaltag_delete(name: str, confirm: bool) -> dict:
     """Delete a legal tag.
 
     CAUTION: Deleting a legal tag will make all associated data invalid.
@@ -37,7 +30,7 @@ async def legaltag_delete(
     if not confirm:
         raise OSMCPAPIError(
             "Deletion not confirmed. Set confirm=true to delete the legal tag. WARNING: This will invalidate all associated data.",
-            status_code=400
+            status_code=400,
         )
 
     config = ConfigManager()
@@ -58,15 +51,12 @@ async def legaltag_delete(
             "name": client.ensure_full_tag_name(name),
             "delete_enabled": True,
             "partition": partition,
-            "warning": "Associated data is now invalid"
+            "warning": "Associated data is now invalid",
         }
 
         logger.info(
             "Deleted legal tag successfully",
-            extra={
-                "name": name,
-                "partition": partition
-            }
+            extra={"name": name, "partition": partition},
         )
 
         # Audit log for write operation
@@ -77,8 +67,8 @@ async def legaltag_delete(
                 "tag_name": name,
                 "partition": partition,
                 "user": "authenticated_user",  # Should be extracted from auth context
-                "warning": "Associated data is now invalid"
-            }
+                "warning": "Associated data is now invalid",
+            },
         )
 
         return result

@@ -1,9 +1,10 @@
 """Tests for the ConfigManager class."""
 
 import os
-import pytest
 from pathlib import Path
 from unittest.mock import mock_open, patch
+
+import pytest
 
 from osdu_mcp_server.shared.config_manager import ConfigManager
 from osdu_mcp_server.shared.exceptions import OSMCPConfigError
@@ -23,8 +24,10 @@ server:
     url: https://yaml-osdu.com
     data_partition: yaml-partition
 """
-    with patch("builtins.open", mock_open(read_data=yaml_content)), \
-         patch("pathlib.Path.exists", return_value=True):
+    with (
+        patch("builtins.open", mock_open(read_data=yaml_content)),
+        patch("pathlib.Path.exists", return_value=True),
+    ):
         config = ConfigManager()
         assert config.get("server", "url") == "https://yaml-osdu.com"
 
@@ -81,8 +84,10 @@ def test_config_manager_parse_numbers():
 
 def test_config_manager_yaml_error():
     """Test that YAML errors are properly reported."""
-    with patch("builtins.open", mock_open(read_data="invalid: yaml: content:")), \
-         patch("pathlib.Path.exists", return_value=True):
+    with (
+        patch("builtins.open", mock_open(read_data="invalid: yaml: content:")),
+        patch("pathlib.Path.exists", return_value=True),
+    ):
         with pytest.raises(OSMCPConfigError) as exc_info:
             ConfigManager()
         assert "Failed to load config file" in str(exc_info.value)
@@ -96,9 +101,11 @@ server:
 auth:
     scope: yaml-scope
 """
-    with patch("builtins.open", mock_open(read_data=yaml_content)), \
-         patch("pathlib.Path.exists", return_value=True), \
-         patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": "30"}):
+    with (
+        patch("builtins.open", mock_open(read_data=yaml_content)),
+        patch("pathlib.Path.exists", return_value=True),
+        patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": "30"}),
+    ):
 
         config = ConfigManager()
         all_config = config.get_all_config()
@@ -115,8 +122,10 @@ def test_config_manager_custom_file():
 server:
     url: https://custom-osdu.com
 """
-    with patch("builtins.open", mock_open(read_data=yaml_content)), \
-         patch("pathlib.Path.exists", return_value=True):
+    with (
+        patch("builtins.open", mock_open(read_data=yaml_content)),
+        patch("pathlib.Path.exists", return_value=True),
+    ):
 
         config = ConfigManager(config_file=custom_path)
         assert config.get("server", "url") == "https://custom-osdu.com"

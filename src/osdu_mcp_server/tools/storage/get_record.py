@@ -1,10 +1,9 @@
 """Tool for getting a record by ID."""
 
-from typing import Dict, List, Optional
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -12,10 +11,7 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_get_record(
-    id: str,
-    attributes: Optional[List[str]] = None
-) -> Dict:
+async def storage_get_record(id: str, attributes: list[str] | None = None) -> dict:
     """Get the latest version of a record by ID.
 
     Args:
@@ -52,7 +48,7 @@ async def storage_get_record(
         result = {
             "success": True,
             "record": record,
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.info(
@@ -60,8 +56,8 @@ async def storage_get_record(
             extra={
                 "record_id": id,
                 "operation": "get_record",
-                "has_attributes": bool(attributes)
-            }
+                "has_attributes": bool(attributes),
+            },
         )
 
         return result

@@ -1,6 +1,7 @@
 """Tests for utility functions."""
 
 from datetime import datetime
+
 from freezegun import freeze_time
 
 from osdu_mcp_server.shared.utils import get_timestamp, merge_dicts
@@ -31,48 +32,30 @@ def test_merge_dicts_nested():
     """Test nested dictionary merge."""
     base = {
         "server": {"url": "http://base.com", "timeout": 30},
-        "auth": {"scope": "base-scope"}
+        "auth": {"scope": "base-scope"},
     }
     override = {
         "server": {"url": "http://override.com"},
-        "auth": {"scope": "override-scope", "method": "oauth"}
+        "auth": {"scope": "override-scope", "method": "oauth"},
     }
 
     result = merge_dicts(base, override)
 
     expected = {
         "server": {"url": "http://override.com", "timeout": 30},
-        "auth": {"scope": "override-scope", "method": "oauth"}
+        "auth": {"scope": "override-scope", "method": "oauth"},
     }
     assert result == expected
 
 
 def test_merge_dicts_deep_nested():
     """Test deeply nested dictionary merge."""
-    base = {
-        "level1": {
-            "level2": {
-                "level3": {"a": 1, "b": 2}
-            }
-        }
-    }
-    override = {
-        "level1": {
-            "level2": {
-                "level3": {"b": 3, "c": 4}
-            }
-        }
-    }
+    base = {"level1": {"level2": {"level3": {"a": 1, "b": 2}}}}
+    override = {"level1": {"level2": {"level3": {"b": 3, "c": 4}}}}
 
     result = merge_dicts(base, override)
 
-    expected = {
-        "level1": {
-            "level2": {
-                "level3": {"a": 1, "b": 3, "c": 4}
-            }
-        }
-    }
+    expected = {"level1": {"level2": {"level3": {"a": 1, "b": 3, "c": 4}}}}
     assert result == expected
 
 

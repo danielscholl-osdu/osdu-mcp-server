@@ -1,11 +1,11 @@
 """Tests for legaltag_list tool."""
 
-import pytest
-from aioresponses import aioresponses
-from unittest.mock import patch, MagicMock
 import os
 from datetime import datetime, timedelta
+from unittest.mock import MagicMock, patch
 
+import pytest
+from aioresponses import aioresponses
 from azure.core.credentials import AccessToken
 
 from osdu_mcp_server.tools.legal import legaltag_list
@@ -25,8 +25,8 @@ async def test_legaltag_list_success():
                     "expirationDate": "2028-12-31",
                     "securityClassification": "Private",
                     "personalData": "No Personal Data",
-                    "exportClassification": "EAR99"
-                }
+                    "exportClassification": "EAR99",
+                },
             },
             {
                 "name": "opendes-Public-Global-Data",
@@ -36,27 +36,29 @@ async def test_legaltag_list_success():
                     "contractId": "B5678",
                     "securityClassification": "Public",
                     "personalData": "No Personal Data",
-                    "exportClassification": "No License Required"
-                }
-            }
+                    "exportClassification": "No License Required",
+                },
+            },
         ]
     }
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
@@ -64,7 +66,7 @@ async def test_legaltag_list_success():
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=true",
-                    payload=mock_response
+                    payload=mock_response,
                 )
 
                 result = await legaltag_list(valid_only=True)
@@ -91,27 +93,29 @@ async def test_legaltag_list_invalid_only():
                     "countryOfOrigin": ["US"],
                     "contractId": "EXP123",
                     "expirationDate": "2020-12-31",
-                    "securityClassification": "Private"
-                }
+                    "securityClassification": "Private",
+                },
             }
         ]
     }
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
@@ -119,7 +123,7 @@ async def test_legaltag_list_invalid_only():
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=false",
-                    payload=mock_response
+                    payload=mock_response,
                 )
 
                 result = await legaltag_list(valid_only=False)
@@ -133,25 +137,25 @@ async def test_legaltag_list_invalid_only():
 @pytest.mark.asyncio
 async def test_legaltag_list_empty():
     """Test when no legal tags exist."""
-    mock_response = {
-        "legalTags": []
-    }
+    mock_response = {"legalTags": []}
 
     mock_token = AccessToken(
         token="fake-token",
-        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp())
+        expires_on=int((datetime.now() + timedelta(hours=1)).timestamp()),
     )
 
     test_env = {
-        'OSDU_MCP_SERVER_URL': 'https://test.osdu.com',
-        'OSDU_MCP_SERVER_DATA_PARTITION': 'opendes',
-        'AZURE_CLIENT_ID': 'test-client-id',
-        'AZURE_TENANT_ID': 'test-tenant-id',
-        'AZURE_CLIENT_SECRET': 'test-secret'
+        "OSDU_MCP_SERVER_URL": "https://test.osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "AZURE_CLIENT_ID": "test-client-id",
+        "AZURE_TENANT_ID": "test-tenant-id",
+        "AZURE_CLIENT_SECRET": "test-secret",
     }
 
     with patch.dict(os.environ, test_env):
-        with patch('osdu_mcp_server.shared.auth_handler.DefaultAzureCredential') as mock_credential_class:
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_credential_class:
             mock_credential = MagicMock()
             mock_credential.get_token.return_value = mock_token
             mock_credential_class.return_value = mock_credential
@@ -159,7 +163,7 @@ async def test_legaltag_list_empty():
             with aioresponses() as mocked:
                 mocked.get(
                     "https://test.osdu.com/api/legal/v1/legaltags?valid=true",
-                    payload=mock_response
+                    payload=mock_response,
                 )
 
                 result = await legaltag_list()

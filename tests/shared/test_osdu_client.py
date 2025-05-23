@@ -1,12 +1,13 @@
 """Tests for the OsduClient class focusing on behavior, not implementation."""
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
+
 import aiohttp
+import pytest
 from aioresponses import aioresponses
 
-from osdu_mcp_server.shared.osdu_client import OsduClient
 from osdu_mcp_server.shared.exceptions import OSMCPAPIError, OSMCPConnectionError
+from osdu_mcp_server.shared.osdu_client import OsduClient
 
 
 @pytest.mark.asyncio
@@ -15,7 +16,7 @@ async def test_osdu_client_get_success():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -25,9 +26,7 @@ async def test_osdu_client_get_success():
     with aioresponses() as mocked:
         # Mock the HTTP response
         mocked.get(
-            "https://test-osdu.com/api/test",
-            payload={"result": "success"},
-            status=200
+            "https://test-osdu.com/api/test", payload={"result": "success"}, status=200
         )
 
         client = OsduClient(mock_config, mock_auth)
@@ -45,7 +44,7 @@ async def test_osdu_client_post_with_data():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -57,7 +56,7 @@ async def test_osdu_client_post_with_data():
         mocked.post(
             "https://test-osdu.com/api/create",
             payload={"id": "123", "created": True},
-            status=201
+            status=201,
         )
 
         client = OsduClient(mock_config, mock_auth)
@@ -75,7 +74,7 @@ async def test_osdu_client_handles_api_errors():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -87,7 +86,7 @@ async def test_osdu_client_handles_api_errors():
         mocked.get(
             "https://test-osdu.com/api/bad",
             status=400,
-            body="Bad request: invalid parameter"
+            body="Bad request: invalid parameter",
         )
 
         client = OsduClient(mock_config, mock_auth)
@@ -108,7 +107,7 @@ async def test_osdu_client_retries_on_connection_error():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -119,16 +118,14 @@ async def test_osdu_client_retries_on_connection_error():
         # First two calls fail, third succeeds
         mocked.get(
             "https://test-osdu.com/api/flaky",
-            exception=aiohttp.ClientError("Connection failed")
+            exception=aiohttp.ClientError("Connection failed"),
         )
         mocked.get(
             "https://test-osdu.com/api/flaky",
-            exception=aiohttp.ClientError("Connection failed")
+            exception=aiohttp.ClientError("Connection failed"),
         )
         mocked.get(
-            "https://test-osdu.com/api/flaky",
-            payload={"result": "success"},
-            status=200
+            "https://test-osdu.com/api/flaky", payload={"result": "success"}, status=200
         )
 
         with patch("asyncio.sleep") as mock_sleep:
@@ -152,7 +149,7 @@ async def test_osdu_client_fails_after_max_retries():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -164,7 +161,7 @@ async def test_osdu_client_fails_after_max_retries():
         for _ in range(3):
             mocked.get(
                 "https://test-osdu.com/api/broken",
-                exception=aiohttp.ClientError("Connection failed")
+                exception=aiohttp.ClientError("Connection failed"),
             )
 
         with patch("asyncio.sleep") as mock_sleep:
@@ -188,14 +185,16 @@ async def test_osdu_client_reuses_session():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
     mock_auth = AsyncMock()
     mock_auth.get_access_token.return_value = "test-token"
 
-    with patch("osdu_mcp_server.shared.osdu_client.ClientSession") as mock_session_class:
+    with patch(
+        "osdu_mcp_server.shared.osdu_client.ClientSession"
+    ) as mock_session_class:
         mock_session = AsyncMock()
         mock_session.closed = False
         mock_session_class.return_value = mock_session
@@ -220,7 +219,7 @@ async def test_osdu_client_correctly_formats_headers():
     mock_config = MagicMock()
     mock_config.get_required.side_effect = lambda section, key: {
         ("server", "url"): "https://test-osdu.com",
-        ("server", "data_partition"): "test-partition"
+        ("server", "data_partition"): "test-partition",
     }[(section, key)]
     mock_config.get.return_value = 30
 
@@ -228,7 +227,9 @@ async def test_osdu_client_correctly_formats_headers():
     mock_auth.get_access_token.return_value = "test-token"
 
     # Mock at the session level to capture headers
-    with patch("osdu_mcp_server.shared.osdu_client.ClientSession") as mock_session_class:
+    with patch(
+        "osdu_mcp_server.shared.osdu_client.ClientSession"
+    ) as mock_session_class:
         mock_response = AsyncMock()
         mock_response.status = 200
         mock_response.json.return_value = {"result": "success"}

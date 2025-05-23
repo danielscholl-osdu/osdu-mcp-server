@@ -1,7 +1,6 @@
 """Service URL configuration for OSDU services."""
 
 from enum import Enum
-from typing import Dict
 
 
 class OSMCPService(Enum):
@@ -19,7 +18,7 @@ class OSMCPService(Enum):
 
 
 # Service base URL patterns
-SERVICE_BASE_URLS: Dict[OSMCPService, str] = {
+SERVICE_BASE_URLS: dict[OSMCPService, str] = {
     OSMCPService.STORAGE: "/api/storage/v2",
     OSMCPService.SEARCH: "/api/search/v2",
     OSMCPService.LEGAL: "/api/legal/v1",  # Legal uses v1

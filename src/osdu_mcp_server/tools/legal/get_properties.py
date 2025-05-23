@@ -1,20 +1,17 @@
 """Tool for getting allowed property values for legal tags."""
 
-from typing import Dict
 import logging
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.legal_client import LegalClient
-from ...shared.exceptions import (
-    handle_osdu_exceptions
-)
+from ...shared.config_manager import ConfigManager
+from ...shared.exceptions import handle_osdu_exceptions
 
 logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_get_properties() -> Dict:
+async def legaltag_get_properties() -> dict:
     """Get allowed values for legal tag properties.
 
     Returns:
@@ -59,10 +56,7 @@ async def legaltag_get_properties() -> Dict:
         response = await client.get_legal_tag_properties()
 
         # Build response
-        result = {
-            "success": True,
-            "properties": response
-        }
+        result = {"success": True, "properties": response}
 
         logger.info("Retrieved legal tag properties successfully")
 

@@ -1,10 +1,9 @@
 """Tool for listing all versions of a record."""
 
-from typing import Dict
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -12,7 +11,7 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_list_record_versions(id: str) -> Dict:
+async def storage_list_record_versions(id: str) -> dict:
     """List all versions of a record.
 
     Args:
@@ -42,7 +41,7 @@ async def storage_list_record_versions(id: str) -> Dict:
             "recordId": response.get("recordId", id),
             "versions": response.get("versions", []),
             "count": len(response.get("versions", [])),
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.info(
@@ -50,8 +49,8 @@ async def storage_list_record_versions(id: str) -> Dict:
             extra={
                 "record_id": id,
                 "version_count": result["count"],
-                "operation": "list_record_versions"
-            }
+                "operation": "list_record_versions",
+            },
         )
 
         return result

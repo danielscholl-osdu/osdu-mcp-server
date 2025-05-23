@@ -1,10 +1,9 @@
 """Tool for logically deleting a record."""
 
-from typing import Dict
 
-from ...shared.config_manager import ConfigManager
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.storage_client import StorageClient
+from ...shared.config_manager import ConfigManager
 from ...shared.exceptions import handle_osdu_exceptions
 from ...shared.logging_manager import get_logger
 
@@ -12,7 +11,7 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_delete_record(id: str) -> Dict:
+async def storage_delete_record(id: str) -> dict:
     """Logically delete a record (can be restored).
 
     Args:
@@ -44,16 +43,12 @@ async def storage_delete_record(id: str) -> Dict:
             "deleted": True,
             "id": id,
             "delete_enabled": True,
-            "partition": config.get("server", "data_partition")
+            "partition": config.get("server", "data_partition"),
         }
 
         logger.warning(
             f"Successfully deleted record {id}",
-            extra={
-                "record_id": id,
-                "operation": "delete_record",
-                "destructive": True
-            }
+            extra={"record_id": id, "operation": "delete_record", "destructive": True},
         )
 
         return result

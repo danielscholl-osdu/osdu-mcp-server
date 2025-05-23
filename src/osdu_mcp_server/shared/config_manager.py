@@ -6,7 +6,7 @@ as defined in ADR-003.
 
 import os
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 import yaml
 
@@ -16,14 +16,14 @@ from .exceptions import OSMCPConfigError
 class ConfigManager:
     """Environment-first configuration with YAML fallback."""
 
-    def __init__(self, config_file: Optional[Path] = None):
+    def __init__(self, config_file: Path | None = None):
         """Initialize configuration manager.
 
         Args:
             config_file: Path to YAML configuration file (default: config.yaml)
         """
         self.config_file = config_file or Path("config.yaml")
-        self._file_config: Optional[Dict[str, Any]] = None
+        self._file_config: dict[str, Any] | None = None
         self._load_file_config()
 
     def get(self, section: str, key: str, default: Any = None) -> Any:
@@ -81,7 +81,7 @@ class ConfigManager:
             )
         return value
 
-    def _load_file_config(self) -> Optional[dict]:
+    def _load_file_config(self) -> dict | None:
         """Load configuration from YAML file if it exists.
 
         Returns:
@@ -89,7 +89,7 @@ class ConfigManager:
         """
         if self.config_file.exists():
             try:
-                with open(self.config_file, "r") as f:
+                with open(self.config_file) as f:
                     self._file_config = yaml.safe_load(f)
                     return self._file_config
             except Exception as e:
@@ -122,7 +122,7 @@ class ConfigManager:
         # Return as string
         return value
 
-    def get_all_config(self) -> Dict[str, Any]:
+    def get_all_config(self) -> dict[str, Any]:
         """Get all configuration values for debugging/logging.
 
         Returns:

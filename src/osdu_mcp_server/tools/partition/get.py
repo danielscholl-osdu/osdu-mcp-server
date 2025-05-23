@@ -2,8 +2,8 @@
 
 import json
 import logging
-from datetime import datetime
-from typing import Any, Dict
+from datetime import UTC, datetime
+from typing import Any
 
 from ...shared.auth_handler import AuthHandler
 from ...shared.clients.partition_client import PartitionClient
@@ -19,7 +19,7 @@ async def partition_get(
     partition_id: str,
     include_sensitive: bool = False,
     redact_sensitive_values: bool = True,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Retrieve configuration for a specific OSDU partition.
 
     This tool fetches the properties and configuration for a specific partition.
@@ -48,16 +48,20 @@ async def partition_get(
     trace_id = get_trace_id()
 
     # Log the operation
-    logger.info(json.dumps({
-        "timestamp": datetime.utcnow().isoformat(),
-        "trace_id": trace_id,
-        "level": "INFO",
-        "tool": "partition_get",
-        "action": "partition_get_request",
-        "partition_id": partition_id,
-        "include_sensitive": include_sensitive,
-        "redact_sensitive_values": redact_sensitive_values,
-    }))
+    logger.info(
+        json.dumps(
+            {
+                "timestamp": datetime.now(UTC).isoformat(),
+                "trace_id": trace_id,
+                "level": "INFO",
+                "tool": "partition_get",
+                "action": "partition_get_request",
+                "partition_id": partition_id,
+                "include_sensitive": include_sensitive,
+                "redact_sensitive_values": redact_sensitive_values,
+            }
+        )
+    )
 
     try:
         # Initialize dependencies
@@ -99,17 +103,25 @@ async def partition_get(
 
         # Log sensitive data access if any
         if sensitive_accessed:
-            logger.warning(json.dumps({
-                "timestamp": datetime.utcnow().isoformat(),
-                "trace_id": trace_id,
-                "level": "WARN",
-                "tool": "partition_get",
-                "action": "sensitive_data_access",
-                "partition_id": partition_id,
-                "properties_accessed": sensitive_accessed,
-                "user": await auth_handler.get_user_info() if hasattr(auth_handler, 'get_user_info') else "unknown",
-                "result": "provided",
-            }))
+            logger.warning(
+                json.dumps(
+                    {
+                        "timestamp": datetime.now(UTC).isoformat(),
+                        "trace_id": trace_id,
+                        "level": "WARN",
+                        "tool": "partition_get",
+                        "action": "sensitive_data_access",
+                        "partition_id": partition_id,
+                        "properties_accessed": sensitive_accessed,
+                        "user": (
+                            await auth_handler.get_user_info()
+                            if hasattr(auth_handler, "get_user_info")
+                            else "unknown"
+                        ),
+                        "result": "provided",
+                    }
+                )
+            )
 
         response = {
             "success": True,
@@ -120,31 +132,39 @@ async def partition_get(
         }
 
         # Log successful response
-        logger.info(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
-            "trace_id": trace_id,
-            "level": "INFO",
-            "tool": "partition_get",
-            "action": "partition_get_success",
-            "partition_id": partition_id,
-            "property_count": len(processed_properties),
-            "sensitive_count": sensitive_count,
-        }))
+        logger.info(
+            json.dumps(
+                {
+                    "timestamp": datetime.now(UTC).isoformat(),
+                    "trace_id": trace_id,
+                    "level": "INFO",
+                    "tool": "partition_get",
+                    "action": "partition_get_success",
+                    "partition_id": partition_id,
+                    "property_count": len(processed_properties),
+                    "sensitive_count": sensitive_count,
+                }
+            )
+        )
 
         return response
 
     except OSMCPError as e:
         # Log error
-        logger.error(json.dumps({
-            "timestamp": datetime.utcnow().isoformat(),
-            "trace_id": trace_id,
-            "level": "ERROR",
-            "tool": "partition_get",
-            "action": "partition_get_error",
-            "partition_id": partition_id,
-            "error_type": type(e).__name__,
-            "error_message": str(e),
-        }))
+        logger.error(
+            json.dumps(
+                {
+                    "timestamp": datetime.now(UTC).isoformat(),
+                    "trace_id": trace_id,
+                    "level": "ERROR",
+                    "tool": "partition_get",
+                    "action": "partition_get_error",
+                    "partition_id": partition_id,
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                }
+            )
+        )
 
         # Check if it's a not found error
         exists = "not found" not in str(e).lower()
@@ -159,5 +179,5 @@ async def partition_get(
 
     finally:
         # Clean up resources
-        if 'client' in locals():
+        if "client" in locals():
             await client.close()

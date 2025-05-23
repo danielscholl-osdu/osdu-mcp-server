@@ -3,7 +3,7 @@
 This module implements the health check tool as defined in ADR-007.
 """
 
-from typing import Any, Dict
+from typing import Any
 
 from ..shared.auth_handler import AuthHandler
 from ..shared.config_manager import ConfigManager
@@ -18,7 +18,7 @@ async def health_check(
     include_services: bool = True,
     include_auth: bool = True,
     include_version_info: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Check OSDU platform connectivity and service health.
 
     Args:
@@ -70,7 +70,7 @@ async def health_check(
 
 async def _check_services(
     client: OsduClient, include_versions: bool = False
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Check individual OSDU service health.
 
     Args:
