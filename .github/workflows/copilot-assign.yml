@@ -16,12 +16,16 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const issue = context.issue;
+            const issue_number = context.payload.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
             
             // Try to assign the issue to copilot user, but continue if it fails
             try {
               await github.rest.issues.addAssignees({
-                ...issue,
+                owner: owner,
+                repo: repo,
+                issue_number: issue_number,
                 assignees: ['copilot']
               });
               console.log('Successfully assigned issue to copilot user');
@@ -32,7 +36,9 @@ jobs:
             
             // Add a comment confirming the assignment
             await github.rest.issues.createComment({
-              ...issue,
+              owner: owner,
+              repo: repo,
+              issue_number: issue_number,
               body: `🤖 This issue has been labeled for GitHub Copilot implementation.
               
               Copilot will follow the established patterns and guidelines in:
