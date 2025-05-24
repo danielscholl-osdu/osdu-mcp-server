@@ -11,6 +11,20 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.1.4](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.3...v0.1.4) (2025-05-24)
+
+
+### Bug Fixes
+
+* **github:** Fix Copilot bot username case sensitivity in workflow ([ab57382](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/ab57382a6e72839e72be7f3263acf9f2a528847f))
+* **github:** Fix Copilot bot username case sensitivity in workflow ([a47b358](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/a47b358cca62e3677918d3bab427d7953633a061))
+
+
+### Documentation
+
+* add release badge to README ([f51f599](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/f51f599be772c6cb783e4f087ff5076140d1ff86))
+* add release badge to README ([24f1c94](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/24f1c942b58b02d0e90ed8300b5d34971631874d))
+
 ## [0.1.3](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.2...v0.1.3) (2025-05-24)
 
 
