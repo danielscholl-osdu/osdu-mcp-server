@@ -22,7 +22,8 @@ jobs:
         id: release
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          release-type: python
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
           
   # Build and validate package when a release is created
   build:
