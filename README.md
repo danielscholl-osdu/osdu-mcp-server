@@ -1,6 +1,7 @@
 # OSDU MCP Server
 
 [![CI](https://github.com/danielscholl-osdu/osdu-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/danielscholl-osdu/osdu-mcp-server/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/danielscholl-osdu/osdu-mcp-server)](https://github.com/danielscholl-osdu/osdu-mcp-server/releases)
 [![Python](https://img.shields.io/badge/python-3.12%20|%203.13-blue)](https://www.python.org/downloads/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Checked with mypy](https://img.shields.io/badge/mypy-checked-blue)](http://mypy-lang.org/)
