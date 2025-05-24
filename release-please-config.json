@@ -17,13 +17,14 @@
         {"type": "ci", "section": "Continuous Integration", "hidden": true}
       ],
       "exclude-paths": [
-        "docs/**",
         "*.md",
+        ".flake8",
         ".github/**",
-        "tests/**",
-        "setup.cfg",
+        ".release-please-manifest.json",
+        "docs/**",
         "mypy.ini",
-        ".flake8"
+        "setup.cfg",
+        "tests/**"
       ]
     }
   }
