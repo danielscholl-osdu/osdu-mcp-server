@@ -11,6 +11,21 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.2.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.3...v0.2.0) (2025-05-24)
+
+
+### Features
+
+* configure release-please to only bump versions for source code changes ([5fb97bd](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/5fb97bde93b9e3466e800b73745ae471256b2999))
+* configure release-please to only bump versions for source code changes ([4c6ad68](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/4c6ad684a6ced04c0031a2addbfa939dd2fbace7)), closes [#64](https://github.com/danielscholl-osdu/osdu-mcp-server/issues/64)
+
+
+### Bug Fixes
+
+* **github:** Fix Copilot bot username case sensitivity in workflow ([ab57382](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/ab57382a6e72839e72be7f3263acf9f2a528847f))
+* **github:** Fix Copilot bot username case sensitivity in workflow ([a47b358](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/a47b358cca62e3677918d3bab427d7953633a061))
+* prevent release-please infinite loop and improve config maintainability ([4bf2046](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/4bf2046a26efebb4c23000acb4712e93795e8d92))
+
 ## [0.1.4](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.3...v0.1.4) (2025-05-24)
 
 
