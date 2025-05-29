@@ -11,6 +11,22 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.3.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.2.0...v0.3.0) (2025-05-29)
+
+
+### Features
+
+* **github:** add automated labeling for AI agent assignments and issue creation ([0e89139](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/0e89139a7a2bd666968ce3e9dcfdd47c5370c58a))
+
+
+### Bug Fixes
+
+* **github:** improve Copilot assignment workflow feedback and documentation ([2172e22](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/2172e22d97f5d76b1a9b0789ae7663bc9650db5c))
+* **github:** improve Copilot assignment workflow feedback and status clarity ([e6333e5](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/e6333e5cc8a6b54953cf896508a2b87b7ced1292))
+* **github:** properly verify Copilot assignment success by checking issue state ([eba7d40](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/eba7d409a5a2ca6e5b8cd2685335dd20840307bd))
+* **github:** remove non-functional Copilot assignment workflow ([3c7d958](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/3c7d958d4cd215b4932855bdddb61362ea994286))
+* **github:** remove non-functional Copilot assignment workflow ([12e9fb1](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/12e9fb153fa8230f39e08b87fa5a59a3e073213e))
+
 ## [0.2.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.1.3...v0.2.0) (2025-05-24)
 
 
