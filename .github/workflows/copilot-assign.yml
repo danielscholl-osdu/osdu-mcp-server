@@ -20,7 +20,8 @@ jobs:
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             
-            // Try to assign the issue to copilot user, but continue if it fails
+            // Try to assign the issue to copilot user
+            let assignmentSuccessful = false;
             try {
               await github.rest.issues.addAssignees({
                 owner: owner,
@@ -28,22 +29,49 @@ jobs:
                 issue_number: issue_number,
                 assignees: ['Copilot']
               });
-              console.log('Successfully assigned issue to copilot user');
+              
+              // Verify the assignment actually worked by fetching the issue
+              const updatedIssue = await github.rest.issues.get({
+                owner: owner,
+                repo: repo,
+                issue_number: issue_number
+              });
+              
+              const assignees = updatedIssue.data.assignees.map(assignee => assignee.login);
+              assignmentSuccessful = assignees.includes('Copilot');
+              
+              if (assignmentSuccessful) {
+                console.log(`✅ Successfully assigned issue #${issue_number} to Copilot user`);
+              } else {
+                console.log(`❌ Assignment API call succeeded but Copilot is not in assignees list for issue #${issue_number}`);
+              }
             } catch (error) {
-              console.log(`Failed to assign issue: ${error.message}`);
-              // Continue with the workflow
+              console.log(`❌ Failed to assign issue #${issue_number} to Copilot: ${error.message}`);
+              // Continue with the workflow to post a comment explaining the failure
             }
             
-            // Add a comment confirming the assignment
-            await github.rest.issues.createComment({
-              owner: owner,
-              repo: repo,
-              issue_number: issue_number,
-              body: `🤖 This issue has been labeled for GitHub Copilot implementation.
+            // Add a comment based on assignment result
+            const commentBody = assignmentSuccessful 
+              ? `🤖 **GitHub Copilot has been automatically assigned to this issue.**
               
               Copilot will follow the established patterns and guidelines in:
               - \`.github/copilot-instructions.md\`
               - \`docs/label-strategy.md\`
               
               Quality checks will be run before submitting a PR.`
+              : `🤖 **This issue has been labeled for GitHub Copilot implementation.**
+              
+              ⚠️ Automatic assignment to Copilot failed, but the issue is ready for manual assignment.
+              
+              Copilot will follow the established patterns and guidelines in:
+              - \`.github/copilot-instructions.md\`
+              - \`docs/label-strategy.md\`
+              
+              Quality checks will be run before submitting a PR.`;
+            
+            await github.rest.issues.createComment({
+              owner: owner,
+              repo: repo,
+              issue_number: issue_number,
+              body: commentBody
             });

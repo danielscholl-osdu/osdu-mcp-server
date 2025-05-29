@@ -97,9 +97,10 @@ By preserving this knowledge, session logs ensure the AI stays aligned with proj
 This project is optimized for collaboration with GitHub Copilot coding agent. To assign tasks to Copilot:
 
 1. **Create Well-Scoped Issues**: Use the "Copilot Task" issue template
-2. **Clear Acceptance Criteria**: Define exactly what success looks like
-3. **Reference Patterns**: Point to existing code patterns to follow
-4. **Specify Files**: List which files need modification
+2. **Apply the 'copilot' Label**: This automatically assigns the issue to @Copilot
+3. **Clear Acceptance Criteria**: Define exactly what success looks like
+4. **Reference Patterns**: Point to existing code patterns to follow
+5. **Specify Files**: List which files need modification
 
 Copilot will:
 - Follow the patterns defined in `.github/copilot-instructions.md`

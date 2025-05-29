@@ -142,3 +142,11 @@ Labels can be automatically managed using:
 - `.github/labels.yml` - Label definitions
 - GitHub Actions for label sync
 - Issue templates with default labels
+
+### Automatic Copilot Assignment
+
+Issues labeled with **copilot** are automatically assigned to the GitHub Copilot user via the `.github/workflows/copilot-assign.yml` workflow. The workflow:
+- Triggers when the 'copilot' label is added to an issue
+- Automatically assigns the issue to @Copilot
+- Posts a comment confirming the assignment status
+- Provides guidance on Copilot implementation patterns
