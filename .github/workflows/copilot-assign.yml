@@ -29,8 +29,22 @@ jobs:
                 issue_number: issue_number,
                 assignees: ['Copilot']
               });
-              console.log(`✅ Successfully assigned issue #${issue_number} to Copilot user`);
-              assignmentSuccessful = true;
+              
+              // Verify the assignment actually worked by fetching the issue
+              const updatedIssue = await github.rest.issues.get({
+                owner: owner,
+                repo: repo,
+                issue_number: issue_number
+              });
+              
+              const assignees = updatedIssue.data.assignees.map(assignee => assignee.login);
+              assignmentSuccessful = assignees.includes('Copilot');
+              
+              if (assignmentSuccessful) {
+                console.log(`✅ Successfully assigned issue #${issue_number} to Copilot user`);
+              } else {
+                console.log(`❌ Assignment API call succeeded but Copilot is not in assignees list for issue #${issue_number}`);
+              }
             } catch (error) {
               console.log(`❌ Failed to assign issue #${issue_number} to Copilot: ${error.message}`);
               // Continue with the workflow to post a comment explaining the failure
