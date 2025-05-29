@@ -1,11 +1,18 @@
-name: Setup OSDU MCP Server Development Environment
+name: "Copilot Setup Steps"
 
-on:
-  workflow_call:
+# Allow testing of the setup steps from your repository's "Actions" tab.
+on: workflow_dispatch
 
 jobs:
-  setup:
+  # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
+  copilot-setup-steps:
     runs-on: ubuntu-latest
+
+    # Set the permissions to the lowest permissions possible needed for your steps.
+    # Copilot will be given its own token for its operations.
+    permissions:
+      # Clone the repository as part of setup steps to install dependencies
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
