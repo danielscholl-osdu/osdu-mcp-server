@@ -11,6 +11,18 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.4.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.3.0...v0.4.0) (2025-05-29)
+
+
+### Features
+
+* simplify Copilot issue template to minimal structure ([6abd665](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/6abd6651a0e84c4800e2f0edc52f8607804dbdcc))
+
+
+### Bug Fixes
+
+* **github:** update uv.lock automatically in Release Please workflow ([213c522](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/213c522d58a6139cee1e7a2f0ad928be84fcb52e))
+
 ## [0.3.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.2.0...v0.3.0) (2025-05-29)
 
 
