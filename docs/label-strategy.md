@@ -37,6 +37,7 @@ This document defines the labeling strategy for the OSDU MCP Server project, ens
 
 ### 5. AI Agent Labels (Automation)
 - **copilot** - Suitable for GitHub Copilot to implement
+- **claude** - Issue created by Claude Code assistant
 
 ## AI Agent Guidelines
 
@@ -46,7 +47,7 @@ When creating issues, AI agents should apply labels based on:
 2. **Add Priority when clear** - If the issue mentions urgency or importance
 3. **Include relevant Component labels** - Can have multiple if the issue spans areas
 4. **Status labels are optional** - Apply only when explicitly relevant
-5. **Add copilot label** - When the issue is suitable for GitHub Copilot implementation
+5. **Add AI agent label** - Claude should add `claude` label, suitable tasks get `copilot` label
 
 ## When to Apply the Copilot Label
 

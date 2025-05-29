@@ -66,12 +66,13 @@ When creating GitHub issues, follow the label strategy defined in @docs/label-st
 2. **Add Priority when clear**: high-priority, medium-priority, low-priority
 3. **Add Component labels**: configuration, dependencies, etc. (when relevant)
 4. **Status labels are optional**: needs-triage, blocked, breaking-change
-5. **Add copilot label**: When the issue is suitable for GitHub Copilot implementation
+5. **Always add claude label**: All issues created by Claude should include the `claude` label
+6. **Add copilot label**: When the issue is suitable for GitHub Copilot implementation
 
 Example issue creation:
 ```bash
 gh issue create -t "Add retry logic to storage client" \
-  -l "enhancement,medium-priority,copilot" \
+  -l "enhancement,medium-priority,claude,copilot" \
   -b "The storage client should retry failed requests..."
 ```
 
