@@ -7,13 +7,14 @@
     "Modify description to reflect your specific use case",
     "All fields shown are required for successful creation"
   ],
-  "_example_mcp_call": "legaltag_create(name='public-usa-agent-test-20250619', description='Legal tag created by OSDU MCP Server AI agent for workflow testing', country_of_origin=['US'], contract_id='TEST-CONTRACT-001', security_classification='Public', personal_data='No Personal Data', export_classification='EAR99', data_type='Public Domain Data', expiration_date='2025-12-31')",
+  "_example_mcp_call": "legaltag_create(name='public-usa-agent-test-20250619', description='Legal tag created by OSDU MCP Server AI agent for workflow testing', country_of_origin=['US'], contract_id='TEST-CONTRACT-001', originator='OSDU-MCP-Server', security_classification='Public', personal_data='No Personal Data', export_classification='EAR99', data_type='Public Domain Data', expiration_date='2025-12-31')",
   
   "template": {
     "name": "public-usa-agent-test-YYYYMMDD",
     "description": "Legal tag created by OSDU MCP Server AI agent for workflow testing",
     "country_of_origin": ["US"],
-    "contract_id": "TEST-CONTRACT-001", 
+    "contract_id": "TEST-CONTRACT-001",
+    "originator": "OSDU-MCP-Server",
     "security_classification": "Public",
     "personal_data": "No Personal Data",
     "export_classification": "EAR99",
@@ -32,6 +33,7 @@
     "name": "Must be unique across partition. Include timestamp (YYYYMMDD) to ensure uniqueness",
     "country_of_origin": "Must be valid ISO country codes (e.g., 'US', 'GB', 'CA')",
     "contract_id": "Required field, use meaningful identifier for your organization",
+    "originator": "Required field (3-60 characters). Client or supplier name. Alphanumeric, spaces, hyphens, periods allowed",
     "expiration_date": "Must be future date in YYYY-MM-DD format",
     "description": "Should clearly indicate purpose and scope of data usage"
   },
@@ -39,7 +41,7 @@
   "common_errors": [
     "Name already exists: Use timestamp or UUID to ensure uniqueness",
     "Invalid country code: Use 2-letter ISO codes (US, not USA)",
-    "Missing originator: Some environments require 'originator' field",
+    "Invalid originator: Must be 3-60 characters, alphanumeric with spaces/hyphens/periods only",
     "Expired date: Must be in the future"
   ]
 }
