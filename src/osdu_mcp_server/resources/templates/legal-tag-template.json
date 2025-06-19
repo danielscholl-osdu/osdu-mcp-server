@@ -7,11 +7,11 @@
     "Modify description to reflect your specific use case",
     "All fields shown are required for successful creation"
   ],
-  "_example_mcp_call": "legaltag_create(name='your-tag-name', description='Your description', country_of_origin=['US'], contract_id='YOUR-CONTRACT-ID', security_classification='Public', personal_data='No Personal Data', export_classification='EAR99', data_type='Public Domain Data', expiration_date='2025-12-31')",
+  "_example_mcp_call": "legaltag_create(name='public-usa-agent-test-20250619', description='Legal tag created by OSDU MCP Server AI agent for workflow testing', country_of_origin=['US'], contract_id='TEST-CONTRACT-001', security_classification='Public', personal_data='No Personal Data', export_classification='EAR99', data_type='Public Domain Data', expiration_date='2025-12-31')",
   
   "template": {
-    "name": "public-usa-workflow-test-YYYYMMDD",
-    "description": "Legal tag for OSDU MCP workflow demonstration and testing",
+    "name": "public-usa-agent-test-YYYYMMDD",
+    "description": "Legal tag created by OSDU MCP Server AI agent for workflow testing",
     "country_of_origin": ["US"],
     "contract_id": "TEST-CONTRACT-001", 
     "security_classification": "Public",
