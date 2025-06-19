@@ -130,6 +130,7 @@ This returns the health status of your OSDU platform, checking authentication an
 
 ### Prompts
 - **list_mcp_assets**: Comprehensive overview of all server capabilities with usage examples and quick start guidance
+- **guide_search_patterns**: Search pattern guidance for OSDU operations with Elasticsearch syntax examples
 
 ### Tools
 
@@ -162,6 +163,11 @@ This returns the health status of your OSDU platform, checking authentication an
 - **schema_search**: Advanced schema discovery with rich filtering and text search
 - **schema_create**: Create a new schema (write-protected)
 - **schema_update**: Update an existing schema (write-protected)
+
+#### Search Service
+- **search_query**: Execute search queries using Elasticsearch syntax
+- **search_by_id**: Find specific records by ID
+- **search_by_kind**: Find all records of specific type
 
 #### Storage Service
 - **storage_create_update_records**: Create or update records (write-protected)
