@@ -11,6 +11,19 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.5.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.4.0...v0.5.0) (2025-06-19)
+
+
+### Features
+
+* implement MCP prompts capability with asset discovery ([06815b9](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/06815b9a0c47ee0e62f6d2f974d98a054c859aa1))
+* implement MCP prompts capability with asset discovery ([dd8049c](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/dd8049cdcbd2163dee66b49875db241a73da2438))
+
+
+### Bug Fixes
+
+* resolve code quality issues ([0aad5c6](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/0aad5c6111cffd30d4e2ab957d2ab4d1578ff56e))
+
 ## [0.4.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.3.0...v0.4.0) (2025-05-29)
 
 
