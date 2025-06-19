@@ -29,6 +29,9 @@ Optimized ADR Index for Agent Context
 | 021 | Record Validation Pattern           | acc    | [ADR-021](021-record-validation-pattern.md) |
 | 022 | Confirmation Requirement Pattern    | acc    | [ADR-022](022-confirmation-requirement-pattern.md) |
 | 023 | Enhanced Audit Logging Pattern      | acc    | [ADR-023](023-enhanced-audit-logging-pattern.md) |
+| 024 | Prompt Implementation Pattern        | acc    | [ADR-024](024-prompt-implementation-pattern.md) |
+| 025 | Prompt Naming Convention             | acc    | [ADR-025](025-prompt-naming-convention.md) |
+| 026 | Content Generation Strategy          | acc    | [ADR-026](026-content-generation-strategy.md) |
 
 ---
 
@@ -465,4 +468,73 @@ impact: |
 tradeoffs:
 positive: [compliance support, rich context, monitoring-friendly]
 negative: [increased storage, processing overhead, complexity]
+```
+
+--------------------------------------------
+```yaml
+id: 024
+title: Prompt Implementation Pattern
+status: accepted
+date: 2025-06-19
+decision: Use pure async functions returning List[Message] with content generation via dedicated generator classes.
+why: |
+• MCP protocol compliance with proper Message format
+• FastMCP alignment with function-based registration
+• Testability of data provider vs. consumer
+• Separation of concerns between prompt logic and content generation
+• Consistency with tool patterns while serving unique purpose
+implementation: |
+• Function signature: async def prompt_name() -> List[Message]
+• Message structure: [{"role": "user", "content": "..."}]
+• Generator classes for content creation
+• Registration via mcp.prompt() decorator
+tradeoffs:
+positive: [MCP compliance, clear separation, testable, maintainable]
+negative: [additional generator classes, two-layer architecture]
+```
+
+--------------------------------------------
+```yaml
+id: 025
+title: Prompt Naming Convention
+status: accepted
+date: 2025-06-19
+decision: Use descriptive naming for prompts that clearly indicates their discovery and guidance purpose.
+why: |
+• Different purpose from tools (content delivery vs. actions)
+• User mental model of prompts as assistance not operations
+• Clear distinction improves discoverability
+• Future-proof for various prompt types
+implementation: |
+• Discovery prompts: {verb}_{subject} (list_mcp_assets)
+• Guidance prompts: {verb}_{context} (guide_data_ingestion)
+• Interactive prompts: {action}_{workflow} (create_legal_tag_wizard)
+• Descriptive over resource-action pattern
+tradeoffs:
+positive: [clear distinction, purpose-driven, extensible, natural language]
+negative: [learning curve, consistency overhead, documentation needs]
+```
+
+--------------------------------------------
+```yaml
+id: 026
+title: Content Generation Strategy
+status: accepted
+date: 2025-06-19
+decision: Use static content generation with dynamic elements via dedicated generator classes.
+why: |
+• Hybrid approach balances accuracy with performance
+• Static content ensures comprehensive coverage
+• Dynamic elements reflect current server state
+• Generator classes provide clear organization
+• Template-based approach ensures consistency
+implementation: |
+• AssetsGenerator class with section-based methods
+• Static template content for stable information
+• Dynamic discovery for current capabilities (future)
+• Error handling with graceful degradation
+• Performance target: <500ms generation, 5-10KB content
+tradeoffs:
+positive: [accuracy, performance, maintainable, consistent, extensible]
+negative: [maintenance overhead, code-based content, generator complexity]
 ```

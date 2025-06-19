@@ -40,9 +40,13 @@ from .tools.storage import (
     storage_purge_record,
     storage_query_records_by_kind,
 )
+from .prompts import list_mcp_assets
 
 # Create FastMCP server instance
 mcp = FastMCP("OSDU MCP Server")
+
+# Register prompts
+mcp.prompt()(list_mcp_assets)  # type: ignore[arg-type]
 
 # Register tools
 mcp.tool()(health_check)  # type: ignore[arg-type]
