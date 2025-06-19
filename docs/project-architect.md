@@ -63,9 +63,23 @@ This document covers:
 │  ┌─────────────────────────────────┐    │
 │  │         Tool Registry           │    │
 │  │   • Health Check               │    │
-│  │   • Storage Tools (Phase 2)    │    │
-│  │   • Search Tools (Phase 2)     │    │
-│  │   • Schema Tools (Phase 3)     │    │
+│  │   • Storage Tools (Phase 6)    │    │
+│  │   • Search Tools (Phase 5) ✅  │    │
+│  │   • Schema Tools (Phase 4)     │    │
+│  │   • Legal Tools (Phase 3)      │    │
+│  │   • Partition Tools (Phase 2)  │    │
+│  └─────────────────────────────────┘    │
+│  ┌─────────────────────────────────┐    │
+│  │        Prompt Registry          │    │
+│  │   • Asset Discovery            │    │
+│  │   • Search Guidance            │    │
+│  │   • Record Lifecycle Workflow  │    │
+│  └─────────────────────────────────┘    │
+│  ┌─────────────────────────────────┐    │
+│  │       Resource Registry         │    │
+│  │   • Working Templates          │    │
+│  │   • Reference Examples         │    │
+│  │   • Format Patterns            │    │
 │  └─────────────────────────────────┘    │
 │  ┌─────────────────────────────────┐    │
 │  │      Shared Infrastructure      │    │
@@ -112,9 +126,100 @@ This document covers:
 **Goal**: OSDU record storage operations
 **Scope**: Record CRUD + versioning + validation
 
-## 4. Phase 1: Foundation Architecture
+## 4. MCP Capabilities Architecture
 
-### 4.1. Component Structure
+### 4.1. Prompts Implementation (ADR-024, ADR-025)
+**Design Principle**: Self-documenting capabilities via guidance prompts
+
+The server implements MCP prompts to provide AI assistants with rich guidance content:
+
+```python
+# Prompt implementation pattern
+async def guide_record_lifecycle() -> List[Message]:
+    """Provide comprehensive guidance for executing the complete OSDU record
+    lifecycle workflow with validation at each step."""
+    
+    generator = AssetsGenerator()
+    content = generator.generate_workflow_guide()
+    
+    return [{"role": "user", "content": content}]
+```
+
+**Current Prompts:**
+- **list_mcp_assets**: Discover server capabilities and available tools
+- **guide_search_patterns**: Elasticsearch query patterns and best practices  
+- **guide_record_lifecycle**: Complete workflow from legal setup to cleanup
+
+### 4.2. Resources Implementation (ADR-027, ADR-028)
+**Design Principle**: Template-driven workflows eliminate format-guessing errors
+
+The server provides working templates and reference examples via MCP Resources:
+
+```
+src/osdu_mcp_server/resources/
+├── templates/           # Working templates for direct use
+│   ├── legal-tag-template.json
+│   └── processing-parameter-record.json
+└── references/          # Reference examples and patterns
+    ├── acl-format-examples.json
+    └── search-query-patterns.json
+```
+
+**Resource Registration:**
+```python
+def get_workflow_resources() -> List[Resource]:
+    """Discover and register all workflow resources."""
+    resources = []
+    base_path = Path(__file__).parent / "resources"
+    
+    # Auto-discover templates and references
+    for category in ["templates", "references"]:
+        category_path = base_path / category
+        if category_path.exists():
+            for json_file in category_path.glob("*.json"):
+                resources.append(Resource(
+                    uri=f"{category}://{json_file.stem}",
+                    name=f"{category.title()}: {json_file.stem.replace('-', ' ').title()}",
+                    description=f"Working {category[:-1]} for {json_file.stem.replace('-', ' ')}",
+                    mimeType="application/json"
+                ))
+    
+    return resources
+```
+
+### 4.3. Data Domain Configuration (ADR-028)
+**Design Principle**: Environment-specific configuration for ACL accuracy
+
+OSDU ACLs require deployment-specific data domains:
+
+```python
+# Configuration integration
+class ConfigManager:
+    def get_data_domain(self) -> str:
+        """Get the OSDU data domain for ACL formatting."""
+        return self.get("server", "domain", "contoso.com")
+
+# Template domain injection
+def get_acl_template(domain: str = None) -> dict:
+    """Generate ACL template with appropriate domain."""
+    if domain is None:
+        config = ConfigManager()
+        domain = config.get_data_domain()
+    
+    return {
+        "viewers": [f"data.default.viewers@{domain}"],
+        "owners": [f"data.default.owners@{domain}"]
+    }
+```
+
+**Domain Mapping:**
+- **Standard OSDU**: `contoso.com` (default)
+- **Microsoft Energy Data Services**: `dataservices.energy`
+- **Test Environments**: `msft-osdu-test.org`
+
+## 5. Phase 1: Foundation Architecture
+
+### 5.1. Component Structure
 
 ```
 osdu_mcp_server/
@@ -126,17 +231,34 @@ osdu_mcp_server/
 │   ├── osdu_client.py         # OSDU API client
 │   ├── data_types.py          # Standard response models
 │   ├── exceptions.py          # Error handling
-│   └── utils.py               # Helper functions
+│   ├── assets_generator.py    # Content generation for prompts
+│   └── clients/               # Service-specific clients
 ├── tools/                     # MCP tool implementations
-│   └── health_check.py        # Health check tool
-└── tests/                     # Test suite
-    ├── test_health_check.py
+│   ├── health_check.py        # Health check tool
+│   ├── partition/             # Partition service tools
+│   ├── legal/                 # Legal service tools
+│   ├── schema/                # Schema service tools
+│   ├── search/                # Search service tools
+│   └── storage/               # Storage service tools
+├── prompts/                   # MCP prompt implementations
+│   ├── list_mcp_assets.py     # Asset discovery prompt
+│   ├── guide_search_patterns.py # Search guidance prompt
+│   └── guide_record_lifecycle.py # Workflow guidance prompt
+├── resources/                 # MCP resources (JSON templates)
+│   ├── templates/             # Working templates for direct use
+│   │   ├── legal-tag-template.json
+│   │   └── processing-parameter-record.json
+│   └── references/            # Reference examples and patterns
+│       ├── acl-format-examples.json
+│       └── search-query-patterns.json
+└── tests/                     # Test suite (mirrors source structure)
+    ├── tools/
+    ├── prompts/
+    ├── resources/
     └── shared/
-        ├── test_config.py
-        └── test_auth.py
 ```
 
-### 4.2. Configuration Architecture
+### 5.2. Configuration Architecture
 
 **Design Principle**: Environment-first with simple fallback
 
@@ -172,7 +294,7 @@ class ConfigManager:
 2. **YAML File**: Simple key-value structure
 3. **Defaults**: Sensible defaults where possible
 
-### 4.3. Authentication Architecture
+### 5.3. Authentication Architecture
 
 #### Design Principle  
 Use Azure's **DefaultAzureCredential** (or the async `aio` variant) with *selective exclusions* to cover every MCP-server deployment surface—laptop, CI/CD pipeline, or managed hosting—while avoiding hand-rolled chains.
@@ -247,7 +369,7 @@ class AuthHandler:
 * **Observability & Retry** – built-in; no custom caching required.
 * **Async ready** – keeps event loop unblocked for high-throughput MCP requests.
 
-### 4.4. OSDU Client Architecture
+### 5.4. OSDU Client Architecture
 
 **Design Principle**: Simple HTTP client with CLI-inspired patterns, optimized for headless operation
 
@@ -323,7 +445,7 @@ class OsduClient:
             await self._session.close()
 ```
 
-### 4.5. Tool Implementation Pattern
+### 5.5. Tool Implementation Pattern
 
 **Design Principle**: Consistent, FastMCP-optimized tools
 
@@ -401,7 +523,7 @@ async def _test_services(client: OsduClient) -> dict:
     return results
 ```
 
-### 4.6. Error Handling Architecture
+### 5.6. Error Handling Architecture
 
 **Design Principle**: CLI-inspired structured errors optimized for AI
 
@@ -454,9 +576,9 @@ def handle_osdu_exceptions(func):
     return wrapper
 ```
 
-## 5. Future Phases Architecture Evolution
+## 6. Future Phases Architecture Evolution
 
-### 5.1. Phase 2: Core Tools Addition
+### 6.1. Phase 2: Core Tools Addition
 
 **New Components:**
 ```python
@@ -480,7 +602,7 @@ def handle_osdu_exceptions(func):
 - Implement batch operation support
 - Enhanced error context for tool operations
 
-### 5.2. Phase 3: Data Management
+### 6.2. Phase 3: Data Management
 
 **New Components:**
 ```python
@@ -504,7 +626,7 @@ def handle_osdu_exceptions(func):
 - Implement schema caching
 - Enhanced compliance checking
 
-### 5.3. Phase 4: AI Enhancement
+### 6.3. Phase 4: AI Enhancement
 
 **New Components:**
 ```python
@@ -524,9 +646,9 @@ def handle_osdu_exceptions(func):
 - Implement response optimization
 - Advanced batch processing
 
-## 6. Integration Patterns
+## 7. Integration Patterns
 
-### 6.1. Tool Registration Pattern
+### 7.1. Tool Registration Pattern
 
 ```python
 # server.py - Central tool registration
@@ -545,7 +667,7 @@ if FEATURE_FLAGS.get("storage_tools"):
     mcp.register_tool()(create_record)
 ```
 
-### 6.2. Client Factory Pattern
+### 7.2. Client Factory Pattern
 
 ```python
 # Centralized client management
@@ -565,7 +687,7 @@ class ClientFactory:
         return self._clients["storage"]
 ```
 
-### 6.3. Testing Architecture
+### 7.3. Testing Architecture
 
 Following ADR-010 (Testing Philosophy), we use behavior-driven testing:
 
@@ -601,9 +723,9 @@ async def test_health_check_reports_service_unavailable():
 
 See [ADR-010: Testing Philosophy and Strategy](../docs/adr.md#adr-010-testing-philosophy-and-strategy) for complete guidelines.
 
-## 7. Development Guidelines
+## 8. Development Guidelines
 
-### 7.1. Adding New Tools
+### 8.1. Adding New Tools
 
 1. **Create tool module** in appropriate phase directory
 2. **Implement using standard pattern** with `@handle_osdu_exceptions` decorator
@@ -611,14 +733,14 @@ See [ADR-010: Testing Philosophy and Strategy](../docs/adr.md#adr-010-testing-ph
 4. **Write behavior-driven tests** following ADR-010 guidelines
 5. **Update documentation** with usage examples
 
-### 7.2. Extending Authentication
+### 8.2. Extending Authentication
 
 1. **Follow DefaultAzureCredential pattern** - add new credentials to chain
 2. **Test in multiple deployment scenarios** (local dev, Azure, containers)
 3. **Maintain backward compatibility** with existing configurations
 4. **Document new environment variables** and configuration options
 
-### 7.3. Quality Gates
+### 8.3. Quality Gates
 
 - **Code Review**: All changes reviewed
 - **Test Coverage**: >90% for new components
@@ -627,9 +749,9 @@ See [ADR-010: Testing Philosophy and Strategy](../docs/adr.md#adr-010-testing-ph
 - **Documentation**: All public APIs documented
 - **Integration Testing**: Verify with real OSDU instances
 
-## 8. Deployment Architecture
+## 9. Deployment Architecture
 
-### 8.1. MCP Client Integration
+### 9.1. MCP Client Integration
 
 ```json
 // .mcp.json configuration
@@ -651,7 +773,7 @@ See [ADR-010: Testing Philosophy and Strategy](../docs/adr.md#adr-010-testing-ph
 }
 ```
 
-### 8.2. Container Deployment
+### 9.2. Container Deployment
 
 ```dockerfile
 FROM python:3.12-slim
@@ -673,7 +795,7 @@ ENV OSDU_MCP_AUTH_ALLOW_INTERACTIVE=false
 CMD ["python", "-m", "osdu_mcp_server"]
 ```
 
-### 8.3. Environment Setup
+### 9.3. Environment Setup
 
 ```bash
 # Installation
@@ -697,9 +819,9 @@ az login
 osdu-mcp-server
 ```
 
-## 9. Validation Strategy
+## 10. Validation Strategy
 
-### 9.1. Architecture Validation
+### 10.1. Architecture Validation
 
 - **Phase 1 Completion Criteria**:
   - Health check tool operational with DefaultAzureCredential
@@ -708,7 +830,7 @@ osdu-mcp-server
   - Error handling comprehensive with context-rich messages
   - Integration tests passing with real OSDU instances
 
-### 9.2. Evolution Validation
+### 10.2. Evolution Validation
 
 - **Inter-phase validation**: Each phase builds on validated previous phases
 - **Pattern consistency**: CLI-inspired patterns maintained across phases
@@ -716,7 +838,7 @@ osdu-mcp-server
 - **Integration testing**: MCP protocol compliance verified
 - **Security validation**: Authentication chain tested in all scenarios
 
-## 10. Conclusion
+## 11. Conclusion
 
 This architecture provides a solid foundation for the OSDU MCP Server while maintaining the flexibility to evolve through planned phases. By learning from CLI patterns while building MCP-optimized tools, the architecture balances proven reliability with innovation for AI workflows.
 

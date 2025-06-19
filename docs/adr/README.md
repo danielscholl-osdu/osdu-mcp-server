@@ -32,6 +32,8 @@ Optimized ADR Index for Agent Context
 | 024 | Prompt Implementation Pattern        | acc    | [ADR-024](024-prompt-implementation-pattern.md) |
 | 025 | Prompt Naming Convention             | acc    | [ADR-025](025-prompt-naming-convention.md) |
 | 026 | Content Generation Strategy          | acc    | [ADR-026](026-content-generation-strategy.md) |
+| 027 | MCP Resources Implementation Pattern | acc    | [ADR-027](027-mcp-resources-implementation-pattern.md) |
+| 028 | Data Domain Configuration Pattern    | acc    | [ADR-028](028-data-domain-configuration-pattern.md) |
 
 ---
 
@@ -537,4 +539,56 @@ implementation: |
 tradeoffs:
 positive: [accuracy, performance, maintainable, consistent, extensible]
 negative: [maintenance overhead, code-based content, generator complexity]
+```
+
+--------------------------------------------
+```yaml
+id: 027
+title: MCP Resources Implementation Pattern
+status: accepted
+date: 2025-06-19
+decision: Implement file-based MCP Resources using JSON templates with structured discovery and validation patterns.
+why: |
+• Working templates eliminate format-guessing errors in OSDU workflows
+• Template-driven approach transforms error-prone trial-and-error into reliable execution
+• MCP protocol compliance using standard Resources capability
+• JSON files are maintainable and easy to update
+implementation: |
+• Directory structure: templates/ for working examples, references/ for guidance
+• Resource registration with get_workflow_resources() function
+• FastMCP integration with automatic resource discovery
+• Template validation against OSDU API requirements
+impact: |
+• Dramatic reduction in OSDU format-guessing errors
+• Reliable template-driven workflow execution
+• Enhanced AI assistant discoverability and usability
+tradeoffs:
+positive: [error elimination, workflow reliability, AI-friendly, maintainable, extensible]
+negative: [template maintenance, file management, validation overhead, discovery complexity]
+```
+
+--------------------------------------------
+```yaml
+id: 028
+title: Data Domain Configuration Pattern
+status: accepted
+date: 2025-06-19
+decision: Implement environment-variable based data domain configuration with sensible defaults and clear domain-to-deployment mapping.
+why: |
+• OSDU ACLs require deployment-specific data domain identifiers
+• Different deployments use different domains (contoso.com, dataservices.energy)
+• Eliminates ACL format errors caused by incorrect domains
+• Provides environment flexibility with convenient defaults
+implementation: |
+• OSDU_MCP_SERVER_DOMAIN environment variable
+• Default: contoso.com (Standard OSDU)
+• Clear deployment-to-domain mapping documentation
+• Template domain injection at runtime
+impact: |
+• Eliminates domain-related ACL validation failures
+• Environment portability across OSDU deployments
+• Consistent domain usage across all tools and resources
+tradeoffs:
+positive: [ACL accuracy, deployment flexibility, error reduction, clear mapping]
+negative: [configuration requirement, documentation burden, template complexity]
 ```

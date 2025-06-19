@@ -1,0 +1,129 @@
+{
+  "_description": "Proven search query patterns for OSDU record lifecycle validation",
+  "_usage": "Use these working search patterns to validate record creation and indexing",
+  "_notes": [
+    "Replace placeholder values with your actual record data",
+    "Search indexing typically takes 30-60 seconds",
+    "Try search_by_id first as it's most reliable",
+    "Field-based searches depend on proper indexing"
+  ],
+  
+  "search_by_record_id": {
+    "description": "Most reliable way to find a specific record",
+    "mcp_tool": "search_by_id",
+    "example": "search_by_id(id='your-record-id')",
+    "usage": "Replace 'your-record-id' with the ID returned from record creation",
+    "timing": "Usually works immediately after record creation",
+    "troubleshooting": "If not found, record creation may have failed"
+  },
+  
+  "search_by_data_id": {
+    "description": "Search for record using data.ID field",
+    "mcp_tool": "search_query",
+    "pattern": "data.ID:(\"your-data-id\")",
+    "example": "search_query(query='data.ID:(\"mcp-lifecycle-test-20250619\")', kind='osdu:wks:reference-data--ProcessingParameterType:1.0.0')",
+    "usage": "Replace 'your-data-id' with the data.ID value from your record",
+    "timing": "Requires search indexing, wait 30-60 seconds",
+    "troubleshooting": "If not found, check indexing delay or ID spelling"
+  },
+  
+  "search_by_name": {
+    "description": "Search for record using data.Name field",
+    "mcp_tool": "search_query", 
+    "pattern": "data.Name:(\"your-record-name\")",
+    "example": "search_query(query='data.Name:(\"MCP Lifecycle Test Parameter\")', kind='osdu:wks:reference-data--ProcessingParameterType:1.0.0')",
+    "usage": "Replace 'your-record-name' with the data.Name value from your record",
+    "timing": "Requires search indexing, wait 30-60 seconds"
+  },
+  
+  "search_by_kind": {
+    "description": "Find all records of a specific type",
+    "mcp_tool": "search_by_kind",
+    "example": "search_by_kind(kind='osdu:wks:reference-data--ProcessingParameterType:1.0.0', limit=10)",
+    "usage": "Returns all records of the specified schema type",
+    "timing": "Usually fast, shows existing records"
+  },
+  
+  "wildcard_search": {
+    "description": "Search for records with partial matches",
+    "mcp_tool": "search_query",
+    "pattern": "data.Name:(*partial-name*)",
+    "example": "search_query(query='data.Name:(*lifecycle*)', kind='osdu:wks:reference-data--ProcessingParameterType:1.0.0')",
+    "usage": "Use * as wildcards for partial matching"
+  },
+  
+  "combination_search": {
+    "description": "Search using multiple criteria",
+    "mcp_tool": "search_query",
+    "pattern": "data.Name:(\"name\") AND data.Source:(\"source\")",
+    "example": "search_query(query='data.Name:(\"MCP Lifecycle Test Parameter\") AND data.Source:(\"osdu-mcp-server-workflow-demo\")')",
+    "usage": "Combine multiple fields with AND/OR operators"
+  },
+  
+  "validation_workflow": {
+    "step_1": {
+      "action": "Immediate search by ID",
+      "tool": "search_by_id(id='record-id-from-creation')",
+      "expected": "Should find record immediately",
+      "if_fails": "Record creation likely failed"
+    },
+    "step_2": {
+      "action": "Wait for indexing",
+      "timing": "Wait 30-60 seconds",
+      "reason": "Allow search service to index the record"
+    },
+    "step_3": {
+      "action": "Search by data.ID",
+      "tool": "search_query(query='data.ID:(\"your-data-id\")')",
+      "expected": "Should find record in search results",
+      "if_fails": "Check indexing delay or retry"
+    },
+    "step_4": {
+      "action": "Validate record content", 
+      "check": "Verify returned data matches what you created",
+      "fields_to_check": ["data.Name", "data.ID", "data.Code", "legal.legaltags"]
+    }
+  },
+  
+  "timing_guidance": {
+    "immediate": [
+      "search_by_id (uses storage service)",
+      "storage_get_record (direct lookup)"
+    ],
+    "requires_indexing": [
+      "search_query with field patterns",
+      "search_by_kind",
+      "Any Elasticsearch-based search"
+    ],
+    "indexing_time": "30-60 seconds typical, up to 5 minutes in busy systems"
+  },
+  
+  "common_issues": {
+    "record_not_found_immediately": {
+      "cause": "Search indexing delay",
+      "solution": "Wait 30-60 seconds and retry",
+      "alternative": "Use search_by_id which doesn't depend on indexing"
+    },
+    "query_syntax_error": {
+      "cause": "Invalid Elasticsearch syntax",
+      "solution": "Use exact patterns from examples",
+      "check": "Ensure proper quoting and parentheses"
+    },
+    "no_results_after_wait": {
+      "causes": ["Indexing failed", "Record creation failed", "Wrong query"],
+      "troubleshooting": [
+        "Verify record exists with storage_get_record",
+        "Check data.ID spelling exactly",
+        "Try search_by_kind to see if any records exist"
+      ]
+    }
+  },
+  
+  "elasticsearch_tips": {
+    "exact_match": "Use quotes: data.ID:(\"exact-value\")",
+    "wildcard": "Use asterisks: data.Name:(*partial*)",
+    "boolean_logic": "Use AND/OR: field1:(value1) AND field2:(value2)",
+    "case_sensitivity": "OSDU searches are usually case-sensitive",
+    "special_characters": "Escape special chars or use quotes"
+  }
+}

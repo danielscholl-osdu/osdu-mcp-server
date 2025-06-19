@@ -74,6 +74,30 @@ To use the OSDU MCP Server, configure it through your MCP client's configuration
 }
 ```
 
+### Domain Configuration
+
+**Critical for ACL Format**: OSDU deployments use different data domain formats for Access Control Lists (ACL). Configure your data domain to avoid ACL format errors:
+
+```json
+"env": {
+  "OSDU_MCP_SERVER_DOMAIN": "contoso.com"
+}
+```
+
+**Data Domain Examples:**
+- Standard OSDU: `contoso.com` (default)
+- Microsoft OSDU: `dataservices.energy`
+- Microsoft Internal: `msft-osdu-test.org`
+
+**Data Domain Detection Methods:**
+1. **Environment Variable** (Recommended): Set `OSDU_MCP_SERVER_DOMAIN`
+2. **Use Entitlements Tool**: Run `entitlements_mine()` to see your group format
+3. **Check with Administrator**: Ask your OSDU administrator for the correct data domain
+
+**Important**: The data domain is the internal OSDU data system domain used in ACL group emails, not the FQDN from your server URL.
+
+If not set, the server will attempt to extract the domain from your server URL. For more guidance, use the MCP resource: `ReadMcpResourceTool(server="osdu-mcp-server", uri="file://acl-format-examples.json")`.
+
 ### Authentication Methods
 
 Authentication is handled via the Azure CLI by default. You must be logged in using `az login` before running the server:
@@ -102,6 +126,32 @@ Delete and purge operations are separately controlled and disabled by default:
 ```
 
 This dual protection allows you to enable data creation and updates while maintaining strict control over destructive operations.
+
+### Complete Configuration Example
+
+Here's a complete `.mcp.json` configuration example with all common environment variables:
+
+```json
+{
+  "mcpServers": {
+    "osdu-mcp-server": {
+      "type": "stdio",
+      "command": "uv",
+      "args": ["run", "osdu-mcp-server"],
+      "env": {
+        "OSDU_MCP_SERVER_URL": "https://team.internal.msft-osdu-test.org",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
+        "OSDU_MCP_SERVER_DOMAIN": "contoso.com",
+        "OSDU_MCP_ENABLE_WRITE_MODE": "true",
+        "OSDU_MCP_ENABLE_DELETE_MODE": "true",
+        "AZURE_CLIENT_ID": "your-client-id",
+        "AZURE_TENANT_ID": "your-tenant-id",
+        "AZURE_CLIENT_SECRET": "your-client-secret"
+      }
+    }
+  }
+}
+```
 
 ### Logging Configuration
 

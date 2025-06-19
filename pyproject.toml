@@ -51,7 +51,10 @@ osdu-mcp-server = "osdu_mcp_server.main:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-osdu_mcp_server = ["py.typed"]
+osdu_mcp_server = [
+    "py.typed",
+    "resources/**/*.json",
+]
 
 [tool.black]
 line-length = 88

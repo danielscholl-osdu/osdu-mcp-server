@@ -1,0 +1,45 @@
+{
+  "_description": "Working legal tag template for OSDU record lifecycle workflow",
+  "_usage": "Copy this structure and modify the values with your specific requirements",
+  "_notes": [
+    "Replace 'your-tag-name' with a unique identifier (avoid spaces)",
+    "Update expiration_date to appropriate future date",
+    "Modify description to reflect your specific use case",
+    "All fields shown are required for successful creation"
+  ],
+  "_example_mcp_call": "legaltag_create(name='your-tag-name', description='Your description', country_of_origin=['US'], contract_id='YOUR-CONTRACT-ID', security_classification='Public', personal_data='No Personal Data', export_classification='EAR99', data_type='Public Domain Data', expiration_date='2025-12-31')",
+  
+  "template": {
+    "name": "public-usa-workflow-test-YYYYMMDD",
+    "description": "Legal tag for OSDU MCP workflow demonstration and testing",
+    "country_of_origin": ["US"],
+    "contract_id": "TEST-CONTRACT-001", 
+    "security_classification": "Public",
+    "personal_data": "No Personal Data",
+    "export_classification": "EAR99",
+    "data_type": "Public Domain Data",
+    "expiration_date": "2025-12-31"
+  },
+  
+  "alternatives": {
+    "security_classifications": ["Public", "Private", "Confidential"],
+    "export_classifications": ["EAR99", "No License Required", "0A998", "Not - Technical Data"],
+    "personal_data_types": ["No Personal Data", "Personally Identifiable"],
+    "data_types": ["Public Domain Data", "First Party Data", "Second Party Data", "Third Party Data", "Transferred Data"]
+  },
+  
+  "validation_notes": {
+    "name": "Must be unique across partition. Include timestamp (YYYYMMDD) to ensure uniqueness",
+    "country_of_origin": "Must be valid ISO country codes (e.g., 'US', 'GB', 'CA')",
+    "contract_id": "Required field, use meaningful identifier for your organization",
+    "expiration_date": "Must be future date in YYYY-MM-DD format",
+    "description": "Should clearly indicate purpose and scope of data usage"
+  },
+  
+  "common_errors": [
+    "Name already exists: Use timestamp or UUID to ensure uniqueness",
+    "Invalid country code: Use 2-letter ISO codes (US, not USA)",
+    "Missing originator: Some environments require 'originator' field",
+    "Expired date: Must be in the future"
+  ]
+}
