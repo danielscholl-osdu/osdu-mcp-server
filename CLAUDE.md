@@ -41,6 +41,7 @@ gh pr create                           # Create pull request
 3. **Error Handling**: Use @handle_osdu_exceptions decorator
 4. **Write Protection**: Check ADR-020 for dual permission model
 5. **Authentication**: DefaultAzureCredential with configurable exclusions (ADR-002)
+6. **Prompt Maintenance**: When adding services/tools, update `AssetsGenerator._generate_tools_section()` in `shared/assets_generator.py`
 
 ## Core Documentation
 

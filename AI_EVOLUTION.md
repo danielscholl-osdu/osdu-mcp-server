@@ -38,6 +38,12 @@ This document tracks the project's evolution in a way that helps AI assistants u
 - **Innovation**: Risk-based log levels (INFO for reads, WARNING for deletes)
 - **Benefit**: Structured logs enable compliance reporting
 
+### Phase 6: Prompts Capability (ADR-024, ADR-025, ADR-026)
+- **Goal**: Self-documenting server capabilities for AI assistants
+- **Challenge**: How to keep discovery content current as capabilities evolve?
+- **Solution**: Static content generation with maintenance patterns
+- **Critical Lesson**: Prompts require active maintenance when adding services/tools
+
 ## Key Decisions & Their Rationale
 
 1. **FastMCP over raw MCP**: 70% less boilerplate, worth the framework lock-in
@@ -53,6 +59,7 @@ When adding new OSDU services:
 3. Follow the tool naming convention: `{resource}_{action}`
 4. Add write protection for any destructive operations
 5. Include structured logging with operation metadata
+6. **Update AssetsGenerator**: Add new tools to `_generate_tools_section()` in `shared/assets_generator.py`
 
 ## Current State & Next Steps
 

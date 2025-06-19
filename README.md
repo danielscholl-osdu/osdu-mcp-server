@@ -126,22 +126,27 @@ osdu:health_check
 
 This returns the health status of your OSDU platform, checking authentication and the availability of all services (storage, search, legal, schema, file, workflow, entitlements, and dataset).
 
-## Available Tools
+## Available Capabilities
 
-### Foundation
+### Prompts
+- **list_mcp_assets**: Comprehensive overview of all server capabilities with usage examples and quick start guidance
+
+### Tools
+
+#### Foundation
 - **health_check**: Check OSDU platform connectivity and service health
 
-### Partition Service
+#### Partition Service
 - **partition_list**: List all accessible OSDU partitions
 - **partition_get**: Retrieve configuration for a specific partition
 - **partition_create**: Create a new partition (write-protected)
 - **partition_update**: Update partition properties (write-protected)
 - **partition_delete**: Delete a partition (write-protected)
 
-### Entitlements Service
+#### Entitlements Service
 - **entitlements_mine**: Get groups for the current authenticated user
 
-### Legal Service
+#### Legal Service
 - **legaltag_list**: List all legal tags
 - **legaltag_get**: Get specific legal tag
 - **legaltag_get_properties**: Get allowed property values
@@ -151,14 +156,14 @@ This returns the health status of your OSDU platform, checking authentication an
 - **legaltag_update**: Update legal tag (write-protected)
 - **legaltag_delete**: Delete legal tag (delete-protected)
 
-### Schema Service
+#### Schema Service
 - **schema_list**: List available schemas with optional filtering
 - **schema_get**: Retrieve complete schema by ID
 - **schema_search**: Advanced schema discovery with rich filtering and text search
 - **schema_create**: Create a new schema (write-protected)
 - **schema_update**: Update an existing schema (write-protected)
 
-### Storage Service
+#### Storage Service
 - **storage_create_update_records**: Create or update records (write-protected)
 - **storage_get_record**: Get latest version of a record by ID
 - **storage_get_record_version**: Get specific version of a record
