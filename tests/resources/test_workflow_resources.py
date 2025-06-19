@@ -20,19 +20,20 @@ class TestWorkflowResources:
         resources = get_workflow_resources()
 
         for resource in resources:
-            # Check required Resource fields
+            # Check required FileResource fields
             assert hasattr(resource, "uri")
             assert hasattr(resource, "name")
             assert hasattr(resource, "description")
-            assert hasattr(resource, "mimeType")
+            assert hasattr(resource, "mime_type")
+            assert hasattr(resource, "path")
 
             # Validate field types and content
-            assert str(resource.uri).startswith("file://")
+            assert str(resource.uri).startswith(("template://", "reference://"))
             assert isinstance(resource.name, str)
             assert len(resource.name) > 0
             assert isinstance(resource.description, str)
             assert len(resource.description) > 0
-            assert resource.mimeType == "application/json"
+            assert resource.mime_type == "application/json"
 
     def test_expected_template_resources_exist(self):
         """Test that expected template resources are registered."""
@@ -40,8 +41,8 @@ class TestWorkflowResources:
         resource_names = [r.name for r in resources]
 
         expected_templates = [
-            "legal-tag-template.json",
-            "processing-parameter-record.json",
+            "Template: legal-tag-template.json",
+            "Template: processing-parameter-record.json",
         ]
 
         for template_name in expected_templates:
@@ -54,7 +55,10 @@ class TestWorkflowResources:
         resources = get_workflow_resources()
         resource_names = [r.name for r in resources]
 
-        expected_references = ["acl-format-examples.json", "search-query-patterns.json"]
+        expected_references = [
+            "Reference: acl-format-examples.json",
+            "Reference: search-query-patterns.json",
+        ]
 
         for reference_name in expected_references:
             assert (
@@ -66,31 +70,29 @@ class TestWorkflowResources:
         resources = get_workflow_resources()
 
         for resource in resources:
-            # Extract file path from URI
-            file_path = str(resource.uri).replace("file://", "")
-            path = Path(file_path)
+            # Use the path attribute from FileResource
+            path = resource.path
 
             # Verify file exists
-            assert path.exists(), f"Resource file does not exist: {file_path}"
+            assert path.exists(), f"Resource file does not exist: {path}"
 
             # Verify file contains valid JSON
             with open(path, "r") as f:
                 try:
                     json.load(f)
                 except json.JSONDecodeError as e:
-                    pytest.fail(f"Resource file {file_path} contains invalid JSON: {e}")
+                    pytest.fail(f"Resource file {path} contains invalid JSON: {e}")
 
     def test_legal_tag_template_structure(self):
         """Test that legal tag template has expected structure."""
         resources = get_workflow_resources()
         legal_template = next(
-            (r for r in resources if r.name == "legal-tag-template.json"), None
+            (r for r in resources if r.name == "Template: legal-tag-template.json"), None
         )
         assert legal_template is not None, "Legal tag template not found"
 
         # Load and validate structure
-        file_path = str(legal_template.uri).replace("file://", "")
-        with open(file_path, "r") as f:
+        with open(legal_template.path, "r") as f:
             data = json.load(f)
 
         # Check for key sections
@@ -110,13 +112,12 @@ class TestWorkflowResources:
         """Test that record template has expected structure."""
         resources = get_workflow_resources()
         record_template = next(
-            (r for r in resources if r.name == "processing-parameter-record.json"), None
+            (r for r in resources if r.name == "Template: processing-parameter-record.json"), None
         )
         assert record_template is not None, "Record template not found"
 
         # Load and validate structure
-        file_path = str(record_template.uri).replace("file://", "")
-        with open(file_path, "r") as f:
+        with open(record_template.path, "r") as f:
             data = json.load(f)
 
         # Check for key sections
@@ -146,13 +147,12 @@ class TestWorkflowResources:
         """Test that ACL examples have expected structure."""
         resources = get_workflow_resources()
         acl_examples = next(
-            (r for r in resources if r.name == "acl-format-examples.json"), None
+            (r for r in resources if r.name == "Reference: acl-format-examples.json"), None
         )
         assert acl_examples is not None, "ACL examples not found"
 
         # Load and validate structure
-        file_path = str(acl_examples.uri).replace("file://", "")
-        with open(file_path, "r") as f:
+        with open(acl_examples.path, "r") as f:
             data = json.load(f)
 
         # Check for key sections
@@ -174,13 +174,12 @@ class TestWorkflowResources:
         """Test that search patterns have expected structure."""
         resources = get_workflow_resources()
         search_patterns = next(
-            (r for r in resources if r.name == "search-query-patterns.json"), None
+            (r for r in resources if r.name == "Reference: search-query-patterns.json"), None
         )
         assert search_patterns is not None, "Search patterns not found"
 
         # Load and validate structure
-        file_path = str(search_patterns.uri).replace("file://", "")
-        with open(file_path, "r") as f:
+        with open(search_patterns.path, "r") as f:
             data = json.load(f)
 
         # Check for key sections

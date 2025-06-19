@@ -2,14 +2,14 @@
 
 from pathlib import Path
 from typing import List
-from mcp.types import Resource
+from mcp.server.fastmcp.resources import FileResource
 from pydantic import AnyUrl
 
 # Get the resources directory path
 RESOURCES_DIR = Path(__file__).parent
 
 
-def get_workflow_resources() -> List[Resource]:
+def get_workflow_resources() -> List[FileResource]:
     """Get all MCP resources for OSDU workflow templates."""
     resources = []
 
@@ -26,11 +26,12 @@ def get_workflow_resources() -> List[Resource]:
         file_path = RESOURCES_DIR / "templates" / filename
         if file_path.exists():
             resources.append(
-                Resource(
-                    uri=AnyUrl(f"file://{file_path}"),
-                    name=filename,
+                FileResource(
+                    uri=AnyUrl(f"template://{filename}"),
+                    name=f"Template: {filename}",
                     description=description,
-                    mimeType="application/json",
+                    mime_type="application/json",
+                    path=file_path,
                 )
             )
 
@@ -50,11 +51,12 @@ def get_workflow_resources() -> List[Resource]:
         file_path = RESOURCES_DIR / "references" / filename
         if file_path.exists():
             resources.append(
-                Resource(
-                    uri=AnyUrl(f"file://{file_path}"),
-                    name=filename,
+                FileResource(
+                    uri=AnyUrl(f"reference://{filename}"),
+                    name=f"Reference: {filename}",
                     description=description,
-                    mimeType="application/json",
+                    mime_type="application/json",
+                    path=file_path,
                 )
             )
 
