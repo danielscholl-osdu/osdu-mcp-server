@@ -87,7 +87,8 @@ class TestWorkflowResources:
         """Test that legal tag template has expected structure."""
         resources = get_workflow_resources()
         legal_template = next(
-            (r for r in resources if r.name == "Template: legal-tag-template.json"), None
+            (r for r in resources if r.name == "Template: legal-tag-template.json"),
+            None,
         )
         assert legal_template is not None, "Legal tag template not found"
 
@@ -112,7 +113,12 @@ class TestWorkflowResources:
         """Test that record template has expected structure."""
         resources = get_workflow_resources()
         record_template = next(
-            (r for r in resources if r.name == "Template: processing-parameter-record.json"), None
+            (
+                r
+                for r in resources
+                if r.name == "Template: processing-parameter-record.json"
+            ),
+            None,
         )
         assert record_template is not None, "Record template not found"
 
@@ -147,7 +153,8 @@ class TestWorkflowResources:
         """Test that ACL examples have expected structure."""
         resources = get_workflow_resources()
         acl_examples = next(
-            (r for r in resources if r.name == "Reference: acl-format-examples.json"), None
+            (r for r in resources if r.name == "Reference: acl-format-examples.json"),
+            None,
         )
         assert acl_examples is not None, "ACL examples not found"
 
@@ -174,7 +181,8 @@ class TestWorkflowResources:
         """Test that search patterns have expected structure."""
         resources = get_workflow_resources()
         search_patterns = next(
-            (r for r in resources if r.name == "Reference: search-query-patterns.json"), None
+            (r for r in resources if r.name == "Reference: search-query-patterns.json"),
+            None,
         )
         assert search_patterns is not None, "Search patterns not found"
 

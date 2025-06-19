@@ -62,7 +62,7 @@ jobs:
       continue-on-error: true
       run: |
         echo "::group::MyPy Type Checking"
-        uv run mypy . --pretty --color-output
+        PYTHONPATH=src uv run mypy src/osdu_mcp_server --pretty --color-output
         echo "::endgroup::"
       
     # Run tests with coverage - continue on error to get results
