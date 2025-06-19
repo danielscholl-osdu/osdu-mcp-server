@@ -92,17 +92,25 @@ This document covers:
 **Goal**: Basic connectivity and health monitoring
 **Scope**: Health check tool + core infrastructure
 
-#### Phase 2: Core Tools
-**Goal**: Essential OSDU operations
-**Scope**: Storage CRUD + basic search
+#### Phase 2: Partition & Entitlements Service
+**Goal**: Platform administration capabilities  
+**Scope**: Partition management + user entitlements
 
-#### Phase 3: Data Management
-**Goal**: Schema and compliance tools
-**Scope**: Schema validation + legal tags
+#### Phase 3: Legal Service
+**Goal**: Compliance and legal tag management
+**Scope**: Legal tag CRUD operations + validation
 
-#### Phase 4: AI Enhancement
-**Goal**: AI-specific optimizations
-**Scope**: Natural language processing + advanced features
+#### Phase 4: Schema Service  
+**Goal**: Data schema management
+**Scope**: Schema discovery + validation + CRUD
+
+#### Phase 5: Search Service (✅ Complete)
+**Goal**: OSDU data discovery and query capabilities
+**Scope**: Elasticsearch-powered search + guidance prompts
+
+#### Phase 6: Storage Service
+**Goal**: OSDU record storage operations
+**Scope**: Record CRUD + versioning + validation
 
 ## 4. Phase 1: Foundation Architecture
 
