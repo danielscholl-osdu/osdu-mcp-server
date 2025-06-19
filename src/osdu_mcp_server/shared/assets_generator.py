@@ -62,7 +62,7 @@ OSDU platform integration and data management functions:
 • **partition_list** (include_count, detailed) - List all accessible OSDU partitions
 • **partition_get** (partition_id, include_sensitive, redact_sensitive_values) - Retrieve configuration for a specific partition
 • **partition_create** (partition_id, properties, dry_run) - Create a new partition (write-protected)
-• **partition_update** (partition_id, properties, dry_run) - Update partition properties (write-protected)  
+• **partition_update** (partition_id, properties, dry_run) - Update partition properties (write-protected)
 • **partition_delete** (partition_id, confirm, dry_run) - Delete a partition (delete-protected)
 
 ### Entitlements Service
@@ -85,7 +85,7 @@ OSDU platform integration and data management functions:
 • **schema_create** (authority, source, entity, major_version, minor_version, patch_version, schema, status, description) - Create a new schema (write-protected)
 • **schema_update** (id, schema, status) - Update an existing schema (write-protected)
 
-### Storage Service  
+### Storage Service
 • **storage_create_update_records** (records, skip_dupes) - Create or update records (write-protected)
 • **storage_get_record** (id, attributes) - Get latest version of a record by ID
 • **storage_get_record_version** (id, version, attributes) - Get specific version of a record
@@ -115,7 +115,7 @@ export AZURE_CLIENT_SECRET="your-secret"
 # Optional: Enable write operations (disabled by default)
 export OSDU_MCP_ENABLE_WRITE_MODE="true"
 
-# Optional: Enable delete operations (disabled by default) 
+# Optional: Enable delete operations (disabled by default)
 export OSDU_MCP_ENABLE_DELETE_MODE="true"
 
 # Optional: Enable logging (disabled by default)
@@ -145,7 +145,7 @@ export OSDU_MCP_LOGGING_LEVEL="INFO"
 1. Check partitions: partition_list
    Result: Available data partitions you can access
 
-2. Review legal tags: legaltag_list  
+2. Review legal tags: legaltag_list
    Result: Compliance tags available for data classification
 
 3. Explore schemas: schema_list with scope="SHARED"
@@ -161,7 +161,7 @@ export OSDU_MCP_LOGGING_LEVEL="INFO"
    Arguments: kind="osdu:wks:dataset--File.Generic:1.0.0"
    Result: Available dataset records
 
-3. Get record details: storage_get_record  
+3. Get record details: storage_get_record
    Arguments: id="<record-id>"
    Result: Complete record information
 ```
@@ -171,7 +171,7 @@ export OSDU_MCP_LOGGING_LEVEL="INFO"
 1. Enable write mode: Set OSDU_MCP_ENABLE_WRITE_MODE="true"
 
 2. Validate schema: schema_get
-   Arguments: id="osdu:wks:dataset--File.Generic:1.0.0" 
+   Arguments: id="osdu:wks:dataset--File.Generic:1.0.0"
    Result: Schema requirements for new records
 
 3. Create legal tag: legaltag_create (if needed)
@@ -190,7 +190,7 @@ export OSDU_MCP_LOGGING_LEVEL="INFO"
 • **Graduated Permissions**: Enable write mode separately from delete mode for enhanced control
 • **Authentication Flexibility**: Supports Service Principal, Managed Identity, Azure CLI, and Developer CLI
 
-### Performance Optimization  
+### Performance Optimization
 • **Selective Health Checks**: Use health_check parameters to avoid timeouts on large deployments
 • **Batch Operations**: Use storage_fetch_records for multiple record operations
 • **Connection Pooling**: HTTP client automatically pools connections for efficiency
