@@ -22,11 +22,11 @@ async def test_search_query_returns_structured_results():
                 "kind": "test:osdu:well:1.0.0",
                 "data": {"Name": "Test Well", "Location": "Texas"},
                 "createTime": "2023-01-01T00:00:00Z",
-                "version": 123456789
+                "version": 123456789,
             }
         ],
         "totalCount": 1,
-        "took": 125
+        "took": 125,
     }
 
     mock_token = AccessToken(
@@ -78,10 +78,10 @@ async def test_search_by_id_finds_specific_record():
                 "id": "test:record:123",
                 "kind": "test:osdu:record:1.0.0",
                 "data": {"Name": "Found Record"},
-                "createTime": "2023-01-01T00:00:00Z"
+                "createTime": "2023-01-01T00:00:00Z",
             }
         ],
-        "totalCount": 1
+        "totalCount": 1,
     }
 
     mock_token = AccessToken(
@@ -118,9 +118,9 @@ async def test_search_by_id_finds_specific_record():
                 # Extract the request from the mocked calls
                 request_key = list(mocked.requests.keys())[0]
                 request = mocked.requests[request_key][0]
-                request_data = request.kwargs['json']
-                assert request_data['query'] == 'id:("test:record:123")'
-                assert request_data['kind'] == "*:*:*:*"
+                request_data = request.kwargs["json"]
+                assert request_data["query"] == 'id:("test:record:123")'
+                assert request_data["kind"] == "*:*:*:*"
 
                 # Test observable behavior
                 assert result["success"] is True
@@ -131,10 +131,7 @@ async def test_search_by_id_finds_specific_record():
 @pytest.mark.asyncio
 async def test_search_by_kind_handles_no_results():
     """Test that search_by_kind gracefully handles when no records are found."""
-    mock_response = {
-        "results": [],
-        "totalCount": 0
-    }
+    mock_response = {"results": [], "totalCount": 0}
 
     mock_token = AccessToken(
         token="fake-token",
