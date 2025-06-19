@@ -18,6 +18,7 @@ async def legaltag_create(
     description: str,
     country_of_origin: list[str],
     contract_id: str,
+    originator: str,
     security_classification: str,
     personal_data: str,
     export_classification: str,
@@ -32,6 +33,7 @@ async def legaltag_create(
         description: Tag description
         country_of_origin: ISO country codes
         contract_id: Associated contract ID
+        originator: Client or supplier name (3-60 characters, alphanumeric, spaces, hyphens, periods allowed)
         security_classification: Security level
         personal_data: Personal data type
         export_classification: Export classification control number
@@ -63,6 +65,7 @@ async def legaltag_create(
         properties = {
             "countryOfOrigin": country_of_origin,
             "contractId": contract_id,
+            "originator": originator,
             "securityClassification": security_classification,
             "personalData": personal_data,
             "exportClassification": export_classification,

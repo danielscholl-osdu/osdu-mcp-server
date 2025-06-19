@@ -25,6 +25,7 @@ async def test_legaltag_create_write_disabled():
                 description="Test description",
                 country_of_origin=["US"],
                 contract_id="TEST123",
+                originator="Test-Company",
                 security_classification="Private",
                 personal_data="No Personal Data",
                 export_classification="EAR99",
