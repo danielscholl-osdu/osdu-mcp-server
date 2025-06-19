@@ -1,0 +1,151 @@
+{
+  "_description": "ACL format examples for different OSDU deployment environments",
+  "_usage": "Use the ACL format that matches your specific OSDU environment",
+  "_notes": [
+    "ACL format varies by OSDU deployment and hosting environment",
+    "Replace {partition} with your actual data partition ID",
+    "Replace {domain} with your OSDU data domain (see domain_detection below)",
+    "Test with a simple record first to confirm format works",
+    "Contact your OSDU administrator if formats don't work"
+  ],
+  
+  "domain_detection": {
+    "description": "How to determine your OSDU data domain",
+    "important_note": "The data domain is the internal OSDU data system domain used in ACL group emails, NOT the FQDN from your server URL",
+    "method_1_environment_variable": {
+      "description": "Set OSDU_MCP_SERVER_DOMAIN environment variable (Recommended)",
+      "example": "OSDU_MCP_SERVER_DOMAIN=contoso.com",
+      "usage": "This explicitly sets your internal OSDU domain"
+    },
+    "method_2_entitlements": {
+      "description": "Use entitlements_mine tool to see your actual group format",
+      "example": "entitlements_mine()",
+      "usage": "Look at the group emails to determine the domain part"
+    },
+    "method_3_administrator": {
+      "description": "Ask your OSDU administrator for the correct internal domain",
+      "usage": "Most reliable method for enterprise deployments"
+    },
+    "method_4_defaults": {
+      "standard_osdu": "contoso.com",
+      "microsoft_osdu": "dataservices.energy",
+      "microsoft_internal": "msft-osdu-test.org"
+    },
+    "validation": "Use entitlements_mine tool to verify your actual group formats"
+  },
+  
+  "standard_osdu_format": {
+    "description": "Standard OSDU deployment format",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.default.viewers@opendes.contoso.com"],
+      "owners": ["data.default.owners@opendes.contoso.com"]
+    }
+  },
+  
+  "microsoft_osdu_format": {
+    "description": "Microsoft OSDU deployments",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.default.viewers@opendes.dataservices.energy"],
+      "owners": ["data.default.owners@opendes.dataservices.energy"]
+    }
+  },
+  
+  "microsoft_internal_format": {
+    "description": "Microsoft internal OSDU deployments",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.default.viewers@opendes.msft-osdu-test.org"],
+      "owners": ["data.default.owners@opendes.msft-osdu-test.org"]
+    }
+  },
+  
+  "gcp_deployment_format": {
+    "description": "Google Cloud Platform OSDU deployments",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.default.viewers@opendes.gcp-osdu.com"],
+      "owners": ["data.default.owners@opendes.gcp-osdu.com"]
+    }
+  },
+  
+  "aws_deployment_format": {
+    "description": "Amazon Web Services OSDU deployments",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.default.viewers@opendes.aws-osdu.com"],
+      "owners": ["data.default.owners@opendes.aws-osdu.com"]
+    }
+  },
+  
+  "custom_groups_format": {
+    "description": "Custom group definitions for specific organizations",
+    "acl": {
+      "viewers": ["data.viewers@{partition}.{domain}"],
+      "owners": ["data.owners@{partition}.{domain}"]
+    },
+    "example_with_values": {
+      "viewers": ["data.viewers@opendes.mycompany.com"],
+      "owners": ["data.owners@opendes.mycompany.com"]
+    }
+  },
+  
+  "multi_group_format": {
+    "description": "Multiple groups for more granular access control",
+    "acl": {
+      "viewers": [
+        "data.default.viewers@{partition}.{domain}",
+        "data.readonly.users@{partition}.{domain}"
+      ],
+      "owners": [
+        "data.default.owners@{partition}.{domain}",
+        "data.admin.users@{partition}.{domain}"
+      ]
+    }
+  },
+  
+  "testing_your_acl_format": {
+    "steps": [
+      "1. Determine your domain using domain_detection methods above",
+      "2. Start with standard_osdu_format or microsoft_internal_format",
+      "3. Replace {partition} with your partition ID (e.g., 'opendes')",
+      "4. Replace {domain} with your determined domain (e.g., 'msft-osdu-test.org')",
+      "5. Try creating a simple record",
+      "6. If ACL error occurs, check entitlements_mine to see actual group formats",
+      "7. Use exact groups from entitlements response in ACL"
+    ],
+    "validation_tool": "entitlements_mine() - shows groups you have access to",
+    "environment_variable": "Set OSDU_MCP_SERVER_DOMAIN=your-domain to override detection"
+  },
+  
+  "troubleshooting": {
+    "acl_not_match_tenant": "Try azure_deployment_format with your tenant domain",
+    "invalid_email_format": "Ensure groups follow email format with @ symbol",
+    "permission_denied": "You may not have permission to use these groups",
+    "group_not_found": "Check entitlements_mine to see available groups"
+  },
+  
+  "determining_your_format": {
+    "method_1": "Use entitlements_mine tool to see your actual group format",
+    "method_2": "Set OSDU_MCP_SERVER_DOMAIN environment variable to override", 
+    "method_3": "Check existing records in your environment",
+    "method_4": "Consult your OSDU administrator",
+    "method_5": "Try formats: standard_osdu → microsoft_osdu → microsoft_internal → custom"
+  }
+}

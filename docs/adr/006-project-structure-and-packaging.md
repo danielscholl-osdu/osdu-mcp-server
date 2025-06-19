@@ -54,11 +54,23 @@ osdu_mcp_server/
 │   ├── shared/                  # Shared infrastructure
 │   │   ├── config_manager.py
 │   │   ├── auth_handler.py
-│   │   └── osdu_client.py
-│   └── tools/                   # MCP tools
-│       └── health_check.py
+│   │   ├── osdu_client.py
+│   │   └── clients/             # Service-specific clients
+│   ├── tools/                   # MCP tools
+│   │   ├── partition/
+│   │   ├── legal/
+│   │   ├── storage/
+│   │   └── search/
+│   ├── prompts/                 # MCP prompts
+│   │   ├── list_assets.py
+│   │   └── guide_*.py
+│   └── resources/               # MCP resources (JSON files)
+│       ├── templates/           # Working templates
+│       └── references/          # Reference examples
 ├── tests/                       # Mirror source structure
-│   ├── test_health_check.py
+│   ├── tools/
+│   ├── prompts/
+│   ├── resources/
 │   └── shared/
 └── pyproject.toml              # Modern Python packaging
 ```

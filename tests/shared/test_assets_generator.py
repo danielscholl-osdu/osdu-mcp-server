@@ -5,7 +5,6 @@ Following ADR-010 Testing Philosophy: Test content generation functionality
 without testing subjective content quality.
 """
 
-import pytest
 from osdu_mcp_server.shared.assets_generator import AssetsGenerator
 
 

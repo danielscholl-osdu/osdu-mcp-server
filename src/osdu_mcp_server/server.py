@@ -45,14 +45,20 @@ from .tools.storage import (
     storage_purge_record,
     storage_query_records_by_kind,
 )
-from .prompts import list_mcp_assets, guide_search_patterns
+from .prompts import list_mcp_assets, guide_search_patterns, guide_record_lifecycle
+from .resources import get_workflow_resources
 
 # Create FastMCP server instance
 mcp = FastMCP("OSDU MCP Server")
 
+# Register MCP resources
+for resource in get_workflow_resources():
+    mcp.add_resource(resource)
+
 # Register prompts
 mcp.prompt()(list_mcp_assets)  # type: ignore[arg-type]
 mcp.prompt()(guide_search_patterns)  # type: ignore[arg-type]
+mcp.prompt()(guide_record_lifecycle)  # type: ignore[arg-type]
 
 # Register tools
 mcp.tool()(health_check)  # type: ignore[arg-type]

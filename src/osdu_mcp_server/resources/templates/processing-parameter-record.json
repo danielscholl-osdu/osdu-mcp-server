@@ -1,0 +1,79 @@
+{
+  "_description": "Complete record template for osdu:wks:reference-data--ProcessingParameterType:1.0.0",
+  "_usage": "Copy this structure and modify the data section with your specific values",
+  "_notes": [
+    "Replace {partition} with your actual data partition (e.g., 'opendes')",
+    "Replace {domain} with your OSDU data domain (e.g., 'contoso.com')",
+    "Replace legal tag reference with your created legal tag",
+    "Update data section with your specific parameter information",
+    "ACL format is environment-specific - see acl-format-examples.json for data domain detection"
+  ],
+  "_example_mcp_call": "storage_create_update_records(records=[template])",
+  
+  "template": {
+    "kind": "osdu:wks:reference-data--ProcessingParameterType:1.0.0",
+    "acl": {
+      "viewers": ["data.default.viewers@{partition}.{domain}"],
+      "owners": ["data.default.owners@{partition}.{domain}"]
+    },
+    "legal": {
+      "legaltags": ["{partition}-public-usa-workflow-test-YYYYMMDD"],
+      "otherRelevantDataCountries": ["US"],
+      "status": "compliant"
+    },
+    "data": {
+      "Name": "MCP Lifecycle Test Parameter",
+      "ID": "mcp-lifecycle-test-YYYYMMDD-HHMMSS",
+      "Code": "MCP-LIFECYCLE",
+      "Description": "Test processing parameter created via MCP lifecycle workflow demonstration",
+      "Source": "osdu-mcp-server-workflow-demo"
+    }
+  },
+  
+  "required_fields": {
+    "system_level": ["kind", "acl", "legal"],
+    "acl_level": ["viewers", "owners"],
+    "legal_level": ["legaltags", "otherRelevantDataCountries"],
+    "data_level": ["Name"]
+  },
+  
+  "field_descriptions": {
+    "kind": "Schema identifier - must match exactly for schema validation",
+    "acl.viewers": "Groups with read access - must be valid email format",
+    "acl.owners": "Groups with write access - must be valid email format", 
+    "legal.legaltags": "Must reference existing legal tags with partition prefix",
+    "legal.otherRelevantDataCountries": "ISO country codes as array",
+    "legal.status": "Usually 'compliant' for new records",
+    "data.Name": "Required by schema inheritance - human readable name",
+    "data.ID": "Unique identifier within your data set",
+    "data.Code": "Short code or abbreviation",
+    "data.Description": "Detailed description of the parameter",
+    "data.Source": "System or process that created this record"
+  },
+  
+  "customization_guide": {
+    "partition_replacement": "Replace {partition} with your data partition ID (e.g., 'opendes')",
+    "domain_replacement": "Replace {domain} with your OSDU data domain (e.g., 'contoso.com')",
+    "legal_tag_reference": "Use the legal tag name you created (with partition prefix)",
+    "unique_identifiers": "Use timestamps in ID to ensure uniqueness",
+    "acl_format": "Check acl-format-examples.json for data domain detection methods",
+    "data_values": "Replace all data field values with your specific parameter information"
+  },
+  
+  "validation_tips": [
+    "Ensure legal tag exists before creating record",
+    "ACL emails must match your environment's group format - check data domain detection in acl-format-examples.json",
+    "Use entitlements_mine tool to verify your available groups",
+    "ID should be unique within your parameter type",
+    "All required fields must be present and non-empty",
+    "Country codes must be valid 2-letter ISO codes"
+  ],
+  
+  "common_errors": [
+    "ACL format mismatch: Wrong data domain in ACL emails - check acl-format-examples.json for data domain detection",
+    "Legal tag not found: Ensure legal tag exists and includes partition prefix",
+    "Schema validation: Ensure all required fields are present",
+    "Duplicate ID: Use timestamps or UUIDs to ensure uniqueness",
+    "Permission denied: Your user may not have access to the specified ACL groups"
+  ]
+}

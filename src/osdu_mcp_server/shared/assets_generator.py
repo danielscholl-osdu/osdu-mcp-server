@@ -49,7 +49,8 @@ class AssetsGenerator:
 Interactive conversation starters and guided workflows:
 
 • **list_mcp_assets** () - Comprehensive overview of all server capabilities
-• **guide_search_patterns** () - Search pattern guidance for OSDU operations"""
+• **guide_search_patterns** () - Search pattern guidance for OSDU operations
+• **guide_record_lifecycle** () - Complete record lifecycle workflow from creation to cleanup"""
 
     def _generate_tools_section(self) -> str:
         """Generate tools documentation section."""
