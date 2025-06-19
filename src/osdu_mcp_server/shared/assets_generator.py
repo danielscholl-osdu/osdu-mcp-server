@@ -48,7 +48,8 @@ class AssetsGenerator:
         return """## 📝 Prompts
 Interactive conversation starters and guided workflows:
 
-• **list_mcp_assets** () - Comprehensive overview of all server capabilities"""
+• **list_mcp_assets** () - Comprehensive overview of all server capabilities
+• **guide_search_patterns** () - Search pattern guidance for OSDU operations"""
 
     def _generate_tools_section(self) -> str:
         """Generate tools documentation section."""
@@ -84,6 +85,11 @@ OSDU platform integration and data management functions:
 • **schema_search** (text, search_in, version_pattern, filter, latest_version, limit, offset, include_content, sort_by, sort_order) - Advanced schema discovery with rich filtering and text search
 • **schema_create** (authority, source, entity, major_version, minor_version, patch_version, schema, status, description) - Create a new schema (write-protected)
 • **schema_update** (id, schema, status) - Update an existing schema (write-protected)
+
+### Search Service
+• **search_query** (query, kind, limit, offset) - Execute search queries using Elasticsearch syntax
+• **search_by_id** (id, limit) - Find specific records by ID
+• **search_by_kind** (kind, limit, offset) - Find all records of specific type
 
 ### Storage Service
 • **storage_create_update_records** (records, skip_dupes) - Create or update records (write-protected)
