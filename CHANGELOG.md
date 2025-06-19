@@ -11,6 +11,18 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.6.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.5.0...v0.6.0) (2025-06-19)
+
+
+### Features
+
+* create comprehensive search service specification ([4ba76a7](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/4ba76a745635bfbd5d6b82afae32591874bb503a))
+* implement Search Service with comprehensive Elasticsearch capabilities ([871e34b](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/871e34bd3b7d683b13a947550f6a85fed3c4a7ca))
+* **prompts:** add comprehensive search patterns guidance ([4f85ba0](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/4f85ba0648834358cc8b5373656fb648fd39de64))
+* **search:** implement core search tools with Elasticsearch support ([dd307a7](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/dd307a7deb63c66419dccfde6cb3167e4401f0c2))
+* **search:** implement SearchClient with Elasticsearch integration ([634d7bb](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/634d7bbf15487c307b902337634ecd8b6ad5fb06))
+* **server:** register search tools and prompt in MCP server ([5097fd0](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/5097fd0fe9837ed1641a26fe7848c22cbd4c8157))
+
 ## [0.5.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.4.0...v0.5.0) (2025-06-19)
 
 
