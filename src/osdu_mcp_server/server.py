@@ -30,6 +30,11 @@ from .tools.schema import (
     schema_search,
     schema_update,
 )
+from .tools.search import (
+    search_query,
+    search_by_id,
+    search_by_kind,
+)
 from .tools.storage import (
     storage_create_update_records,
     storage_delete_record,
@@ -40,13 +45,14 @@ from .tools.storage import (
     storage_purge_record,
     storage_query_records_by_kind,
 )
-from .prompts import list_mcp_assets
+from .prompts import list_mcp_assets, guide_search_patterns
 
 # Create FastMCP server instance
 mcp = FastMCP("OSDU MCP Server")
 
 # Register prompts
 mcp.prompt()(list_mcp_assets)  # type: ignore[arg-type]
+mcp.prompt()(guide_search_patterns)  # type: ignore[arg-type]
 
 # Register tools
 mcp.tool()(health_check)  # type: ignore[arg-type]
@@ -77,6 +83,11 @@ mcp.tool()(schema_get)  # type: ignore[arg-type]
 mcp.tool()(schema_search)  # type: ignore[arg-type]
 mcp.tool()(schema_create)  # type: ignore[arg-type]
 mcp.tool()(schema_update)  # type: ignore[arg-type]
+
+# Register search tools
+mcp.tool()(search_query)  # type: ignore[arg-type]
+mcp.tool()(search_by_id)  # type: ignore[arg-type]
+mcp.tool()(search_by_kind)  # type: ignore[arg-type]
 
 # Register storage tools
 mcp.tool()(storage_create_update_records)  # type: ignore[arg-type]
