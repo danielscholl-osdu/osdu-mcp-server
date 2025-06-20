@@ -11,6 +11,21 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.8.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.7.0...v0.8.0) (2025-06-20)
+
+
+### Features
+
+* enhance guide_record_lifecycle with interactive workflow and visual dashboards ([b641f0d](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/b641f0d0996668395c5949806c1c65262dcef91f))
+
+
+### Bug Fixes
+
+* add missing originator parameter to legaltag_create tool ([0d7b6d2](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/0d7b6d2bfc76886490a93096a14618e1b680332d))
+* add missing originator parameter to legaltag_create tool ([f92e9d5](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/f92e9d5ecd74d82eb0b09a658a5d1f610ede0f69)), closes [#94](https://github.com/danielscholl-osdu/osdu-mcp-server/issues/94)
+* improve workflow interactivity with clear user decision points ([856d5b9](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/856d5b910011589ec2a2ec98ed59957d8546854d))
+* **prompt:** remove timestamps and clarify safety assessment language ([a50e4ba](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/a50e4baf44d028337fb272d531a11efa30691ff3))
+
 ## [0.7.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.6.0...v0.7.0) (2025-06-19)
 
 
