@@ -28,11 +28,12 @@ async def guide_record_lifecycle() -> List[Message]:
 
 ## Complete Record Lifecycle Workflow
 
-### Process Flow
-**Legal Setup** → **Schema Validation** → **Record Creation** → **Record Verification** → **Search Validation** → **Cleanup**
+### Interactive Process Flow
+**Legal Tag Discovery** → **Schema Discovery** → **Record Creation** → **Asset Dashboard** → **Search Validation** → **Interactive Cleanup**
 
 ### Time Estimate: 10-15 minutes
 ### Prerequisites: Write and delete permissions enabled, valid OSDU environment
+### Workflow Type: **Interactive** - Adapts based on your environment and choices
 
 ## 🔧 Available MCP Resources
 
@@ -109,70 +110,175 @@ ReadMcpResourceTool(server="osdu-mcp-server", uri="file://acl-format-examples.js
 
 ## Step-by-Step Workflow Guide
 
-### Phase 1: Legal Compliance Setup
+### Phase 1: Interactive Legal Tag Discovery & Selection
 
-#### Step 1: Create Legal Tag
+#### Step 1: Discover Available Legal Tags
 
-**Purpose**: Establish legal compliance framework for the record
+**Purpose**: Find existing suitable legal tags or create new one with intelligent guidance
 
-**📋 Template Resource**: First, read `legal-tag-template.json` for working legal tag structure
-```
-ReadMcpResourceTool(server="osdu-mcp-server", uri="file://legal-tag-template.json")
-```
+**🔍 Discovery Process**:
 
-**MCP Tool**: `legaltag_create`
+1. **List All Available Legal Tags**
+   **MCP Tool**: `legaltag_list`
+   ```
+   legaltag_list(valid_only=true)
+   ```
 
-**Example**:
-```
-legaltag_create(
-  name="public-usa-test-lifecycle-20241219",
-  description="Test legal tag for record lifecycle workflow",
-  country_of_origin=["US"],
-  contract_id="TEST-CONTRACT-001",
-  security_classification="Public",
-  personal_data="No Personal Data",
-  export_classification="EAR99",
-  data_type="Public Domain Data",
-  expiration_date="2025-12-31"
-)
-```
+2. **Analyze Available Options**
+   Based on the results, create a recommendation table:
 
-**Validation**: Verify tag creation success
-**MCP Tool**: `legaltag_get`
-```
-legaltag_get(name="public-usa-test-lifecycle-20241219")
-```
+   ```
+   ## 🏷️ Available Legal Tags Analysis
+
+   ┌─────────────────────────────┬──────────────┬──────────────┬─────────────────┬──────────────┐
+   │ Legal Tag Name              │ Security     │ Data Type    │ Expires         │ Recommended  │
+   ├─────────────────────────────┼──────────────┼──────────────┼─────────────────┼──────────────┤
+   │ opendes-public-usa-general  │ Public       │ Public Domain│ 2025-06-30      │ ✅ EXCELLENT │
+   │ opendes-private-test-data   │ Private      │ Test Data    │ 2024-12-31      │ ⚠️  EXPIRING │
+   │ opendes-confidential-prod   │ Confidential │ Production   │ 2026-01-01      │ ❌ AVOID     │
+   └─────────────────────────────┴──────────────┴──────────────┴─────────────────┴──────────────┘
+
+   💡 **RECOMMENDATION**: Use `opendes-public-usa-general` for this test workflow
+
+   **Reasoning**:
+   - ✅ Public classification suitable for test data
+   - ✅ Long expiration date (6+ months remaining)
+   - ✅ General purpose, perfect for testing
+   - ✅ Already exists (no creation needed)
+   ```
+
+3. **Decision Point**
+   ```
+   📋 **Choose Your Legal Tag Strategy**:
+
+   Option A: Use recommended tag: `opendes-public-usa-general`
+   Option B: Use different existing tag: `[specify-name]`
+   Option C: Create new legal tag for this workflow
+
+   ⚡ **Quick Action**: If using Option A, skip to Step 2 (Schema Discovery)
+   ```
+
+4. **If Creating New Legal Tag** (Option C selected)
+
+   **📋 Template Resource**: Read `legal-tag-template.json` for working structure
+   ```
+   ReadMcpResourceTool(server="osdu-mcp-server", uri="file://legal-tag-template.json")
+   ```
+
+   **MCP Tool**: `legaltag_create`
+   ```
+   legaltag_create(
+     name="public-usa-test-lifecycle-20241219",
+     description="Test legal tag for record lifecycle workflow",
+     country_of_origin=["US"],
+     contract_id="TEST-CONTRACT-001",
+     originator="OSDU-MCP-Server",
+     security_classification="Public",
+     personal_data="No Personal Data",
+     export_classification="EAR99",
+     data_type="Public Domain Data",
+     expiration_date="2025-12-31"
+   )
+   ```
+
+5. **Validate Selected/Created Legal Tag**
+   **MCP Tool**: `legaltag_get`
+   ```
+   legaltag_get(name="[your-chosen-legal-tag]")
+   ```
 
 **Success Criteria**:
-- Legal tag created with proper compliance properties
-- Tag accessible and contains all required metadata
-- Status shows as valid
+- Legal tag exists and is accessible
+- Tag status shows as valid
+- Expiration date is in the future
+- Security classification appropriate for test data
 
 ---
 
-### Phase 2: Schema Validation
+### Phase 2: Interactive Schema Discovery & Selection
 
-#### Step 2: Retrieve Target Schema
+#### Step 2: Discover Available Schemas
 
-**Purpose**: Understand record structure and validation requirements
+**Purpose**: Find suitable schema for your data type with intelligent recommendations
 
-**MCP Tool**: `schema_get`
+**🔍 Discovery Process**:
 
-**Example**:
-```
-schema_get(id="osdu:wks:reference-data--ProcessingParameterType:1.0.0")
-```
+1. **Discover Published Schemas**
+   **MCP Tool**: `schema_search`
+   ```
+   schema_search(
+     filter={"scope": "SHARED", "status": "PUBLISHED"},
+     latest_version=true,
+     sort_by="entityType",
+     limit=20
+   )
+   ```
 
-**Validation Points**:
+2. **Present Common Options with Analysis**
+
+   ```
+   ## 📋 Recommended Schemas for Testing
+
+   ┌────────────────────────────────────────────┬─────────────┬──────────────┬──────────────────┐
+   │ Schema Type                                │ Version     │ Complexity   │ Best For         │
+   ├────────────────────────────────────────────┼─────────────┼──────────────┼──────────────────┤
+   │ 🧪 reference-data--ProcessingParameterType│ 1.0.0       │ ⭐ Simple    │ ✅ Testing       │
+   │ 📊 work-product-component--WellLog        │ 1.2.0       │ ⭐⭐⭐ Complex│ Advanced flows   │
+   │ 📁 work-product--SeismicAcquisitionSurvey │ 2.1.0       │ ⭐⭐⭐⭐ Very │ Production data  │
+   │ 🏗️ reference-data--GeologicalFeature     │ 1.1.0       │ ⭐⭐ Medium  │ Geological data  │
+   └────────────────────────────────────────────┴─────────────┴──────────────┴──────────────────┘
+
+   💡 **RECOMMENDATION**: Use `reference-data--ProcessingParameterType:1.0.0`
+
+   **Reasoning**:
+   - ✅ Simple structure, perfect for learning workflows
+   - ✅ Minimal required fields (Name, ID)
+   - ✅ Stable schema (Published status)
+   - ✅ Well-documented and extensively tested
+   - ✅ Fast validation and indexing
+   ```
+
+3. **Retrieve Detailed Schema Information**
+   **MCP Tool**: `schema_get`
+   ```
+   schema_get(id="osdu:wks:reference-data--ProcessingParameterType:1.0.0")
+   ```
+
+4. **Present Schema Requirements Summary**
+
+   ```
+   ## 📋 Schema Requirements Summary
+
+   **Required Fields**:
+   - `Name` (string) - Display name for the parameter
+   - `ID` (string) - Unique identifier within your namespace
+
+   **Optional Fields**:
+   - `Code` (string) - Short reference code
+   - `Source` (string) - Origin system identifier
+   - `Description` (string) - Detailed description
+
+   **Validation Rules**:
+   - Name: 1-255 characters, no special restrictions
+   - ID: Must be unique, recommend using timestamp or UUID
+   - All string fields accept standard text
+
+   **Example Data Structure**:
+   ```json
+   {
+     "Name": "QA Test Case - Record Lifecycle",
+     "ID": "qatest-lifecycle-20241219",
+     "Code": "QA-LIFECYCLE",
+     "Source": "osdu-mcp-server-workflow-test"
+   }
+   ```
+   ```
+
+**Success Criteria**:
 - Schema exists and is accessible
-- Required properties are identified in schema.properties
-- Schema version is compatible (status: "PUBLISHED")
-- Note required fields for record creation
-
-**Key Information to Extract**:
-- Required vs optional properties
-- Data types and validation rules
-- Any specific format requirements
+- Schema status is "PUBLISHED" (stable)
+- Required fields are clearly identified
+- Example data structure is understood
 
 ---
 
@@ -226,83 +332,246 @@ storage_create_update_records(
 - Record ID is generated and returned
 - Version number is assigned (typically 1 for new records)
 
-#### Step 4: Verify Record Creation
+#### Step 4: Generate OSDU Asset Dashboard
 
-**Validation Steps**:
+**Purpose**: Comprehensive visibility into created OSDU assets with visual dashboard and detailed analysis
 
-1. **Get Latest Record Version**
+**🔍 Asset Analysis Process**:
+
+1. **Retrieve Complete Record Details**
    **MCP Tool**: `storage_get_record`
    ```
    storage_get_record(id="[record-id-from-step-3]")
    ```
 
-2. **Check Record Versions**
+2. **Analyze Legal Tag Details**
+   **MCP Tool**: `legaltag_get`
+   ```
+   legaltag_get(name="[your-legal-tag-name]")
+   ```
+
+3. **Check Version History**
    **MCP Tool**: `storage_list_record_versions`
    ```
    storage_list_record_versions(id="[record-id-from-step-3]")
    ```
 
-3. **Get Specific Version** (optional)
-   **MCP Tool**: `storage_get_record_version`
+4. **Generate Asset Dashboard**
+
    ```
-   storage_get_record_version(id="[record-id-from-step-3]", version=1)
+   ## 📊 OSDU Asset Dashboard
+   ┌─────────────────────────────────────────────────────────────────┐
+   │  🏗️  ASSET INVENTORY                           Status: ✅ HEALTHY │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ Storage Record │ opendes:record:12345      │ v1    │ ✅ Active   │
+   │ Legal Tag      │ opendes-public-usa-general│ -     │ ✅ Valid    │
+   │ Schema         │ ProcessingParameterType   │ 1.0.0 │ ✅ Published│
+   │ Search Index   │ [Pending Analysis]        │ -     │ ⏳ TBD      │
+   └─────────────────────────────────────────────────────────────────┘
+
+   🔐 ACCESS CONTROL MATRIX
+   ┌────────────────┬─────────────────────────────┬────────────────┐
+   │ Permission     │ Groups                      │ Domain         │
+   ├────────────────┼─────────────────────────────┼────────────────┤
+   │ 👀 Viewers     │ data.default.viewers        │ contoso.com    │
+   │ 👑 Owners      │ data.default.owners         │ contoso.com    │
+   │ 🌍 Scope       │ Partition: opendes          │ Public Access  │
+   └────────────────┴─────────────────────────────┴────────────────┘
+   ```
+
+5. **Create Asset Cards**
+
+   ```
+   ## 📇 OSDU Asset Cards
+
+   ┌─────────────────────────────────┐ ┌─────────────────────────────────┐
+   │ 📄 STORAGE RECORD               │ │ ⚖️ LEGAL TAG                    │
+   │ ID: opendes:record:12345        │ │ Name: opendes-public-usa-general│
+   │ Kind: ProcessingParameterType   │ │ Classification: Public          │
+   │ Version: 1                      │ │ Contract: GENERAL-001           │
+   │ Size: 2.1 KB                    │ │ Countries: US                   │
+   │ Created: 2024-12-19 14:30 UTC   │ │ Expires: 2025-06-30             │
+   │ Status: ✅ Active               │ │ Status: ✅ Valid                │
+   │                                 │ │                                 │
+   │ 🎯 Key Data:                    │ │ 🎯 Compliance:                  │
+   │ • Name: QA Test Case            │ │ • Export: EAR99                 │
+   │ • ID: qatest-lifecycle          │ │ • Personal Data: None           │
+   │ • Source: mcp-server-test       │ │ • Data Type: Public Domain      │
+   └─────────────────────────────────┘ └─────────────────────────────────┘
+   ```
+
+6. **Generate Workflow Timeline**
+
+   ```
+   ⏰ WORKFLOW TIMELINE
+   14:30:15 │ ⚖️  Legal tag selected: [tag-name] ([new/existing])
+   14:30:18 │ 📋 Schema validated: ProcessingParameterType:1.0.0
+   14:30:22 │ 📄 Record created: [record-id] (v1)
+   14:30:25 │ 🔍 Asset dashboard generated
+   14:XX:XX │ ⏳ [Next: Search validation]
+
+   ⏱️  Current workflow time: ~45 seconds
+   🎯 Success rate: 100% (4/6 phases completed)
    ```
 
 **Validation Points**:
 - Record structure matches schema requirements
-- ACL and legal metadata are properly set
-- Data payload is correctly stored
-- Version information is accurate
+- ACL and legal metadata are properly configured
+- Data payload is correctly stored and accessible
+- Version information is accurate (typically v1 for new records)
+- Asset relationships are properly established
 
 ---
 
 ### Phase 4: Search Validation
 
-#### Step 5: Verify Record Indexing
+#### Step 5: Verify Record Indexing & Discoverability
 
-**Purpose**: Confirm record is properly indexed and discoverable
+**Purpose**: Confirm record is properly indexed and discoverable through OSDU search
 
-**📋 Reference Resource**: Get proven search patterns to avoid query syntax errors:
-```
-ReadMcpResourceTool(server="osdu-mcp-server", uri="file://search-query-patterns.json")
-```
+**🔍 Search Validation Process**:
 
 **Wait Period**: Allow 30-60 seconds for search indexing to complete
 
-**MCP Tool**: `search_query`
+1. **Search by Record ID**
+   **MCP Tool**: `search_by_id`
+   ```
+   search_by_id(id="[record-id-from-step-3]")
+   ```
 
-**Example**:
-```
-search_query(
-  query="data.ID:(\"qatest-lifecycle-20241219\")",
-  kind="osdu:wks:reference-data--ProcessingParameterType:1.0.0",
-  limit=10
-)
-```
+2. **Search by Data Content**
+   **MCP Tool**: `search_query`
+   ```
+   search_query(
+     query="data.ID:(\"qatest-lifecycle-20241219\")",
+     kind="osdu:wks:reference-data--ProcessingParameterType:1.0.0",
+     limit=10
+   )
+   ```
 
-**Alternative Search by ID**:
-**MCP Tool**: `search_by_id`
-```
-search_by_id(id="[record-id-from-step-3]")
-```
+3. **Update Asset Dashboard with Search Status**
+
+   ```
+   ## 📊 Updated OSDU Asset Dashboard
+   ┌─────────────────────────────────────────────────────────────────┐
+   │  🏗️  ASSET INVENTORY                           Status: ✅ HEALTHY │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ Storage Record │ opendes:record:12345      │ v1    │ ✅ Active   │
+   │ Legal Tag      │ opendes-public-usa-general│ -     │ ✅ Valid    │
+   │ Schema         │ ProcessingParameterType   │ 1.0.0 │ ✅ Published│
+   │ Search Index   │ Indexed & Discoverable    │ -     │ ✅ Ready    │
+   └─────────────────────────────────────────────────────────────────┘
+   ```
 
 **Validation Points**:
-- Record appears in search results
+- Record appears in search results within 60 seconds
 - Search metadata matches record data
 - Record data is properly indexed and searchable
 - Total count > 0 indicates successful indexing
 
-**Common Issue**: If record doesn't appear immediately, wait additional 30 seconds and retry. Search indexing can have delays.
+**Common Issue**: If record doesn't appear immediately, wait additional 30 seconds and retry. Search indexing can have delays in some OSDU environments.
 
 ---
 
-### Phase 5: Cleanup & Verification
+### Phase 5: Interactive Cleanup & Safety Validation
 
-#### Step 6: Complete Cleanup
+#### Step 6: Interactive Cleanup with Safety Validation
 
-**Purpose**: Remove test resources and verify proper cleanup
+**Purpose**: Safe, informed cleanup with comprehensive validation and user confirmation
 
-**Cleanup Sequence**:
+## 🛡️ Pre-Deletion Safety Assessment
+
+**⚠️ CRITICAL**: Always validate what you're about to remove before proceeding with any destructive operations.
+
+### 1. **Comprehensive Asset Inspection**
+
+1. **Inspect Storage Record Details**
+   **MCP Tool**: `storage_get_record`
+   ```
+   storage_get_record(id="[record-id-from-step-3]")
+   ```
+   **Verify**: Confirm this is test data by checking:
+   - Data payload contains test identifiers
+   - Creation timestamp is recent (workflow session)
+   - Record size/content matches your test data
+
+2. **Check Legal Tag Usage** (Critical for Shared Resources)
+   **MCP Tool**: `search_query`
+   ```
+   search_query(
+     query="legal.legaltags:([your-legal-tag-name])",
+     kind="*:*:*:*",
+     limit=50
+   )
+   ```
+   **Verify**: How many records use this legal tag?
+   - If > 1 result: Legal tag is shared, DO NOT DELETE
+   - If = 1 result: Only your test record uses it, safe to delete
+
+3. **Review Asset Summary** (From Step 4 Dashboard)
+   Review your complete asset dashboard before proceeding
+
+### 2. **Generate Safety Assessment Matrix**
+
+```
+## 🛡️ Pre-Deletion Safety Assessment
+
+┌─────────────────────┬──────────┬─────────────────────┬────────────────┐
+│ Safety Check        │ Status   │ Details             │ Action         │
+├─────────────────────┼──────────┼─────────────────────┼────────────────┤
+│ 🏷️  Test Data Only  │ ✅ PASS  │ Contains 'test' ID  │ Safe to delete │
+│ 🔗 No Dependencies  │ ✅ PASS  │ No child records    │ Safe to delete │
+│ 👥 Limited Scope    │ ✅ PASS  │ Only test users     │ Safe to delete │
+│ ⏰ Recent Creation  │ ⚠️  WARN │ Created <1 hour ago │ Verify intent  │
+│ 🌍 Partition Scope  │ ✅ PASS  │ Test partition      │ Safe to delete │
+│ 🏷️  Legal Tag Used  │ ⚠️  CHECK│ Tag used elsewhere  │ Keep legal tag │
+└─────────────────────┴──────────┴─────────────────────┴────────────────┘
+```
+
+### 3. **Create Deletion Plan**
+
+```
+## 📋 Deletion Plan
+
+**Will Delete**:
+- ✅ Storage Record: `[record-id]` (confirmed test data only)
+
+**Will Keep**:
+- ⚖️  Legal Tag: `[legal-tag-name]` (used by other records OR reusable)
+- 📋 Schema: `ProcessingParameterType:1.0.0` (shared OSDU resource)
+
+**Reasoning**:
+- Storage record is test-only and safe to remove
+- Legal tag [is shared/was created for this test] - [keep/delete] accordingly
+- Schema is a shared OSDU resource and should never be deleted
+```
+
+### 4. **Interactive Confirmation**
+
+```
+📊 **DELETION SUMMARY**
+You created these OSDU assets during this workflow:
+   • 1 Storage Record (test data)
+   • [0/1] Legal Tag ([used existing/created new])
+   • 0 Schemas (used existing shared resource)
+
+🗑️  **Ready to delete**: [#] test-only resources
+🔒 **Will preserve**: [#] shared/reusable resources
+
+❓ **PROCEED WITH CLEANUP?**
+
+Options:
+- Type 'YES' to confirm deletion of test storage record only
+- Type 'DELETE-ALL' to delete both record AND legal tag (if safe)
+- Type 'NO' to keep all assets for further testing
+- Type 'DETAILS' to see full asset information again
+
+⚠️  **CRITICAL**: Only proceed after confirming all assets are test-only resources
+```
+
+### 5. **Execute Cleanup** (Only After Confirmation)
+
+**If User Confirms 'YES' or 'DELETE-ALL':**
 
 1. **Delete Storage Record**
    **MCP Tool**: `storage_delete_record`
@@ -310,51 +579,101 @@ search_by_id(id="[record-id-from-step-3]")
    storage_delete_record(id="[record-id-from-step-3]")
    ```
 
-2. **Delete Legal Tag**
+2. **Delete Legal Tag** (Only if 'DELETE-ALL' and confirmed safe)
    **MCP Tool**: `legaltag_delete`
    ```
    legaltag_delete(
-     name="public-usa-test-lifecycle-20241219",
+     name="[legal-tag-name]",
      confirm=true
    )
    ```
 
-**Verification Steps**:
+### 6. **Verify Cleanup Success**
 
 1. **Verify Record Deletion**
    **MCP Tool**: `storage_get_record`
    ```
    storage_get_record(id="[record-id-from-step-3]")
    ```
-   **Expected**: Should return error indicating record not found or is deleted
+   **Expected**: Error indicating record not found or deleted
 
-2. **Verify Legal Tag Deletion**
+2. **Verify Legal Tag Status** (if deleted)
    **MCP Tool**: `legaltag_get`
    ```
-   legaltag_get(name="public-usa-test-lifecycle-20241219")
+   legaltag_get(name="[legal-tag-name]")
    ```
-   **Expected**: Should return error indicating legal tag not found
+   **Expected**: Error if deleted, success if preserved
 
-**Success Criteria**: Both resources return "not found" errors, confirming complete cleanup
+3. **Final Asset Status**
+   ```
+   ## ✅ Cleanup Complete
+
+   **Deleted**:
+   - 📄 Storage Record: Successfully removed
+   - ⚖️  Legal Tag: [Removed/Preserved] as planned
+
+   **Preserved**:
+   - 📋 Schema: ProcessingParameterType:1.0.0 (shared resource)
+   - [Other preserved resources]
+
+   **Result**: Test environment cleaned, shared resources preserved
+   ```
+
+**Success Criteria**:
+- Test resources properly removed with confirmation
+- Shared resources preserved and still accessible
+- Clean environment ready for future testing
 
 ---
 
-## Validation Checkpoints
+## Interactive Workflow Validation Checkpoints
 
-### After Each Step
-- [ ] **Legal Tag**: Created successfully with all required properties
-- [ ] **Schema**: Retrieved and requirements understood
-- [ ] **Record**: Created with proper structure and compliance metadata
-- [ ] **Versions**: Record versioning working correctly
-- [ ] **Search**: Record indexed and discoverable
-- [ ] **Cleanup**: All test resources properly removed
+### Phase-by-Phase Success Criteria
 
-### Error Indicators
-- Permission denied errors → Check write/delete mode settings
-- Schema validation failures → Review record structure against schema
-- Record creation failures → Verify ACL format and legal tag references
-- Search indexing delays → Normal, wait 30-60 seconds and retry
-- Cleanup incomplete → Check delete permissions and confirmation parameters
+**Phase 1: Legal Tag Discovery**
+- [ ] **Discovery**: Successfully listed available legal tags
+- [ ] **Analysis**: Generated recommendation table with reasoning
+- [ ] **Selection**: Chose appropriate legal tag strategy (existing/new)
+- [ ] **Validation**: Confirmed legal tag exists and is valid
+
+**Phase 2: Schema Discovery**
+- [ ] **Discovery**: Listed available schemas with complexity analysis
+- [ ] **Selection**: Chose appropriate schema for testing workflow
+- [ ] **Requirements**: Understood required vs optional fields
+- [ ] **Validation**: Confirmed schema is published and stable
+
+**Phase 3: Record Creation**
+- [ ] **Templates**: Accessed ACL and record templates for environment
+- [ ] **Creation**: Successfully created storage record
+- [ ] **Validation**: Record ID and version assigned correctly
+
+**Phase 4: Asset Dashboard**
+- [ ] **Dashboard**: Generated complete asset inventory status
+- [ ] **ACL Analysis**: Confirmed access control configuration
+- [ ] **Asset Cards**: Reviewed detailed record and legal tag information
+- [ ] **Timeline**: Tracked workflow progress and timing
+
+**Phase 5: Search Validation**
+- [ ] **Indexing**: Record discoverable via search within 60 seconds
+- [ ] **Queries**: Both ID and content searches return correct results
+- [ ] **Dashboard Update**: Search status updated to "Ready"
+
+**Phase 6: Interactive Cleanup**
+- [ ] **Safety Assessment**: Completed comprehensive pre-deletion validation
+- [ ] **Asset Inspection**: Confirmed test-only data and dependencies
+- [ ] **User Confirmation**: Obtained explicit cleanup confirmation
+- [ ] **Selective Cleanup**: Deleted test resources, preserved shared assets
+- [ ] **Verification**: Confirmed successful cleanup with proper preservation
+
+### Enhanced Error Indicators
+- **Discovery Failures** → Check service connectivity and permissions
+- **Recommendation Errors** → Verify legal tag/schema accessibility
+- **Permission Denied** → Check write/delete mode environment variables
+- **Schema Validation** → Review record structure against schema requirements
+- **ACL Format Errors** → Verify data domain configuration and group format
+- **Search Indexing Delays** → Normal behavior, wait 30-60 seconds and retry
+- **Safety Assessment Failures** → Review asset inspection results before cleanup
+- **Cleanup Incomplete** → Check delete permissions and confirmation parameters
 
 ---
 
@@ -468,16 +787,43 @@ Test partial failure scenarios:
 
 ---
 
-## Workflow Summary
+## Interactive Workflow Summary
 
-This workflow demonstrates the complete OSDU record lifecycle:
+This enhanced workflow transforms the OSDU record lifecycle from a rigid script into an intelligent, interactive experience:
 
-1. **Legal Compliance** → Establishing data governance framework
-2. **Schema Validation** → Understanding data structure requirements
-3. **Record Creation** → Creating properly compliant data records
-4. **Verification** → Validating successful storage and versioning
-5. **Discovery** → Confirming search indexing and discoverability
-6. **Cleanup** → Responsible resource management
+### 🎯 **Interactive Discovery & Intelligence**
+1. **Legal Tag Discovery** → Smart analysis of existing resources with recommendations
+2. **Schema Discovery** → Complexity analysis and intelligent schema selection
+3. **Record Creation** → Template-guided creation with environment-specific formats
+
+### 📊 **Visual Asset Management**
+4. **Asset Dashboard** → Comprehensive visibility with status tables and detailed cards
+5. **Search Validation** → Indexing verification with dashboard updates
+
+### 🛡️ **Safe & Informed Cleanup**
+6. **Interactive Cleanup** → Safety assessment, dependency analysis, and user confirmation
+
+### 🌟 **Key Innovations**
+
+**Intelligence**:
+- Discovers existing OSDU resources instead of blind creation
+- Provides reasoning for all recommendations
+- Adapts workflow based on environment and user choices
+
+**Safety**:
+- Multiple validation layers prevent accidental data loss
+- Dependency analysis identifies shared vs. test-only resources
+- Interactive confirmation with full context before destructive operations
+
+**Visibility**:
+- Visual dashboard with status indicators and ACL matrices
+- Asset cards showing detailed resource information
+- Timeline tracking workflow progress and performance
+
+**Education**:
+- Users learn about OSDU resource relationships
+- Guided discovery teaches platform best practices
+- Clear explanations of reasoning behind recommendations
 
 The workflow serves multiple purposes:
 - **Learning Tool**: Understand OSDU service integration
