@@ -147,16 +147,26 @@ ReadMcpResourceTool(server="osdu-mcp-server", uri="file://acl-format-examples.js
    - ✅ Already exists (no creation needed)
    ```
 
-3. **Decision Point**
+3. **User Decision Required** 🛑
+
+   **STOP HERE** - Make your choice before proceeding:
+
    ```
    📋 **Choose Your Legal Tag Strategy**:
 
-   Option A: Use recommended tag: `opendes-public-usa-general`
-   Option B: Use different existing tag: `[specify-name]`
+   Option A: Use recommended tag: `[best-existing-tag]`
+   Option B: Use different existing tag: `[specify-name-from-list-above]`
    Option C: Create new legal tag for this workflow
 
-   ⚡ **Quick Action**: If using Option A, skip to Step 2 (Schema Discovery)
+   ❓ **Please respond with your choice**: A, B, or C
+
+   📝 **If Option B**: Specify which legal tag name you want to use
+   📝 **If Option C**: We'll guide you through legal tag creation
    ```
+
+   **Based on your choice, proceed to the appropriate step**:
+   - **Option A or B**: Continue to "Validate Selected Legal Tag" below
+   - **Option C**: Continue to "Create New Legal Tag" below
 
 4. **If Creating New Legal Tag** (Option C selected)
 
@@ -197,88 +207,76 @@ ReadMcpResourceTool(server="osdu-mcp-server", uri="file://acl-format-examples.js
 
 ### Phase 2: Interactive Schema Discovery & Selection
 
-#### Step 2: Discover Available Schemas
+#### Step 2: Choose Schema for Your Test Record
 
-**Purpose**: Find suitable schema for your data type with intelligent recommendations
+**Purpose**: Select the appropriate schema for creating test data
 
-**🔍 Discovery Process**:
+**🎯 DEFAULT RECOMMENDATION**:
 
-1. **Discover Published Schemas**
-   **MCP Tool**: `schema_search`
-   ```
-   schema_search(
-     filter={"scope": "SHARED", "status": "PUBLISHED"},
-     latest_version=true,
-     sort_by="entityType",
-     limit=20
-   )
-   ```
+For this learning workflow, we recommend using the **ProcessingParameterType** schema, which is ideal for testing:
 
-2. **Present Common Options with Analysis**
+```
+## 📋 Recommended Schema (Ready to Use)
 
-   ```
-   ## 📋 Recommended Schemas for Testing
+Schema: `osdu:wks:reference-data--ProcessingParameterType:1.0.0`
 
-   ┌────────────────────────────────────────────┬─────────────┬──────────────┬──────────────────┐
-   │ Schema Type                                │ Version     │ Complexity   │ Best For         │
-   ├────────────────────────────────────────────┼─────────────┼──────────────┼──────────────────┤
-   │ 🧪 reference-data--ProcessingParameterType│ 1.0.0       │ ⭐ Simple    │ ✅ Testing       │
-   │ 📊 work-product-component--WellLog        │ 1.2.0       │ ⭐⭐⭐ Complex│ Advanced flows   │
-   │ 📁 work-product--SeismicAcquisitionSurvey │ 2.1.0       │ ⭐⭐⭐⭐ Very │ Production data  │
-   │ 🏗️ reference-data--GeologicalFeature     │ 1.1.0       │ ⭐⭐ Medium  │ Geological data  │
-   └────────────────────────────────────────────┴─────────────┴──────────────┴──────────────────┘
+✅ **Why This Schema is Perfect for Learning**:
+- Simple structure with minimal required fields
+- Well-tested and stable (Published status)
+- Fast validation and indexing
+- Perfect for demonstrating OSDU workflows
+- Used in most OSDU training and documentation
 
-   💡 **RECOMMENDATION**: Use `reference-data--ProcessingParameterType:1.0.0`
+📋 **Schema Requirements Summary**:
+- **Required**: `Name` (string) - Display name for the parameter
+- **Optional**: `Code`, `ID`, `Description`, `Source` - All simple text fields
+- **Validation**: Standard text validation, no complex rules
+```
 
-   **Reasoning**:
-   - ✅ Simple structure, perfect for learning workflows
-   - ✅ Minimal required fields (Name, ID)
-   - ✅ Stable schema (Published status)
-   - ✅ Well-documented and extensively tested
-   - ✅ Fast validation and indexing
-   ```
+**🛑 User Decision Required**:
 
-3. **Retrieve Detailed Schema Information**
+```
+❓ **Schema Choice**:
+
+Option A: Use recommended ProcessingParameterType schema (⭐ **Recommended for first-time users**)
+Option B: I want to use a different schema type
+
+📝 **Please respond with your choice**: A or B
+
+If Option A: Continue to "Validate Schema" below
+If Option B: Continue to "Custom Schema Discovery" below
+```
+
+**For Option A (Recommended Path)**:
+
+1. **Validate Recommended Schema**
    **MCP Tool**: `schema_get`
    ```
    schema_get(id="osdu:wks:reference-data--ProcessingParameterType:1.0.0")
    ```
 
-4. **Present Schema Requirements Summary**
+   **Expected Result**: Schema details confirming it's available and published
 
+**For Option B (Custom Schema Discovery)**:
+
+1. **Search Available Schemas**
+   **MCP Tool**: `schema_search`
    ```
-   ## 📋 Schema Requirements Summary
-
-   **Required Fields**:
-   - `Name` (string) - Display name for the parameter
-   - `ID` (string) - Unique identifier within your namespace
-
-   **Optional Fields**:
-   - `Code` (string) - Short reference code
-   - `Source` (string) - Origin system identifier
-   - `Description` (string) - Detailed description
-
-   **Validation Rules**:
-   - Name: 1-255 characters, no special restrictions
-   - ID: Must be unique, recommend using timestamp or UUID
-   - All string fields accept standard text
-
-   **Example Data Structure**:
-   ```json
-   {
-     "Name": "QA Test Case - Record Lifecycle",
-     "ID": "qatest-lifecycle-20241219",
-     "Code": "QA-LIFECYCLE",
-     "Source": "osdu-mcp-server-workflow-test"
-   }
-   ```
+   schema_search(
+     filter={"scope": "SHARED", "status": "PUBLISHED"},
+     latest_version=true,
+     limit=50
+   )
    ```
 
-**Success Criteria**:
+2. **Browse and Select**
+   Review the results and choose a schema that matches your data type. Note that complex schemas may require additional fields and validation.
+
+**Success Criteria** (Both Paths):
 - Schema exists and is accessible
 - Schema status is "PUBLISHED" (stable)
 - Required fields are clearly identified
-- Example data structure is understood
+- Ready to proceed with record creation
 
 ---
 
