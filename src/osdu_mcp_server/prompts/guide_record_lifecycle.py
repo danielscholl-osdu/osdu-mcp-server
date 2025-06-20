@@ -24,7 +24,7 @@ async def guide_record_lifecycle() -> List[Message]:
     Returns:
         List[Message]: Single user message containing the complete workflow guide
     """
-    content = """# OSDU Record Lifecycle Workflow Guide
+    content = """# OSDU Record Lifecycle Check
 
 ## Complete Record Lifecycle Workflow
 
@@ -233,19 +233,27 @@ Schema: `osdu:wks:reference-data--ProcessingParameterType:1.0.0`
 - **Validation**: Standard text validation, no complex rules
 ```
 
-**🛑 User Decision Required**:
+## 🛑 **STOP HERE - Schema Decision Required**
+
+**DO NOT PROCEED** until you make your choice:
 
 ```
-❓ **Schema Choice**:
+❓ **REQUIRED: Choose Your Schema Strategy**
 
-Option A: Use recommended ProcessingParameterType schema (⭐ **Recommended for first-time users**)
-Option B: I want to use a different schema type
+Option A: Use recommended ProcessingParameterType schema
+          ⭐ **RECOMMENDED** - Works in all OSDU environments
 
-📝 **Please respond with your choice**: A or B
+Option B: I want to explore and choose a different schema type
+          ⚠️  **Advanced** - May require additional validation
 
-If Option A: Continue to "Validate Schema" below
-If Option B: Continue to "Custom Schema Discovery" below
+📝 **YOU MUST RESPOND**: Type "A" or "B" before continuing
+
+➡️  **Next Steps Based on Your Choice**:
+    - Choose A → Continue to "Validate Schema" section below
+    - Choose B → Continue to "Custom Schema Discovery" section below
 ```
+
+**⚠️  IMPORTANT**: The workflow will not continue until you make this decision.
 
 **For Option A (Recommended Path)**:
 
@@ -388,7 +396,7 @@ storage_create_update_records(
    │ Kind: ProcessingParameterType   │ │ Classification: Public          │
    │ Version: 1                      │ │ Contract: GENERAL-001           │
    │ Size: 2.1 KB                    │ │ Countries: US                   │
-   │ Created: 2024-12-19 14:30 UTC   │ │ Expires: 2025-06-30             │
+   │ Created: [Recent - This Session]│ │ Expires: 2025-06-30             │
    │ Status: ✅ Active               │ │ Status: ✅ Valid                │
    │                                 │ │                                 │
    │ 🎯 Key Data:                    │ │ 🎯 Compliance:                  │
@@ -402,14 +410,13 @@ storage_create_update_records(
 
    ```
    ⏰ WORKFLOW TIMELINE
-   14:30:15 │ ⚖️  Legal tag selected: [tag-name] ([new/existing])
-   14:30:18 │ 📋 Schema validated: ProcessingParameterType:1.0.0
-   14:30:22 │ 📄 Record created: [record-id] (v1)
-   14:30:25 │ 🔍 Asset dashboard generated
-   14:XX:XX │ ⏳ [Next: Search validation]
+   Step 1 │ ⚖️  Legal tag selected: [tag-name] ([new/existing])
+   Step 2 │ 📋 Schema validated: ProcessingParameterType:1.0.0
+   Step 3 │ 📄 Record created: [record-id] (v1)
+   Step 4 │ 🔍 Asset dashboard generated
+   Step 5 │ ⏳ [Next: Search validation]
 
-   ⏱️  Current workflow time: ~45 seconds
-   🎯 Success rate: 100% (4/6 phases completed)
+   🎯 Progress: 4/6 workflow phases completed
    ```
 
 **Validation Points**:
@@ -521,9 +528,15 @@ storage_create_update_records(
 │ 🔗 No Dependencies  │ ✅ PASS  │ No child records    │ Safe to delete │
 │ 👥 Limited Scope    │ ✅ PASS  │ Only test users     │ Safe to delete │
 │ ⏰ Recent Creation  │ ⚠️  WARN │ Created <1 hour ago │ Verify intent  │
-│ 🌍 Partition Scope  │ ✅ PASS  │ Test partition      │ Safe to delete │
+│ 🌍 Data Location    │ ✅ PASS  │ Test data in opendes│ Data removable │
 │ 🏷️  Legal Tag Used  │ ⚠️  CHECK│ Tag used elsewhere  │ Keep legal tag │
 └─────────────────────┴──────────┴─────────────────────┴────────────────┘
+
+⚠️  **CRITICAL CLARIFICATION**:
+- ✅ We are checking that our TEST DATA is safely contained within the partition
+- ❌ We will NEVER delete the partition itself (opendes is your OSDU environment)
+- ✅ Only the test records/legal tags we created will be removed
+- ✅ All platform infrastructure and shared resources remain untouched
 ```
 
 ### 3. **Create Deletion Plan**
@@ -531,17 +544,23 @@ storage_create_update_records(
 ```
 ## 📋 Deletion Plan
 
-**Will Delete**:
-- ✅ Storage Record: `[record-id]` (confirmed test data only)
+**Will Delete (Test Data Only)**:
+- ✅ Storage Record: `[record-id]` (confirmed test data created by this workflow)
 
-**Will Keep**:
-- ⚖️  Legal Tag: `[legal-tag-name]` (used by other records OR reusable)
+**Will Keep (Depending on Usage)**:
+- ⚖️  Legal Tag: `[legal-tag-name]` (keep if shared, delete if created for this test)
+
+**Will NEVER Delete (Platform Infrastructure)**:
+- 🌍 Data Partition: `opendes` (your OSDU environment - NEVER touched)
 - 📋 Schema: `ProcessingParameterType:1.0.0` (shared OSDU resource)
+- 🏗️  Platform Services: Storage, Search, Legal, Schema services
+- 👥 User Groups: All ACL groups and permissions
+- ⚙️  Configuration: All OSDU platform configuration
 
-**Reasoning**:
-- Storage record is test-only and safe to remove
-- Legal tag [is shared/was created for this test] - [keep/delete] accordingly
-- Schema is a shared OSDU resource and should never be deleted
+**Safety Guarantee**:
+- Only TEST DATA we created during this workflow will be removed
+- All platform infrastructure, shared resources, and other users' data remains untouched
+- This is data cleanup, NOT platform modification
 ```
 
 ### 4. **Interactive Confirmation**
