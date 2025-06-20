@@ -57,12 +57,12 @@ async def test_guide_record_lifecycle_includes_workflow_phases():
     content = result[0]["content"]
 
     # Verify all workflow phases are documented
-    assert "Legal Compliance Setup" in content
-    assert "Schema Validation" in content
+    assert "Legal Tag Discovery" in content
+    assert "Schema Discovery" in content
     assert "Record Creation" in content
-    assert "Record Verification" in content
+    assert "Asset Dashboard" in content
     assert "Search Validation" in content
-    assert "Cleanup" in content
+    assert "Interactive Cleanup" in content
 
 
 @pytest.mark.asyncio
