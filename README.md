@@ -164,6 +164,7 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
   - `AZURE_CLIENT_ID`: Service principal ID
   - `AZURE_CLIENT_SECRET`: Service principal secret  
   - `AZURE_TENANT_ID`: Your Azure tenant ID
+  - `OSDU_MCP_AUTH_SCOPE`: (Optional) Custom OAuth scope for v1.0 token environments
 
 **Claude Code CLI Example:**
 ```bash
@@ -174,6 +175,43 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
   -e "AZURE_CLIENT_SECRET=your-service-principal-secret" \
   -e "AZURE_TENANT_ID=your-tenant-id"
 ```
+
+#### Method 3: v1.0 Token Authentication (Legacy OSDU Environments)
+
+For OSDU environments configured with v1.0 tokens (`"requestedAccessTokenVersion": 1` in app manifest):
+
+- **Setup**: Service principal with access to OSDU resource application
+- **Environment Variables**:
+  - `AZURE_CLIENT_ID`: Service principal ID (authentication app)
+  - `AZURE_CLIENT_SECRET`: Service principal secret
+  - `AZURE_TENANT_ID`: Your Azure tenant ID
+  - `OSDU_MCP_AUTH_SCOPE`: Target OSDU application ID with `/.default` suffix
+
+**Example Configuration:**
+```json
+{
+  "mcpServers": {
+    "osdu-mcp-server": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["git+https://github.com/danielscholl-osdu/osdu-mcp-server@main"],
+      "env": {
+        "OSDU_MCP_SERVER_URL": "https://your-osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "your-partition",
+        "AZURE_CLIENT_ID": "service-principal-id",
+        "AZURE_CLIENT_SECRET": "service-principal-secret",
+        "AZURE_TENANT_ID": "your-tenant-id",
+        "OSDU_MCP_AUTH_SCOPE": "osdu-resource-app-id/.default"
+      }
+    }
+  }
+}
+```
+
+**Use Cases:**
+- Legacy OSDU deployments with v1.0 token requirements
+- Environments where you authenticate with one app but request tokens for another
+- OSDU platforms with dedicated resource applications and specific JWT audience requirements
 
 #### Authorization Setup
 
