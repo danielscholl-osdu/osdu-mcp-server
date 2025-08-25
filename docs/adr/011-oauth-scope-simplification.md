@@ -1,7 +1,9 @@
 # ADR-011: OAuth Scope Simplification
 
 ## Status
-**Accepted** - 2025-05-16
+**Superseded** - 2025-08-25
+
+**Note**: This ADR has been superseded by the addition of optional custom scope support for legacy v1.0 token environments. See implementation update below.
 
 ## Context
 During initial implementation, the OSDU MCP Server supported custom OAuth scopes via the `AZURE_TOKEN_SCOPE` environment variable. However, testing revealed that OSDU platform has strict requirements for JWT token audiences:
@@ -76,3 +78,48 @@ class AuthHandler:
 - No more JWT audience errors with OSDU
 - Simplified user onboarding experience
 - Clear documentation of the change
+
+## 2025-08-25 Implementation Update
+
+### Reason for Superseding
+Discovery of OSDU environments using v1.0 tokens (`"requestedAccessTokenVersion": 1`) revealed that some deployments require custom scope configuration to handle multi-application authentication patterns.
+
+### Current Implementation
+```python
+class AuthHandler:
+    async def _get_azure_token(self) -> str:
+        # Get client ID from standard Azure environment variable
+        client_id = os.environ.get("AZURE_CLIENT_ID")
+        if not client_id:
+            raise OSMCPAuthError("AZURE_CLIENT_ID environment variable is required")
+
+        # Derive OAuth scope from client ID or custom scope
+        custom_scope = os.environ.get("OSDU_MCP_AUTH_SCOPE")
+        if custom_scope:
+            scope = custom_scope
+        else:
+            scope = f"{client_id}/.default"
+
+        # Get new token
+        self._cached_token = self._credential.get_token(scope)
+        return self._cached_token.token
+```
+
+### New Environment Variable
+- `OSDU_MCP_AUTH_SCOPE`: Optional custom OAuth scope for v1.0 token environments
+
+### Use Cases for Custom Scope
+1. **v1.0 Token Environments**: OSDU apps with `"requestedAccessTokenVersion": 1`
+2. **Multi-App Authentication**: Authenticate with service principal, request tokens for OSDU resource app
+3. **Legacy Deployments**: Older OSDU environments with specific JWT audience requirements
+
+### Backward Compatibility
+- Default behavior unchanged: Uses `{CLIENT_ID}/.default` when `OSDU_MCP_AUTH_SCOPE` not set
+- Existing configurations continue to work without modification
+- Custom scope only used when explicitly configured
+
+### Updated Success Criteria
+- ✅ Standard OSDU environments work without configuration
+- ✅ v1.0 token environments supported via custom scope
+- ✅ Multi-application authentication patterns supported
+- ✅ Backward compatibility maintained
