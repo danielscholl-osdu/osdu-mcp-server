@@ -11,6 +11,13 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.8.1](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.8.0...v0.8.1) (2025-08-25)
+
+
+### Bug Fixes
+
+* readme ([9d03614](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/9d036143b7395b9fd86009c6d1ef64c397d6d24f))
+
 ## [0.8.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.7.0...v0.8.0) (2025-06-20)
 
 
