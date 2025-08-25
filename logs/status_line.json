@@ -1,0 +1,930 @@
+[
+  {
+    "timestamp": "2025-08-25T12:20:49.071918",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0,
+        "total_duration_ms": 37028,
+        "total_api_duration_ms": 0,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:21:21.198492",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.2776993,
+        "total_duration_ms": 69130,
+        "total_api_duration_ms": 16734,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:27:17.034063",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.71843305,
+        "total_duration_ms": 424959,
+        "total_api_duration_ms": 33922,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:28:46.777147",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76033645,
+        "total_duration_ms": 514694,
+        "total_api_duration_ms": 51498,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:39.027747",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76033645,
+        "total_duration_ms": 566956,
+        "total_api_duration_ms": 51498,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:39.329550",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76033645,
+        "total_duration_ms": 567266,
+        "total_api_duration_ms": 51498,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:39.467369",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76033645,
+        "total_duration_ms": 567416,
+        "total_api_duration_ms": 51498,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:55.233382",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76056685,
+        "total_duration_ms": 583136,
+        "total_api_duration_ms": 52650,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:55.744307",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0.76056685,
+        "total_duration_ms": 583635,
+        "total_api_duration_ms": 52650,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:56.910395",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.0453483000000001,
+        "total_duration_ms": 584868,
+        "total_api_duration_ms": 67425,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:29:56.979272",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.0453483000000001,
+        "total_duration_ms": 584935,
+        "total_api_duration_ms": 67425,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:30:03.295061",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.0453483000000001,
+        "total_duration_ms": 591222,
+        "total_api_duration_ms": 67425,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:30:03.934314",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.09710295,
+        "total_duration_ms": 591887,
+        "total_api_duration_ms": 74112,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:30:18.889597",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.09710295,
+        "total_duration_ms": 606809,
+        "total_api_duration_ms": 74112,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:30:25.934958",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.1480539,
+        "total_duration_ms": 613856,
+        "total_api_duration_ms": 95854,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:34:31.314011",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.4472019999999999,
+        "total_duration_ms": 859215,
+        "total_api_duration_ms": 271104,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:36:12.850473",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.4474243999999998,
+        "total_duration_ms": 960742,
+        "total_api_duration_ms": 272261,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:36:14.473108",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.4474243999999998,
+        "total_duration_ms": 962375,
+        "total_api_duration_ms": 272261,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:36:15.684435",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.7515896,
+        "total_duration_ms": 963643,
+        "total_api_duration_ms": 290031,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:38:09.013376",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.7515896,
+        "total_duration_ms": 1076919,
+        "total_api_duration_ms": 290031,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:38:20.640165",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.809663,
+        "total_duration_ms": 1088546,
+        "total_api_duration_ms": 414694,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:38:22.803512",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.809663,
+        "total_duration_ms": 1090763,
+        "total_api_duration_ms": 414694,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:38:32.225888",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.809663,
+        "total_duration_ms": 1100148,
+        "total_api_duration_ms": 414694,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:38:37.608686",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.86139875,
+        "total_duration_ms": 1105532,
+        "total_api_duration_ms": 429222,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:39:26.820207",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.86139875,
+        "total_duration_ms": 1154746,
+        "total_api_duration_ms": 429222,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:39:27.122892",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.86139875,
+        "total_duration_ms": 1155055,
+        "total_api_duration_ms": 429222,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:39:27.257205",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.86139875,
+        "total_duration_ms": 1155204,
+        "total_api_duration_ms": 429222,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:42:03.563638",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 1.86159235,
+        "total_duration_ms": 1311486,
+        "total_api_duration_ms": 430493,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:42:10.427371",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 2.1786808,
+        "total_duration_ms": 1318375,
+        "total_api_duration_ms": 592756,
+        "total_lines_added": 35,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:42:21.744603",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 2.1786808,
+        "total_duration_ms": 1329702,
+        "total_api_duration_ms": 592756,
+        "total_lines_added": 54,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:42:31.638496",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 2.22446605,
+        "total_duration_ms": 1339559,
+        "total_api_duration_ms": 602342,
+        "total_lines_added": 54,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  },
+  {
+    "timestamp": "2025-08-25T12:44:25.860139",
+    "input_data": {
+      "session_id": "292ca679-dd8b-4b3d-9166-38cd9108f1ff",
+      "transcript_path": "/Users/danielscholl/.claude/projects/-Users-danielscholl-source-github-danielscholl-osdu-osdu-mcp-server/292ca679-dd8b-4b3d-9166-38cd9108f1ff.jsonl",
+      "cwd": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+      "model": {
+        "id": "claude-sonnet-4-20250514",
+        "display_name": "Sonnet 4"
+      },
+      "workspace": {
+        "current_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server",
+        "project_dir": "/Users/danielscholl/source/github/danielscholl-osdu/osdu-mcp-server"
+      },
+      "version": "1.0.90",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 2.22446605,
+        "total_duration_ms": 1453803,
+        "total_api_duration_ms": 602342,
+        "total_lines_added": 54,
+        "total_lines_removed": 21
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36m[Sonnet 4]\u001b[0m | \u001b[34m\ud83d\udcc1 osdu-mcp-server\u001b[0m | \u001b[32m\ud83c\udf3f main \u00b15\u001b[0m | \u001b[90mv1.0.90\u001b[0m"
+  }
+]
