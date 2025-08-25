@@ -1,6 +1,7 @@
 .mcp.json
 .envrc
 .claude/settings.local.json
+.claude-trace
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

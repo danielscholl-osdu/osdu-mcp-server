@@ -48,11 +48,51 @@ uv pip install -e '.[dev]'
 
 ## Configuration
 
-To utilize this MCP server directly in other projects either use the buttons to install in VSCode, edit the `.mcp.json` file directory.
+### Claude Code CLI
 
-> Clients tend to have slightly different configurations
+To add this MCP server using the Claude Code CLI:
+
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "AZURE_CLIENT_ID=your-client-id" \
+  -e "AZURE_TENANT_ID=your-tenant-id"
+```
+
+### Direct Installation
+
+To use this MCP server in your projects, add the following to your `.mcp.json` file:
+
+```json
+{
+  "mcpServers": {
+    "osdu-mcp-server": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main",
+        "osdu-mcp-server"
+      ],
+      "env": {
+        "OSDU_MCP_SERVER_URL": "https://your-osdu.com",
+        "OSDU_MCP_SERVER_DATA_PARTITION": "your-partition",
+        "AZURE_CLIENT_ID": "your-client-id",
+        "AZURE_TENANT_ID": "your-tenant-id"
+      }
+    }
+  }
+}
+```
+
+### VS Code Quick Install
 
 [![Install with UV in VS Code](https://img.shields.io/badge/VS_Code-UV-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect?url=vscode:mcp/install?%7B%22name%22%3A%22osdu-mcp-server%22%2C%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22--from%22%2C%22git%2Bhttps%3A%2F%2Fgithub.com%2Fdanielscholl-osdu%2Fosdu-mcp-server%40main%22%2C%22osdu-mcp-server%22%5D%2C%22env%22%3A%7B%22OSDU_MCP_SERVER_URL%22%3A%22%24%7Binput%3Aosdu_url%7D%22%2C%22OSDU_MCP_SERVER_DATA_PARTITION%22%3A%22%24%7Binput%3Adata_partition%7D%22%2C%22AZURE_CLIENT_ID%22%3A%22%24%7Binput%3Aazure_client_id%7D%22%2C%22AZURE_TENANT_ID%22%3A%22%24%7Binput%3Aazure_tenant_id%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22osdu_url%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22OSDU%20Server%20URL%20(e.g.%2C%20https%3A%2F%2Fyour-osdu.com)%22%7D%2C%7B%22id%22%3A%22data_partition%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22OSDU%20Data%20Partition%20(e.g.%2C%20your-partition)%22%7D%2C%7B%22id%22%3A%22azure_client_id%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Client%20ID%22%7D%2C%7B%22id%22%3A%22azure_tenant_id%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Tenant%20ID%22%7D%2C%7B%22id%22%3A%22azure_client_secret%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20Client%20Secret%20(optional%20for%20Service%20Principal%20auth)%22%2C%22password%22%3Atrue%7D%5D%7D)
+
+### Local Development
+
+For local development, you can also use the local installation method:
 
 To use the OSDU MCP Server, configure it through your MCP client's configuration file:
 
@@ -100,9 +140,68 @@ If not set, the server will attempt to extract the domain from your server URL. 
 
 ### Authentication Methods
 
-Authentication is handled via the Azure CLI by default. You must be logged in using `az login` before running the server:
+The server supports two authentication methods:
 
-To enable Service Principal authentication, add the optional `AZURE_CLIENT_SECRET` environment variable:.
+#### Method 1: Azure CLI Authentication (Recommended for Development)
+- **Setup**: Run `az login` before using the server
+- **Environment Variables**: 
+  - `AZURE_CLIENT_ID`: Your OSDU application ID
+  - `AZURE_TENANT_ID`: Your Azure tenant ID
+  - No `AZURE_CLIENT_SECRET` needed
+
+**Claude Code CLI Example:**
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "AZURE_CLIENT_ID=your-osdu-app-id" \
+  -e "AZURE_TENANT_ID=your-tenant-id"
+```
+
+#### Method 2: Service Principal Authentication (Recommended for Production)
+- **Setup**: Create or use an existing service principal
+- **Environment Variables**:
+  - `AZURE_CLIENT_ID`: Service principal ID
+  - `AZURE_CLIENT_SECRET`: Service principal secret  
+  - `AZURE_TENANT_ID`: Your Azure tenant ID
+
+**Claude Code CLI Example:**
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "AZURE_CLIENT_ID=your-service-principal-id" \
+  -e "AZURE_CLIENT_SECRET=your-service-principal-secret" \
+  -e "AZURE_TENANT_ID=your-tenant-id"
+```
+
+#### Authorization Setup
+
+**When you need additional setup:**
+- ✅ **Azure CLI auth**: Always requires authorization setup
+- ✅ **External service principal**: Requires authorization setup  
+- ❌ **OSDU app's own service principal**: No additional setup needed
+
+**For Azure CLI or External Service Principal:**
+
+1. **Navigate to your OSDU application** in **App registrations**
+2. **Go to Expose an API** → **Authorized client applications**
+3. **Click Add a client application**
+4. **Enter the client ID**:
+   - Azure CLI: `04b07795-8ddb-461a-bbee-02f9e1bf7b46`
+   - External Service Principal: Your service principal's ID
+5. **Select the `user_impersonation` scope**
+6. **Click Add**
+
+**Verify authentication:**
+```bash
+az account get-access-token --resource YOUR_AZURE_CLIENT_ID
+```
+
+**Common Issues:**
+- **"Application not found"**: Azure CLI app doesn't exist in some tenants. Use service principal instead.
+- **"Invalid resource"**: The client hasn't been authorized. Follow authorization setup above.
+- **"Authentication failed"**: Verify your client ID matches your OSDU application or service principal.
 
 
 ### Write Operations
@@ -139,7 +238,7 @@ Here's a complete `.mcp.json` configuration example with all common environment 
       "command": "uv",
       "args": ["run", "osdu-mcp-server"],
       "env": {
-        "OSDU_MCP_SERVER_URL": "https://team.internal.msft-osdu-test.org",
+        "OSDU_MCP_SERVER_URL": "https://your-osdu.com",
         "OSDU_MCP_SERVER_DATA_PARTITION": "opendes",
         "OSDU_MCP_SERVER_DOMAIN": "contoso.com",
         "OSDU_MCP_ENABLE_WRITE_MODE": "true",
