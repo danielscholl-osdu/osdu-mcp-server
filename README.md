@@ -140,17 +140,33 @@ If not set, the server will attempt to extract the domain from your server URL. 
 
 ### Authentication Methods
 
-The server supports two authentication methods:
+The server supports **multi-cloud authentication** with automatic provider detection:
 
-#### Method 1: Azure CLI Authentication (Recommended for Development)
+#### Authentication Priority
+
+The server automatically detects your authentication provider in this priority order:
+
+1. **Manual Token** (highest priority) - `OSDU_MCP_USER_TOKEN`
+2. **Azure** - `AZURE_CLIENT_ID` or `AZURE_TENANT_ID`
+3. **AWS** (explicit) - `AWS_ACCESS_KEY_ID` or `AWS_PROFILE`
+4. **GCP** (explicit) - `GOOGLE_APPLICATION_CREDENTIALS`
+5. **AWS** (auto-discovery) - IAM roles, SSO
+6. **GCP** (auto-discovery) - gcloud, metadata service
+
+---
+
+#### Azure Authentication
+
+**Method 1: Azure CLI (Development)**
 - **Setup**: Run `az login` before using the server
-- **Environment Variables**: 
+- **Environment Variables**:
   - `AZURE_CLIENT_ID`: Your OSDU application ID
   - `AZURE_TENANT_ID`: Your Azure tenant ID
   - No `AZURE_CLIENT_SECRET` needed
 
-**Claude Code CLI Example:**
+**Example:**
 ```bash
+az login
 claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
   -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
   -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
@@ -158,15 +174,15 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
   -e "AZURE_TENANT_ID=your-tenant-id"
 ```
 
-#### Method 2: Service Principal Authentication (Recommended for Production)
+**Method 2: Service Principal (Production)**
 - **Setup**: Create or use an existing service principal
 - **Environment Variables**:
   - `AZURE_CLIENT_ID`: Service principal ID
-  - `AZURE_CLIENT_SECRET`: Service principal secret  
+  - `AZURE_CLIENT_SECRET`: Service principal secret
   - `AZURE_TENANT_ID`: Your Azure tenant ID
   - `OSDU_MCP_AUTH_SCOPE`: (Optional) Custom OAuth scope for v1.0 token environments
 
-**Claude Code CLI Example:**
+**Example:**
 ```bash
 claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
   -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
@@ -176,42 +192,112 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
   -e "AZURE_TENANT_ID=your-tenant-id"
 ```
 
-#### Method 3: v1.0 Token Authentication (Legacy OSDU Environments)
+---
 
-For OSDU environments configured with v1.0 tokens (`"requestedAccessTokenVersion": 1` in app manifest):
+#### AWS Authentication
 
-- **Setup**: Service principal with access to OSDU resource application
+**Method 1: AWS SSO (Development)**
+- **Setup**: Configure AWS SSO and log in
 - **Environment Variables**:
-  - `AZURE_CLIENT_ID`: Service principal ID (authentication app)
-  - `AZURE_CLIENT_SECRET`: Service principal secret
-  - `AZURE_TENANT_ID`: Your Azure tenant ID
-  - `OSDU_MCP_AUTH_SCOPE`: Target OSDU application ID with `/.default` suffix
+  - `AWS_PROFILE`: Your AWS profile name
+  - (Other OSDU config as usual)
 
-**Example Configuration:**
-```json
-{
-  "mcpServers": {
-    "osdu-mcp-server": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": ["git+https://github.com/danielscholl-osdu/osdu-mcp-server@main"],
-      "env": {
-        "OSDU_MCP_SERVER_URL": "https://your-osdu.com",
-        "OSDU_MCP_SERVER_DATA_PARTITION": "your-partition",
-        "AZURE_CLIENT_ID": "service-principal-id",
-        "AZURE_CLIENT_SECRET": "service-principal-secret",
-        "AZURE_TENANT_ID": "your-tenant-id",
-        "OSDU_MCP_AUTH_SCOPE": "osdu-resource-app-id/.default"
-      }
-    }
-  }
-}
+**Example:**
+```bash
+aws sso login --profile dev-profile
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "AWS_PROFILE=dev-profile"
 ```
 
-**Use Cases:**
-- Legacy OSDU deployments with v1.0 token requirements
-- Environments where you authenticate with one app but request tokens for another
-- OSDU platforms with dedicated resource applications and specific JWT audience requirements
+**Method 2: Access Keys (Production)**
+- **Setup**: Obtain AWS access keys
+- **Environment Variables**:
+  - `AWS_ACCESS_KEY_ID`: Your AWS access key
+  - `AWS_SECRET_ACCESS_KEY`: Your AWS secret key
+  - `AWS_REGION`: AWS region (e.g., us-east-1)
+
+**Example:**
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE" \
+  -e "AWS_SECRET_ACCESS_KEY=your-secret-key" \
+  -e "AWS_REGION=us-east-1"
+```
+
+**Method 3: IAM Roles (EC2/ECS/Lambda)**
+- **Setup**: Assign IAM role to your compute instance
+- **Environment Variables**: None needed! Automatic credential discovery
+- **Note**: Works on EC2, ECS/Fargate, Lambda with appropriate IAM roles
+
+---
+
+#### GCP Authentication
+
+**Method 1: gcloud CLI (Development)**
+- **Setup**: Run `gcloud auth application-default login`
+- **Environment Variables**: None needed! Automatic credential discovery
+
+**Example:**
+```bash
+gcloud auth application-default login
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition"
+```
+
+**Method 2: Service Account Key (Production)**
+- **Setup**: Download service account JSON key
+- **Environment Variables**:
+  - `GOOGLE_APPLICATION_CREDENTIALS`: Path to service account JSON key
+
+**Example:**
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json"
+```
+
+**Method 3: Workload Identity (GKE)**
+- **Setup**: Configure Workload Identity on GKE
+- **Environment Variables**: None needed! Automatic credential discovery
+- **Note**: Works on GKE with Workload Identity configured
+
+---
+
+#### Manual OAuth Token (Any Provider)
+
+**Use Case**: Custom OAuth providers, testing, or unsupported clouds
+
+- **Setup**: Obtain OAuth Bearer token from your provider
+- **Environment Variables**:
+  - `OSDU_MCP_USER_TOKEN`: Your OAuth Bearer token (JWT format)
+  - **Priority**: This method ALWAYS takes precedence over all others
+
+**Example:**
+```bash
+# Obtain token from your OAuth provider
+TOKEN=$(your-oauth-command)
+
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "OSDU_MCP_USER_TOKEN=$TOKEN"
+```
+
+**Token Requirements:**
+- Valid JWT format (header.payload.signature)
+- Not expired
+- Server warns if token expires within 5 minutes
+
+**Security Notes:**
+- Tokens are validated for format and expiration
+- Tokens are never logged
+- Tokens must be refreshed manually when they expire
 
 #### Authorization Setup
 

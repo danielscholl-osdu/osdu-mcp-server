@@ -353,7 +353,7 @@ async def test_auth_handler_validate_token():
             assert await auth.validate_token() is True
 
             # Clear the cached token to ensure we try to get a new one
-            auth._cached_token = None
+            auth._azure_cached_token = None
 
             # Test failed validation
             mock_cred_instance.get_token.side_effect = Exception("Auth failed")
@@ -374,44 +374,26 @@ def test_auth_handler_close():
         # Mock environment variable for client ID
         with patch.dict(os.environ, {"AZURE_CLIENT_ID": "test-client-id"}):
             auth = AuthHandler(mock_config)
-        auth._cached_token = AccessToken("token", 123456)
+        auth._azure_cached_token = AccessToken("token", 123456)
 
         auth.close()
 
         # Verify cached token is cleared
-        assert auth._cached_token is None
+        assert auth._azure_cached_token is None
 
         # Verify credential close is called if available
         if hasattr(mock_cred_instance, "close"):
             mock_cred_instance.close.assert_called_once()
 
 
-def test_auth_handler_mode_detection_explicit():
-    """Test explicit authentication mode detection."""
+def test_auth_handler_mode_detection_azure():
+    """Test Azure authentication mode detection."""
     mock_config = MagicMock(spec=ConfigManager)
 
-    # Test explicit Azure mode
-    with patch.dict(
-        os.environ,
-        {"OSDU_MCP_AUTH_MODE": "azure", "AZURE_CLIENT_ID": "test"},
-        clear=True,
-    ):
+    # Test Azure mode with CLIENT_ID
+    with patch.dict(os.environ, {"AZURE_CLIENT_ID": "test"}, clear=True):
         auth = AuthHandler(mock_config)
         assert auth.mode == AuthenticationMode.AZURE
-
-    # Test explicit AWS mode
-    with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "aws"}, clear=True):
-        with pytest.raises(
-            NotImplementedError, match="AWS authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
-
-    # Test explicit GCP mode
-    with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "gcp"}, clear=True):
-        with pytest.raises(
-            NotImplementedError, match="GCP authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
 
 
 def test_auth_handler_mode_detection_auto():
@@ -428,36 +410,6 @@ def test_auth_handler_mode_detection_auto():
         auth = AuthHandler(mock_config)
         assert auth.mode == AuthenticationMode.AZURE
 
-    # Test AWS auto-detection with ACCESS_KEY_ID
-    with patch.dict(os.environ, {"AWS_ACCESS_KEY_ID": "test-key"}, clear=True):
-        with pytest.raises(
-            NotImplementedError, match="AWS authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
-
-    # Test AWS auto-detection with REGION only
-    with patch.dict(os.environ, {"AWS_REGION": "us-east-1"}, clear=True):
-        with pytest.raises(
-            NotImplementedError, match="AWS authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
-
-    # Test GCP auto-detection with APPLICATION_CREDENTIALS
-    with patch.dict(
-        os.environ, {"GOOGLE_APPLICATION_CREDENTIALS": "/path/to/creds"}, clear=True
-    ):
-        with pytest.raises(
-            NotImplementedError, match="GCP authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
-
-    # Test GCP auto-detection with PROJECT only
-    with patch.dict(os.environ, {"GOOGLE_CLOUD_PROJECT": "my-project"}, clear=True):
-        with pytest.raises(
-            NotImplementedError, match="GCP authentication not yet implemented"
-        ):
-            AuthHandler(mock_config)
-
 
 def test_auth_handler_mode_detection_error():
     """Test error when no valid authentication mode can be detected."""
@@ -465,35 +417,13 @@ def test_auth_handler_mode_detection_error():
 
     # No credentials available
     with patch.dict(os.environ, {}, clear=True):
-        with pytest.raises(OSMCPAuthError, match="Cannot detect authentication mode"):
-            AuthHandler(mock_config)
+        with patch("boto3.Session") as mock_boto:
+            mock_boto.side_effect = Exception("No AWS")
 
+            with patch("google.auth.default") as mock_gcp:
+                mock_gcp.side_effect = Exception("No GCP")
 
-@pytest.mark.asyncio
-async def test_auth_handler_aws_token_not_implemented():
-    """Test that AWS token retrieval raises NotImplementedError."""
-
-    with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "aws"}, clear=True):
-        # Skip initialization which would fail
-        auth = AuthHandler.__new__(AuthHandler)
-        auth.mode = AuthenticationMode.AWS
-
-        with pytest.raises(
-            NotImplementedError, match="AWS token retrieval not yet implemented"
-        ):
-            await auth._get_aws_token()
-
-
-@pytest.mark.asyncio
-async def test_auth_handler_gcp_token_not_implemented():
-    """Test that GCP token retrieval raises NotImplementedError."""
-
-    with patch.dict(os.environ, {"OSDU_MCP_AUTH_MODE": "gcp"}, clear=True):
-        # Skip initialization which would fail
-        auth = AuthHandler.__new__(AuthHandler)
-        auth.mode = AuthenticationMode.GCP
-
-        with pytest.raises(
-            NotImplementedError, match="GCP token retrieval not yet implemented"
-        ):
-            await auth._get_gcp_token()
+                with pytest.raises(
+                    OSMCPAuthError, match="No authentication credentials configured"
+                ):
+                    AuthHandler(mock_config)
