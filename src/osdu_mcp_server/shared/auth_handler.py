@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any
 
+import jwt
 from azure.core.credentials import AccessToken
 from azure.core.exceptions import ClientAuthenticationError
 from azure.identity import DefaultAzureCredential
@@ -352,8 +353,6 @@ class AuthHandler:
             OSMCPAuthError: If token invalid or expired
         """
         try:
-            import jwt
-
             # Decode without verification (already validated by provider)
             payload = jwt.decode(
                 token,
@@ -488,10 +487,10 @@ class AuthHandler:
             # Option 2: Get STS session token (for IAM-based auth)
             sts = self._aws_session.client("sts")
 
-            # Run synchronous boto3 call in executor
+            # Run synchronous boto3 call in executor to avoid blocking event loop
             loop = asyncio.get_event_loop()
             response = await loop.run_in_executor(
-                None, lambda: sts.get_session_token(DurationSeconds=3600)
+                None, self._get_aws_session_token, sts
             )
 
             # Return session token (OSDU would need to accept this)
@@ -506,6 +505,17 @@ class AuthHandler:
 
         except Exception as e:
             raise OSMCPAuthError(f"AWS token retrieval failed: {e}")
+
+    def _get_aws_session_token(self, sts_client) -> dict:
+        """Get AWS STS session token (synchronous helper for executor).
+
+        Args:
+            sts_client: Boto3 STS client instance
+
+        Returns:
+            STS GetSessionToken response
+        """
+        return sts_client.get_session_token(DurationSeconds=3600)
 
     async def _get_gcp_token(self) -> str:
         """Get GCP access token with automatic refresh.

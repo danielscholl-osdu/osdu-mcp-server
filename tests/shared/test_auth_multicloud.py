@@ -13,6 +13,7 @@ import time
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, AsyncMock, patch
 
+import jwt
 import pytest
 from azure.core.credentials import AccessToken
 
@@ -30,7 +31,6 @@ def create_test_jwt(exp: float | None = None) -> str:
     Returns:
         Valid JWT token string
     """
-    import jwt
 
     if exp is None:
         exp = time.time() + 3600
