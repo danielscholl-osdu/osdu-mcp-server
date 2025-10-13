@@ -33,18 +33,16 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.3.4",
-    "pytest-asyncio>=0.24.0",
-    "pytest-cov>=6.0.0",
-    "pytest-mock>=3.14.0",
-    "black>=24.10.0",
-    "ruff>=0.9.7",
-    "mypy>=1.14.2",
-    "freezegun>=1.5.1",
-    "pytest-cov>=6.1.1",
-    "flake8>=7.2.0",
-    "mypy>=1.15.0",
-    "aioresponses>=0.7.8"
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+    "black>=25.9.0",
+    "ruff>=0.14.0",
+    "mypy>=1.18.2",
+    "freezegun>=1.5.5",
+    "flake8>=7.3.0",
+    "aioresponses>=0.7.8",
 ]
 
 [project.scripts]
