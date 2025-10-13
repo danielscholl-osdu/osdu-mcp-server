@@ -11,11 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_batch_retrieve(names: list[str]) -> dict:
+async def legaltag_batch_retrieve(names: list[str], user_token: str | None = None) -> dict:
     """Retrieve multiple legal tags by name.
 
     Args:
         names: List of legal tag names (max 25)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing legal tags with the following structure:
@@ -33,7 +34,7 @@ async def legaltag_batch_retrieve(names: list[str]) -> dict:
         raise OSMCPError("Maximum 25 legal tags can be retrieved at once")
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:

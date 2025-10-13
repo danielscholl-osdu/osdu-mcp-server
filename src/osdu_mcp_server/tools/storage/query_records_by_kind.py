@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_query_records_by_kind(
-    kind: str, limit: int = 10, cursor: str | None = None
+    kind: str, limit: int = 10, cursor: str | None = None, user_token: str | None = None
 ) -> dict:
     """Get record IDs of a specific kind.
 
@@ -19,6 +19,7 @@ async def storage_query_records_by_kind(
         kind: Required string - Kind to query for
         limit: Optional integer - Maximum number of results (default: 10)
         cursor: Optional string - Cursor for pagination
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing query results with the structure:
@@ -35,7 +36,7 @@ async def storage_query_records_by_kind(
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

@@ -9,12 +9,13 @@ from ...shared.exceptions import handle_osdu_exceptions
 
 
 @handle_osdu_exceptions
-async def search_by_id(id: str, limit: int = 10) -> Dict[str, Any]:
+async def search_by_id(id: str, limit: int = 10, user_token: str | None = None) -> Dict[str, Any]:
     """Find specific records by ID.
 
     Args:
         id: Record ID to search for
         limit: Maximum results (default: 10)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing search results with the following structure:
@@ -42,7 +43,7 @@ async def search_by_id(id: str, limit: int = 10) -> Dict[str, Any]:
         raise ValueError("ID parameter is required")
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SearchClient(config, auth)
 
     try:

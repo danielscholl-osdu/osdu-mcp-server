@@ -10,12 +10,13 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_purge_record(id: str, confirm: bool) -> dict:
+async def storage_purge_record(id: str, confirm: bool, user_token: str | None = None) -> dict:
     """Physically delete a record permanently (cannot be restored).
 
     Args:
         id: Required string - Record ID to purge
         confirm: Required boolean - Explicit confirmation (must be true)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing purge confirmation with the structure:
@@ -31,7 +32,7 @@ async def storage_purge_record(id: str, confirm: bool) -> dict:
     Note: Requires OSDU_MCP_ENABLE_DELETE_MODE=true
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

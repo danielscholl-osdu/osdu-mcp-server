@@ -19,6 +19,7 @@ async def legaltag_update(
     contract_id: str | None = None,
     expiration_date: str | None = None,
     extension_properties: dict[str, Any] | None = None,
+    user_token: str | None = None,
 ) -> dict:
     """Update an existing legal tag.
 
@@ -28,6 +29,7 @@ async def legaltag_update(
         contract_id: New contract ID
         expiration_date: New expiration date (YYYY-MM-DD format)
         extension_properties: New custom properties
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing updated legal tag
@@ -42,7 +44,7 @@ async def legaltag_update(
         )
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:

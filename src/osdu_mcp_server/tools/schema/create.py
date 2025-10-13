@@ -23,6 +23,7 @@ async def schema_create(
     schema: dict[str, Any],
     status: str = "DEVELOPMENT",
     description: str | None = None,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """Create a new schema.
 
@@ -40,6 +41,7 @@ async def schema_create(
         schema: JSON Schema definition
         status: Schema status (default: DEVELOPMENT)
         description: Schema description
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing operation result with the following structure:
@@ -92,7 +94,7 @@ async def schema_create(
         )
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SchemaClient(config, auth)
 
     try:

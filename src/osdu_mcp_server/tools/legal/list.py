@@ -11,11 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_list(valid_only: bool | None = True) -> dict:
+async def legaltag_list(valid_only: bool | None = True, user_token: str | None = None) -> dict:
     """List all legal tags in the current partition.
 
     Args:
         valid_only: If true returns only valid tags, if false returns only invalid tags
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing legal tags with the following structure:
@@ -33,7 +34,7 @@ async def legaltag_list(valid_only: bool | None = True) -> dict:
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:

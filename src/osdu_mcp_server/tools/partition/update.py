@@ -19,6 +19,7 @@ async def partition_update(
     partition_id: str,
     properties: dict[str, Any],
     dry_run: bool = False,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """Update properties of an existing OSDU partition.
 
@@ -31,6 +32,7 @@ async def partition_update(
         properties: Updated properties (key-value pairs). Each property will be
                    automatically formatted with value and sensitive fields.
         dry_run: Whether to simulate the operation without actually updating (default: False)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing operation result with the following structure:
@@ -124,7 +126,7 @@ async def partition_update(
     try:
         # Initialize dependencies
         config = ConfigManager()
-        auth_handler = AuthHandler(config)
+        auth_handler = AuthHandler(config, user_token=user_token)
         client = PartitionClient(config, auth_handler)
 
         # Update the partition

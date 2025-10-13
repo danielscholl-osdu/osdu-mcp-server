@@ -17,6 +17,7 @@ async def legaltag_search(
     sort_by: str | None = None,
     sort_order: str | None = None,
     limit: int | None = None,
+    user_token: str | None = None,
 ) -> dict:
     """Search legal tags with filter conditions.
 
@@ -26,18 +27,19 @@ async def legaltag_search(
         sort_by: Field to sort by
         sort_order: "ASC" or "DESC"
         limit: Maximum results
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing filtered legal tags with the following structure:
         {
-            "success": true,
+            "success": True,
             "legalTags": [...],
             "count": 10,
             "partition": "opendes"
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:

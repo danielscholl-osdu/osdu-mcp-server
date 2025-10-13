@@ -22,22 +22,26 @@ class AuthenticationMode(Enum):
     AZURE = "azure"
     AWS = "aws"
     GCP = "gcp"
+    USER_TOKEN = "user_token"
 
 
 class AuthHandler:
     """Authentication handler with support for multiple cloud providers."""
 
-    def __init__(self, config: ConfigManager):
+    def __init__(self, config: ConfigManager, user_token: str | None = None):
         """Initialize authentication handler.
 
         Args:
             config: Configuration manager instance
+            user_token: An optional user token to use for all authentication.
         """
         self.config = config
         self._credential: DefaultAzureCredential | None = None
         self._cached_token: AccessToken | None = None
+        self._user_token = user_token
         self.mode = self._detect_authentication_mode()
-        self._initialize_credential()
+        if self.mode != AuthenticationMode.USER_TOKEN and not self._user_token:
+            self._initialize_credential()
 
     def _detect_authentication_mode(self) -> AuthenticationMode:
         """Auto-detect authentication mode based on environment variables.
@@ -77,11 +81,8 @@ class AuthHandler:
         if detected_mode:
             return detected_mode
 
-        raise OSMCPAuthError(
-            "Cannot detect authentication mode from environment variables. "
-            "Set Azure (AZURE_CLIENT_ID), AWS (AWS_ACCESS_KEY_ID), or "
-            "GCP (GOOGLE_APPLICATION_CREDENTIALS) credentials."
-        )
+        # Default to USER_TOKEN mode if no other mode is detected
+        return AuthenticationMode.USER_TOKEN
 
     def _initialize_credential(self) -> None:
         """Initialize credential based on authentication mode."""
@@ -140,12 +141,20 @@ class AuthHandler:
         Raises:
             OSMCPAuthError: If authentication fails
         """
+        if self._user_token:
+            return self._user_token
+
         if self.mode == AuthenticationMode.AZURE:
             return await self._get_azure_token()
         elif self.mode == AuthenticationMode.AWS:
             return await self._get_aws_token()
         elif self.mode == AuthenticationMode.GCP:
             return await self._get_gcp_token()
+        elif self.mode == AuthenticationMode.USER_TOKEN:
+            raise OSMCPAuthError(
+                "Authentication mode is 'user_token', but no token was provided."
+            )
+        raise OSMCPAuthError("Invalid authentication mode.")
 
     async def _get_azure_token(self) -> str:
         """Get Azure access token.
@@ -158,7 +167,7 @@ class AuthHandler:
         """
         try:
             # Check if we have a cached token that's still valid
-            if self._is_token_valid():
+            if self._is_token_valid() and self._cached_token:
                 return self._cached_token.token
 
             # Get client ID from standard Azure environment variable
@@ -176,8 +185,13 @@ class AuthHandler:
                 scope = f"{client_id}/.default"
 
             # Get new token
-            self._cached_token = self._credential.get_token(scope)
-            return self._cached_token.token
+            if self._credential:
+                self._cached_token = self._credential.get_token(scope)
+                return self._cached_token.token
+            else:
+                raise OSMCPAuthError(
+                    "Azure credential not initialized. Please check your configuration."
+                )
 
         except ClientAuthenticationError as e:
             # Handle specific authentication errors with user-friendly messages
@@ -293,5 +307,5 @@ class AuthHandler:
         self._cached_token = None
 
         # Close credential if it has a close method
-        if hasattr(self._credential, "close"):
+        if self._credential and hasattr(self._credential, "close"):
             self._credential.close()

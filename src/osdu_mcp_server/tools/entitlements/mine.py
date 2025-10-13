@@ -11,8 +11,11 @@ logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def entitlements_mine() -> dict:
+async def entitlements_mine(user_token: str | None = None) -> dict:
     """Get groups for the current authenticated user.
+
+    Args:
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing group information with the following structure:
@@ -30,7 +33,7 @@ async def entitlements_mine() -> dict:
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = EntitlementsClient(config, auth)
 
     try:

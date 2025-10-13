@@ -25,6 +25,7 @@ async def legaltag_create(
     data_type: str,
     expiration_date: str | None = None,
     extension_properties: dict[str, Any] | None = None,
+    user_token: str | None = None,
 ) -> dict:
     """Create a new legal tag.
 
@@ -40,6 +41,7 @@ async def legaltag_create(
         data_type: Type of data
         expiration_date: Optional expiration date (YYYY-MM-DD format)
         extension_properties: Optional custom properties
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing created legal tag
@@ -54,7 +56,7 @@ async def legaltag_create(
         )
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:

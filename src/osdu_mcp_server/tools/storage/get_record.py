@@ -10,12 +10,13 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_get_record(id: str, attributes: list[str] | None = None) -> dict:
+async def storage_get_record(id: str, attributes: list[str] | None = None, user_token: str | None = None) -> dict:
     """Get the latest version of a record by ID.
 
     Args:
         id: Required string - Record ID
         attributes: Optional array of strings - Specific data fields to return
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing record information with the structure:
@@ -36,7 +37,7 @@ async def storage_get_record(id: str, attributes: list[str] | None = None) -> di
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

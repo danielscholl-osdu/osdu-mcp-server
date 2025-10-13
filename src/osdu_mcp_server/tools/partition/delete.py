@@ -19,18 +19,20 @@ async def partition_delete(
     partition_id: str,
     confirm: bool = False,
     dry_run: bool = False,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """Delete an OSDU partition.
 
     WARNING: This operation permanently deletes a partition and ALL of its data.
     This is an extremely destructive operation that cannot be undone.
     It requires write permissions to be enabled via OSDU_MCP_ENABLE_WRITE_MODE=true.
-    Use with extreme caution and only after careful consideration.
+    Use with extreme caution and only in controlled environments.
 
     Args:
         partition_id: ID of the partition to delete
         confirm: Explicit confirmation required to proceed (default: False)
         dry_run: Whether to simulate the operation without actually deleting (default: False)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing operation result with the following structure:
@@ -153,7 +155,7 @@ async def partition_delete(
     try:
         # Initialize dependencies
         config = ConfigManager()
-        auth_handler = AuthHandler(config)
+        auth_handler = AuthHandler(config, user_token=user_token)
         client = PartitionClient(config, auth_handler)
 
         # Delete the partition
@@ -169,11 +171,7 @@ async def partition_delete(
                     "tool": "partition_delete",
                     "action": "partition_delete_success",
                     "partition_id": partition_id,
-                    "user": (
-                        await auth_handler.get_user_info()
-                        if hasattr(auth_handler, "get_user_info")
-                        else "unknown"
-                    ),
+                    "user": "unknown", # Removed get_user_info as it's not implemented in AuthHandler
                 }
             )
         )

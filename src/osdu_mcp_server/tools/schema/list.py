@@ -20,6 +20,7 @@ async def schema_list(
     latest_version: bool = False,
     limit: int = 10,
     offset: int = 0,
+    user_token: str | None = None,
 ) -> dict:
     """List schemas with optional filtering.
 
@@ -32,6 +33,7 @@ async def schema_list(
         latest_version (bool, optional): Only return latest versions. Default: False
         limit (int, optional): Maximum results to return. Range: 1-100. Default: 10
         offset (int, optional): Pagination offset. Default: 0
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dict: List results containing:
@@ -53,7 +55,7 @@ async def schema_list(
         schema_list(authority="osdu", limit=20, offset=40)
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SchemaClient(config, auth)
 
     try:

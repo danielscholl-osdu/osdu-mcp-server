@@ -30,6 +30,7 @@ async def schema_search(
     include_content: bool = False,
     sort_by: str = "dateCreated",
     sort_order: str = "DESC",
+    user_token: str | None = None,
 ) -> dict:
     """Advanced schema discovery with rich filtering and text search.
 
@@ -49,6 +50,7 @@ async def schema_search(
         include_content (bool, optional): Include full schema content. Default: False
         sort_by (str, optional): Field to sort by. Options: "dateCreated", "authority", "source", "entityType", "status", "scope", "id". Default: "dateCreated"
         sort_order (str, optional): Sort direction. Options: "ASC", "DESC". Default: "DESC"
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dict: Search results containing:
@@ -87,7 +89,7 @@ async def schema_search(
         )
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SchemaClient(config, auth)
 
     # Default search fields if not provided

@@ -12,13 +12,14 @@ logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def schema_get(id: str) -> dict[str, Any]:
+async def schema_get(id: str, user_token: str | None = None) -> dict[str, Any]:
     """Retrieve complete schema by ID.
 
     Args:
         id: Schema ID (format: authority:source:entityType:majorVersion.minorVersion.patchVersion)
             Example standard schema: "osdu:wks:AbstractAccessControlList:1.0.0"
             Example custom schema: "SchemaSanityTest:testSource:testEntity:1.1.0"
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing schema details with the following structure:
@@ -82,7 +83,7 @@ async def schema_get(id: str) -> dict[str, Any]:
         - Only DEVELOPMENT status schemas can be modified
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SchemaClient(config, auth)
 
     try:

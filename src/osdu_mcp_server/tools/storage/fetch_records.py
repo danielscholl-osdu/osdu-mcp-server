@@ -11,13 +11,14 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_fetch_records(
-    records: list[str], attributes: list[str] | None = None
+    records: list[str], attributes: list[str] | None = None, user_token: str | None = None
 ) -> dict:
     """Retrieve multiple records at once.
 
     Args:
         records: Required array of strings - Record IDs (max 100)
         attributes: Optional array of strings - Specific data fields to return
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing multiple records with the structure:
@@ -39,7 +40,7 @@ async def storage_fetch_records(
         }
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

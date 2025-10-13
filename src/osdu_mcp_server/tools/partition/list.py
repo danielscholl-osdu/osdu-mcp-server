@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 async def partition_list(
     include_count: bool = True,
     detailed: bool = False,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """List all accessible OSDU partitions.
 
@@ -27,6 +28,7 @@ async def partition_list(
     Args:
         include_count: Whether to include the total count of partitions (default: True)
         detailed: Whether to include additional metadata (default: False)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing partition information with the following structure:
@@ -61,7 +63,7 @@ async def partition_list(
     try:
         # Initialize dependencies
         config = ConfigManager()
-        auth_handler = AuthHandler(config)
+        auth_handler = AuthHandler(config, user_token=user_token)
         client = PartitionClient(config, auth_handler)
 
         # Get partitions

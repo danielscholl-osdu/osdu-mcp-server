@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 @handle_osdu_exceptions
 async def schema_update(
-    id: str, schema: dict[str, Any], status: str | None = None
+    id: str,
+    schema: dict[str, Any],
+    status: str | None = None,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """Update an existing schema in DEVELOPMENT status.
 
@@ -27,6 +30,7 @@ async def schema_update(
         id: Schema ID to update (format: authority:source:entityType:majorVersion.minorVersion.patchVersion)
         schema: New schema definition
         status: New schema status (can transition from DEVELOPMENT to PUBLISHED)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing operation result with the following structure:
@@ -65,7 +69,7 @@ async def schema_update(
         )
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SchemaClient(config, auth)
 
     try:

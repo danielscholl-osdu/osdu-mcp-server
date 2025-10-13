@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 @handle_osdu_exceptions
 async def storage_create_update_records(
-    records: list[dict], skip_dupes: bool = False
+    records: list[dict], skip_dupes: bool = False, user_token: str | None = None
 ) -> dict:
     """Create new records or update existing ones.
 
@@ -31,6 +31,7 @@ async def storage_create_update_records(
             - meta: Optional array - Additional metadata
             - tags: Optional object - User-defined tags
         skip_dupes: Optional boolean - Skip duplicates when updating (default: false)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing created/updated record information with the structure:
@@ -52,7 +53,7 @@ async def storage_create_update_records(
     Note: Requires OSDU_MCP_ENABLE_WRITE_MODE=true
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

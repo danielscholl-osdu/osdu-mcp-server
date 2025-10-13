@@ -19,6 +19,7 @@ async def partition_get(
     partition_id: str,
     include_sensitive: bool = False,
     redact_sensitive_values: bool = True,
+    user_token: str | None = None,
 ) -> dict[str, Any]:
     """Retrieve configuration for a specific OSDU partition.
 
@@ -30,6 +31,7 @@ async def partition_get(
         partition_id: ID of the partition to retrieve
         include_sensitive: Whether to include sensitive properties (default: False)
         redact_sensitive_values: Whether to redact values of sensitive properties (default: True)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing partition information with the following structure:
@@ -66,7 +68,7 @@ async def partition_get(
     try:
         # Initialize dependencies
         config = ConfigManager()
-        auth_handler = AuthHandler(config)
+        auth_handler = AuthHandler(config, user_token=user_token)
         client = PartitionClient(config, auth_handler)
 
         # Get partition properties
@@ -113,11 +115,7 @@ async def partition_get(
                         "action": "sensitive_data_access",
                         "partition_id": partition_id,
                         "properties_accessed": sensitive_accessed,
-                        "user": (
-                            await auth_handler.get_user_info()
-                            if hasattr(auth_handler, "get_user_info")
-                            else "unknown"
-                        ),
+                        "user": "unknown",  # Removed get_user_info as it's not implemented in AuthHandler
                         "result": "provided",
                     }
                 )

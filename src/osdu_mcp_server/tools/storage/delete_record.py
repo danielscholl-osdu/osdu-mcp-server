@@ -10,11 +10,12 @@ logger = get_logger(__name__)
 
 
 @handle_osdu_exceptions
-async def storage_delete_record(id: str) -> dict:
+async def storage_delete_record(id: str, user_token: str | None = None) -> dict:
     """Logically delete a record (can be restored).
 
     Args:
         id: Required string - Record ID to delete
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing deletion confirmation with the structure:
@@ -29,7 +30,7 @@ async def storage_delete_record(id: str) -> dict:
     Note: Requires OSDU_MCP_ENABLE_DELETE_MODE=true
     """
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = StorageClient(config, auth)
 
     try:

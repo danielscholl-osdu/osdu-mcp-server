@@ -10,7 +10,11 @@ from ...shared.exceptions import handle_osdu_exceptions
 
 @handle_osdu_exceptions
 async def search_query(
-    query: str, kind: str = "*:*:*:*", limit: int = 50, offset: int = 0
+    query: str,
+    kind: str = "*:*:*:*",
+    limit: int = 50,
+    offset: int = 0,
+    user_token: str | None = None,
 ) -> Dict[str, Any]:
     """Execute search queries using Elasticsearch syntax.
 
@@ -19,6 +23,7 @@ async def search_query(
         kind: Kind pattern to search (default: "*:*:*:*")
         limit: Maximum results (default: 50, max: 1000)
         offset: Pagination offset (default: 0)
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing search results with the following structure:
@@ -49,7 +54,7 @@ async def search_query(
         limit = 1000
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = SearchClient(config, auth)
 
     try:

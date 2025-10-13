@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @handle_osdu_exceptions
-async def legaltag_delete(name: str, confirm: bool) -> dict:
+async def legaltag_delete(name: str, confirm: bool, user_token: str | None = None) -> dict:
     """Delete a legal tag.
 
     CAUTION: Deleting a legal tag will make all associated data invalid.
@@ -19,6 +19,7 @@ async def legaltag_delete(name: str, confirm: bool) -> dict:
     Args:
         name: Legal tag name
         confirm: Explicit confirmation required
+        user_token: Optional user-provided token to use for this request.
 
     Returns:
         Dictionary containing deletion confirmation
@@ -34,7 +35,7 @@ async def legaltag_delete(name: str, confirm: bool) -> dict:
         )
 
     config = ConfigManager()
-    auth = AuthHandler(config)
+    auth = AuthHandler(config, user_token=user_token)
     client = LegalClient(config, auth)
 
     try:
