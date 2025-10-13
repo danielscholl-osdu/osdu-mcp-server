@@ -325,9 +325,7 @@ class AuthHandler:
         """
         token = os.environ.get("OSDU_MCP_USER_TOKEN")
         if not token:
-            raise OSMCPAuthError(
-                "USER_TOKEN mode but OSDU_MCP_USER_TOKEN not set"
-            )
+            raise OSMCPAuthError("USER_TOKEN mode but OSDU_MCP_USER_TOKEN not set")
 
         # Validate JWT format
         self._validate_jwt_token(token)
@@ -532,9 +530,7 @@ class AuthHandler:
                 loop = asyncio.get_event_loop()
                 request = Request()
 
-                await loop.run_in_executor(
-                    None, self._gcp_credentials.refresh, request
-                )
+                await loop.run_in_executor(None, self._gcp_credentials.refresh, request)
 
                 logger.info("GCP token refreshed successfully")
 

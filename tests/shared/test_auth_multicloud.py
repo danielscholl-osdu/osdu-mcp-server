@@ -152,7 +152,9 @@ async def test_gcp_credentials_not_found_error():
 
             mock_gcp.side_effect = DefaultCredentialsError()
 
-            with pytest.raises(OSMCPAuthError, match="GCP Application Default Credentials not found"):
+            with pytest.raises(
+                OSMCPAuthError, match="GCP Application Default Credentials not found"
+            ):
                 AuthHandler(mock_config)
 
 
@@ -161,7 +163,9 @@ async def test_aws_mode_detection_explicit():
     """Test AWS mode detection when AWS_ACCESS_KEY_ID is set."""
     mock_config = MagicMock(spec=ConfigManager)
 
-    with patch.dict(os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True):
+    with patch.dict(
+        os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True
+    ):
         with patch("boto3.Session") as mock_session:
             mock_session_instance = MagicMock()
             mock_creds = MagicMock()
@@ -185,7 +189,9 @@ async def test_aws_token_retrieval():
     """Test AWS token retrieval with STS."""
     mock_config = MagicMock(spec=ConfigManager)
 
-    with patch.dict(os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True):
+    with patch.dict(
+        os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True
+    ):
         with patch("boto3.Session") as mock_session:
             mock_session_instance = MagicMock()
             mock_creds = MagicMock()
@@ -221,7 +227,9 @@ async def test_aws_credentials_not_found_error():
     """Test AWS credentials not found error message."""
     mock_config = MagicMock(spec=ConfigManager)
 
-    with patch.dict(os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True):
+    with patch.dict(
+        os.environ, {"AWS_ACCESS_KEY_ID": "AKIAIOSFODNN7EXAMPLE"}, clear=True
+    ):
         with patch("boto3.Session") as mock_session:
             from botocore.exceptions import NoCredentialsError
 
