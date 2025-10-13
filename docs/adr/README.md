@@ -34,6 +34,7 @@ Optimized ADR Index for Agent Context
 | 026 | Content Generation Strategy          | acc    | [ADR-026](026-content-generation-strategy.md) |
 | 027 | MCP Resources Implementation Pattern | acc    | [ADR-027](027-mcp-resources-implementation-pattern.md) |
 | 028 | Data Domain Configuration Pattern    | acc    | [ADR-028](028-data-domain-configuration-pattern.md) |
+| 029 | Multi-Cloud Authentication          | acc    | [ADR-029](029-multi-cloud-authentication.md) |
 
 ---
 
@@ -591,4 +592,33 @@ impact: |
 tradeoffs:
 positive: [ACL accuracy, deployment flexibility, error reduction, clear mapping]
 negative: [configuration requirement, documentation burden, template complexity]
+```
+
+--------------------------------------------
+```yaml
+id: 029
+title: Multi-Cloud Authentication
+status: accepted
+date: 2025-01-13
+decision: Native multi-cloud authentication with AWS boto3, GCP ADC, and manual OAuth token support.
+why: |
+• Enable AWS and GCP users with first-class authentication
+• Provide fallback for custom OAuth providers
+• Maintain seamless developer experience across clouds
+• Zero breaking changes to existing tools
+implementation: |
+• USER_TOKEN mode for manual OAuth tokens (highest priority)
+• AWS mode with boto3 SDK credential chain
+• GCP mode with Application Default Credentials
+• Priority-based automatic detection
+• JWT validation for manual tokens
+• Native SDK integration for token refresh
+impact: |
+• AWS/GCP users get same experience as Azure users
+• Custom OAuth providers supported via manual tokens
+• Zero changes to any of 31 MCP tools
+• Comprehensive test coverage for all modes
+tradeoffs:
+positive: [multi-cloud support, auto-discovery, zero API changes, native SDKs]
+negative: [dependency growth, testing complexity, support burden]
 ```
