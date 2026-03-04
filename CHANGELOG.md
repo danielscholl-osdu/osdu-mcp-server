@@ -11,6 +11,20 @@ Each entry includes not just what changed, but WHY it changed and what patterns 
 Key architectural decisions are linked to their ADRs.
 -->
 
+## [0.9.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.8.0...v0.9.0) (2026-02-17)
+
+
+### Features
+
+* Add custom OAuth scope support for v1.0 token OSDU environments ([d9c4cc2](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/d9c4cc27b683205c28483203b850f40622db96fc))
+* add native multi-cloud authentication support (AWS, GCP, manual OAuth) ([ac43a79](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/ac43a7989e0d260ee72d7ada41d454f5a90ff0b0))
+* **auth:** add custom OAuth scope support for v1.0 token environments ([4d65ceb](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/4d65ceb2334d9a58d6857736f1aa1a7c153e3e0b)), closes [#108](https://github.com/danielscholl-osdu/osdu-mcp-server/issues/108)
+
+
+### Bug Fixes
+
+* readme ([9d03614](https://github.com/danielscholl-osdu/osdu-mcp-server/commit/9d036143b7395b9fd86009c6d1ef64c397d6d24f))
+
 ## [0.8.0](https://github.com/danielscholl-osdu/osdu-mcp-server/compare/v0.7.0...v0.8.0) (2025-06-20)
 
 
