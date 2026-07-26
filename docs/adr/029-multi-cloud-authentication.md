@@ -132,6 +132,24 @@ dependencies = [
 
 3. **Zero Tool Impact**: All 31 MCP tools continue to work without any changes
 
+### GCP Scope Selection
+
+GCP tokens are requested with three scopes by default:
+
+```python
+DEFAULT_GCP_SCOPES = [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "openid",
+    "https://www.googleapis.com/auth/userinfo.email",
+]
+```
+
+`cloud-platform` alone is not sufficient. It is the broadest *access* scope, but it is not an *identity* scope, and `google.auth` narrows the minted token to exactly the scopes requested — the resulting token carries no `email` claim. OSDU resolves entitlements by the caller's email address, so such a token maps to no entitlement group and every OSDU service returns `401 Access denied`. This applies to both credential flows, service account key file and keyless ADC via the metadata server.
+
+The identity scopes grant no additional access; they only make the email claim present. An unscoped metadata token happens to include `userinfo.email` by default, which is why the problem only surfaces when an explicit narrow scope list is passed.
+
+`OSDU_MCP_AUTH_SCOPE` overrides the defaults with a comma-separated list, mirroring the Azure override established in [ADR-011](011-oauth-scope-simplification.md). On Azure the value is a single scope string; on GCP it is a list, because `google.auth.default()` takes a sequence.
+
 ### Token Acquisition Flow
 
 ```

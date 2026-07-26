@@ -140,6 +140,110 @@ async def test_gcp_token_retrieval_with_refresh():
 
 
 @pytest.mark.asyncio
+async def test_gcp_requests_identity_scopes_by_default():
+    """Test GCP credentials request identity scopes so OSDU can resolve entitlements."""
+    mock_config = MagicMock(spec=ConfigManager)
+
+    with patch.dict(
+        os.environ, {"GOOGLE_APPLICATION_CREDENTIALS": "/path/to/key.json"}, clear=True
+    ):
+        with patch("google.auth.default") as mock_gcp:
+            mock_creds = MagicMock()
+            mock_creds.valid = True
+            mock_gcp.return_value = (mock_creds, "test-project")
+
+            AuthHandler(mock_config)
+
+            assert mock_gcp.call_args.kwargs["scopes"] == [
+                "https://www.googleapis.com/auth/cloud-platform",
+                "openid",
+                "https://www.googleapis.com/auth/userinfo.email",
+            ]
+
+
+@pytest.mark.asyncio
+async def test_gcp_custom_scope_replaces_defaults():
+    """Test OSDU_MCP_AUTH_SCOPE overrides the default GCP scopes."""
+    mock_config = MagicMock(spec=ConfigManager)
+
+    with patch.dict(
+        os.environ,
+        {
+            "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/key.json",
+            "OSDU_MCP_AUTH_SCOPE": "https://www.googleapis.com/auth/custom-scope",
+        },
+        clear=True,
+    ):
+        with patch("google.auth.default") as mock_gcp:
+            mock_creds = MagicMock()
+            mock_creds.valid = True
+            mock_gcp.return_value = (mock_creds, "test-project")
+
+            AuthHandler(mock_config)
+
+            assert mock_gcp.call_args.kwargs["scopes"] == [
+                "https://www.googleapis.com/auth/custom-scope"
+            ]
+
+
+@pytest.mark.asyncio
+async def test_gcp_custom_scope_parses_comma_separated_list():
+    """Test OSDU_MCP_AUTH_SCOPE accepts a comma-separated list with whitespace."""
+    mock_config = MagicMock(spec=ConfigManager)
+
+    with patch.dict(
+        os.environ,
+        {
+            "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/key.json",
+            "OSDU_MCP_AUTH_SCOPE": " openid , https://www.googleapis.com/auth/userinfo.email ",
+        },
+        clear=True,
+    ):
+        with patch("google.auth.default") as mock_gcp:
+            mock_creds = MagicMock()
+            mock_creds.valid = True
+            mock_gcp.return_value = (mock_creds, "test-project")
+
+            AuthHandler(mock_config)
+
+            assert mock_gcp.call_args.kwargs["scopes"] == [
+                "openid",
+                "https://www.googleapis.com/auth/userinfo.email",
+            ]
+
+
+@pytest.mark.asyncio
+async def test_azure_scope_unaffected_by_gcp_scope_handling():
+    """Test Azure still passes OSDU_MCP_AUTH_SCOPE through as a single scope string."""
+    mock_config = MagicMock(spec=ConfigManager)
+
+    with patch.dict(
+        os.environ,
+        {
+            "AZURE_CLIENT_ID": "azure-id",
+            "OSDU_MCP_AUTH_SCOPE": "api://azure-id/.default",
+        },
+        clear=True,
+    ):
+        with patch(
+            "osdu_mcp_server.shared.auth_handler.DefaultAzureCredential"
+        ) as mock_cred:
+            mock_cred_instance = MagicMock()
+            mock_cred_instance.get_token.return_value = AccessToken(
+                "azure-token", int(time.time()) + 3600
+            )
+            mock_cred.return_value = mock_cred_instance
+
+            auth = AuthHandler(mock_config)
+            token = await auth.get_access_token()
+
+            assert token == "azure-token"
+            mock_cred_instance.get_token.assert_called_once_with(
+                "api://azure-id/.default"
+            )
+
+
+@pytest.mark.asyncio
 async def test_gcp_credentials_not_found_error():
     """Test GCP credentials not found error message."""
     mock_config = MagicMock(spec=ConfigManager)
