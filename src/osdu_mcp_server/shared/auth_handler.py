@@ -27,6 +27,15 @@ from .logging_manager import get_logger
 
 logger = get_logger(__name__)
 
+# OSDU authorizes by the caller's email address, which is only present in the
+# token when identity scopes are requested. cloud-platform alone yields a token
+# without an email claim, which OSDU rejects with 401.
+DEFAULT_GCP_SCOPES = [
+    "https://www.googleapis.com/auth/cloud-platform",
+    "openid",
+    "https://www.googleapis.com/auth/userinfo.email",
+]
+
 
 class AuthenticationMode(Enum):
     """Supported authentication modes."""
@@ -259,6 +268,9 @@ class AuthHandler:
         2. gcloud application-default credentials
         3. Compute Engine/GKE metadata service
 
+        Scopes default to DEFAULT_GCP_SCOPES and can be overridden with a
+        comma-separated OSDU_MCP_AUTH_SCOPE, mirroring the Azure behavior.
+
         Raises:
             OSMCPAuthError: If no GCP credentials found
         """
@@ -266,10 +278,13 @@ class AuthHandler:
             import google.auth
             from google.auth.exceptions import DefaultCredentialsError
 
-            # Get default credentials with cloud-platform scope
-            # This is the broadest GCP scope, equivalent to Azure's /.default
+            custom_scope = os.environ.get("OSDU_MCP_AUTH_SCOPE", "")
+            scopes = [
+                s.strip() for s in custom_scope.split(",") if s.strip()
+            ] or DEFAULT_GCP_SCOPES
+
             self._gcp_credentials, self._gcp_project = google.auth.default(
-                scopes=["https://www.googleapis.com/auth/cloud-platform"]
+                scopes=scopes
             )
 
             logger.info(
