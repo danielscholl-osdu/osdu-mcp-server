@@ -27,6 +27,7 @@ server:
     with (
         patch("builtins.open", mock_open(read_data=yaml_content)),
         patch("pathlib.Path.exists", return_value=True),
+        patch.dict(os.environ, {}, clear=True),
     ):
         config = ConfigManager()
         assert config.get("server", "url") == "https://yaml-osdu.com"
@@ -41,7 +42,10 @@ def test_config_manager_default_fallback():
 
 def test_config_manager_required_missing():
     """Test that get_required raises error for missing values."""
-    with patch("pathlib.Path.exists", return_value=False):
+    with (
+        patch("pathlib.Path.exists", return_value=False),
+        patch.dict(os.environ, {}, clear=True),
+    ):
         config = ConfigManager()
         with pytest.raises(OSMCPConfigError) as exc_info:
             config.get_required("server", "url")
@@ -104,7 +108,7 @@ auth:
     with (
         patch("builtins.open", mock_open(read_data=yaml_content)),
         patch("pathlib.Path.exists", return_value=True),
-        patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": "30"}),
+        patch.dict(os.environ, {"OSDU_MCP_SERVER_TIMEOUT": "30"}, clear=True),
     ):
 
         config = ConfigManager()
@@ -125,6 +129,7 @@ server:
     with (
         patch("builtins.open", mock_open(read_data=yaml_content)),
         patch("pathlib.Path.exists", return_value=True),
+        patch.dict(os.environ, {}, clear=True),
     ):
 
         config = ConfigManager(config_file=custom_path)

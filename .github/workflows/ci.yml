@@ -37,7 +37,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        uv sync --frozen
+        uv sync --locked
         uv pip install -e .[dev]
         
     # Run all quality checks - continue on error to see all failures
@@ -136,5 +136,5 @@ jobs:
       if: matrix.python-version == '3.12'  # Only upload once
       continue-on-error: true  # Don't fail if service is down
       with:
-        file: ./coverage.xml
+        files: ./coverage.xml
         fail_ci_if_error: false
