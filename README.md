@@ -180,7 +180,7 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
   - `AZURE_CLIENT_ID`: Service principal ID
   - `AZURE_CLIENT_SECRET`: Service principal secret
   - `AZURE_TENANT_ID`: Your Azure tenant ID
-  - `OSDU_MCP_AUTH_SCOPE`: (Optional) Custom OAuth scope for v1.0 token environments
+  - `OSDU_MCP_AUTH_SCOPE`: (Optional) Custom OAuth scope for v1.0 token environments (see GCP Authentication for its GCP meaning)
 
 **Example:**
 ```bash
@@ -266,6 +266,20 @@ claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osd
 - **Setup**: Configure Workload Identity on GKE
 - **Environment Variables**: None needed! Automatic credential discovery
 - **Note**: Works on GKE with Workload Identity configured
+
+**Scopes**
+
+All GCP methods request `cloud-platform` plus the identity scopes `openid` and `userinfo.email` by default. The identity scopes grant no additional access — they make the caller's email address present in the token, which OSDU requires to resolve entitlements. Without them every OSDU request fails with `401 Access denied`.
+
+- `OSDU_MCP_AUTH_SCOPE`: (Optional) Comma-separated list of scopes that replaces the defaults
+
+**Example:**
+```bash
+claude mcp add osdu-mcp-server uvx "git+https://github.com/danielscholl-osdu/osdu-mcp-server@main" \
+  -e "OSDU_MCP_SERVER_URL=https://your-osdu.com" \
+  -e "OSDU_MCP_SERVER_DATA_PARTITION=your-partition" \
+  -e "OSDU_MCP_AUTH_SCOPE=https://www.googleapis.com/auth/cloud-platform,openid,https://www.googleapis.com/auth/userinfo.email"
+```
 
 ---
 

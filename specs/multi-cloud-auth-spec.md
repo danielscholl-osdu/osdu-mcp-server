@@ -61,7 +61,7 @@ OSDU_MCP_SERVER_DATA_PARTITION # Data partition ID
 
 # Generic OAuth Token Override
 OSDU_MCP_USER_TOKEN          # Manual OAuth Bearer token (highest priority - overrides all)
-OSDU_MCP_AUTH_SCOPE          # Optional custom OAuth scope (for v1.0 Azure tokens)
+OSDU_MCP_AUTH_SCOPE          # Optional custom OAuth scope (v1.0 Azure tokens; comma-separated scope list on GCP)
 ```
 
 **Rationale:**
@@ -661,6 +661,7 @@ OSDU_MCP_SERVER_DATA_PARTITION # Required: Data partition ID
 # Authentication Configuration
 OSDU_MCP_USER_TOKEN          # Optional: Manual OAuth Bearer token (highest priority)
 OSDU_MCP_AUTH_SCOPE          # Optional: Custom OAuth scope for v1.0 Azure tokens
+                             #           On GCP: comma-separated scope list replacing the defaults
 
 # Security Configuration
 OSDU_MCP_ENABLE_WRITE_MODE   # Optional: Enable write operations (default: false)
