@@ -156,20 +156,20 @@ wheels = [
 
 [[package]]
 name = "azure-core"
-version = "1.38.1"
+version = "1.38.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "requests" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/53/9b/23893febea484ad8183112c9419b5eb904773adb871492b5fa8ff7b21e09/azure_core-1.38.1.tar.gz", hash = "sha256:9317db1d838e39877eb94a2240ce92fa607db68adf821817b723f0d679facbf6", size = 363323, upload-time = "2026-02-11T02:03:06.051Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/29/9641b73248745774a52c7ce7f965ed1febbdea787ec21caad3ae6891d18a/azure_core-1.38.3.tar.gz", hash = "sha256:a7931fd445cb4af8802c6f39c6a326bbd1e34b115846550a8245fa656ead6f8e", size = 367267, upload-time = "2026-03-12T20:28:21.122Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/db/88/aaea2ad269ce70b446660371286272c1f6ba66541a7f6f635baf8b0db726/azure_core-1.38.1-py3-none-any.whl", hash = "sha256:69f08ee3d55136071b7100de5b198994fc1c5f89d2b91f2f43156d20fcf200a4", size = 217930, upload-time = "2026-02-11T02:03:07.548Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/3d/ac86083efa45a439d0bbfb7947615227813d368b9e1e93d23fd30de6fec0/azure_core-1.38.3-py3-none-any.whl", hash = "sha256:bf59d29765bf4748ab9edf25f98a30b7ea9797f43e367c06d846a30b29c1f845", size = 218231, upload-time = "2026-03-12T20:28:22.462Z" },
 ]
 
 [[package]]
 name = "azure-identity"
-version = "1.25.2"
+version = "1.25.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "azure-core" },
@@ -178,9 +178,9 @@ dependencies = [
     { name = "msal-extensions" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c2/3a/439a32a5e23e45f6a91f0405949dc66cfe6834aba15a430aebfc063a81e7/azure_identity-1.25.2.tar.gz", hash = "sha256:030dbaa720266c796221c6cdbd1999b408c079032c919fef725fcc348a540fe9", size = 284709, upload-time = "2026-02-11T01:55:42.323Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c5/0e/3a63efb48aa4a5ae2cfca61ee152fbcb668092134d3eb8bfda472dd5c617/azure_identity-1.25.3.tar.gz", hash = "sha256:ab23c0d63015f50b630ef6c6cf395e7262f439ce06e5d07a64e874c724f8d9e6", size = 286304, upload-time = "2026-03-13T01:12:20.892Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9b/77/f658c76f9e9a52c784bd836aaca6fd5b9aae176f1f53273e758a2bcda695/azure_identity-1.25.2-py3-none-any.whl", hash = "sha256:1b40060553d01a72ba0d708b9a46d0f61f56312e215d8896d836653ffdc6753d", size = 191423, upload-time = "2026-02-11T01:55:44.245Z" },
+    { url = "https://files.pythonhosted.org/packages/49/9a/417b3a533e01953a7c618884df2cb05a71e7b68bdbce4fbdb62349d2a2e8/azure_identity-1.25.3-py3-none-any.whl", hash = "sha256:f4d0b956a8146f30333e071374171f3cfa7bdb8073adb8c3814b65567aa7447c", size = 192138, upload-time = "2026-03-13T01:12:22.951Z" },
 ]
 
 [[package]]
@@ -685,16 +685,16 @@ wheels = [
 
 [[package]]
 name = "msal"
-version = "1.32.3"
+version = "1.37.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cryptography" },
     { name = "pyjwt", extra = ["crypto"] },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3f/90/81dcc50f0be11a8c4dcbae1a9f761a26e5f905231330a7cacc9f04ec4c61/msal-1.32.3.tar.gz", hash = "sha256:5eea038689c78a5a70ca8ecbe1245458b55a857bd096efb6989c69ba15985d35", size = 151449, upload-time = "2025-04-25T13:12:34.204Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9a/99/d840198ecf6e8057bbc937f129ae940404485d736cda73253bbff9537f01/msal-1.37.0.tar.gz", hash = "sha256:1b1672a33ee467c1d70b341bb16cafd51bb3c817147a95b93263794b03971bec", size = 182444, upload-time = "2026-05-29T19:49:05.561Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/04/bf/81516b9aac7fd867709984d08eb4db1d2e3fe1df795c8e442cde9b568962/msal-1.32.3-py3-none-any.whl", hash = "sha256:b2798db57760b1961b142f027ffb7c8169536bf77316e99a0df5c4aaebb11569", size = 115358, upload-time = "2025-04-25T13:12:33.034Z" },
+    { url = "https://files.pythonhosted.org/packages/94/b0/d807279f4b55d16d1f120d5ac4344c6e39b56732e2a224d40bded7fd67ad/msal-1.37.0-py3-none-any.whl", hash = "sha256:dd17e95a7c71bce75e8108113438ba7c4a086b3bcad4f57a8c09b7af3d753c2d", size = 123725, upload-time = "2026-05-29T19:49:04.335Z" },
 ]
 
 [[package]]
@@ -844,8 +844,8 @@ dev = [
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.13.0" },
     { name = "aioresponses", marker = "extra == 'dev'", specifier = ">=0.7.8" },
-    { name = "azure-core", specifier = "==1.38.1" },
-    { name = "azure-identity", specifier = "==1.25.2" },
+    { name = "azure-core", specifier = "==1.38.3" },
+    { name = "azure-identity", specifier = "==1.25.3" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=25.9.0" },
     { name = "boto3", specifier = ">=1.40.50" },
     { name = "flake8", marker = "extra == 'dev'", specifier = ">=7.3.0" },
